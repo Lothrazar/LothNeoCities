@@ -35,7 +35,7 @@ var AUDIO =
    PLAY:function(id,vol)
    {
        if(!vol ) vol = 1;//volume
-        console.log("play "+id + EXT.AUDIO);
+  
        //add it all ove again d
        Crafty.audio.add(id,id + EXT.AUDIO);
  
@@ -252,7 +252,7 @@ Crafty.c('Actor',
       
       
       var text = Crafty.e("2D, DOM, Text").attr({ x: this.x, y: this.y }).text('this.label');
-     // console.log(this.label);
+      
       this.textShowing = true;
       setTimeout(function()
       { 
@@ -387,8 +387,7 @@ Crafty.c(Player.id,
   }
   
   ,stairway:function(data)
-  {
-      console.log(data[0].obj);
+  { 
       data[0].obj.collect();
   }
   
@@ -960,9 +959,7 @@ Crafty.scene(SCENES.game, function()
         if(random == false)
         { 
             if(typeof map[x][y] != 'undefined' && map[x][y] != false)
-            {
-                
-                console.log("OK MAKE ONE::"+map[x][y]);
+            { 
               Crafty.e(map[x][y]).at( x , y );
             }
         }
@@ -1014,7 +1011,7 @@ Crafty.scene(SCENES.game, function()
  //make initial mobs
   var zombiesSpawned = 0;
   
-  while(zombiesSpawned < config.ZOMBIE_START_COUNT)
+  if(random == false) while(zombiesSpawned < config.ZOMBIE_START_COUNT)
   {
     this.spawn_random_zombie(); 
     //even if the spawn failed, count anyway so we dont loop forever
