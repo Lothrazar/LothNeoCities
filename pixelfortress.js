@@ -712,8 +712,7 @@ Crafty.c('NPC',
       var text = Crafty.e("2D, DOM, Text").attr({ x: this.x, y: this.y }).text("Hello");
       
       setTimeout(function()
-      {
-      //  console.log('destroy');
+      { 
         text.destroy();
       },1000);
     });
@@ -725,7 +724,7 @@ Crafty.c('Stairway',
   init: function() 
   {
     this.requires('Actor, Solid, Color');
-    this.color(config.NPC_COLOUR);
+    this.color('rgb(139,119,101)');
      
   },
     collect: function() 
@@ -884,8 +883,8 @@ Crafty.scene(SCENES.game, function()
   this.occupied[this.player.at().x][this.player.at().y] = true;
   
   
-        Crafty.e('Stairway').at( 20 , 20 );
-         this.occupied[20][20] = true;
+ Crafty.e('Stairway').at( 20 , 20 );
+ this.occupied[20][20] = true;
 
   Crafty.e('NPC').at(6, 6);
    
@@ -1057,6 +1056,7 @@ Crafty.scene(SCENES.game, function()
     }
   });
    
+   Crafty.trigger('UpdateHUD');
     
 }//end scene definition, first function
 , function() 
