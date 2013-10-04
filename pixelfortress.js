@@ -45,9 +45,12 @@ var AUDIO =
  
   ,coin: 'coin-01'   
   ,fairy: 'magic-01'    
-  ,shoot: 'gun_shoot' + EXT.AUDIO 
- 
-  ,reload: 'gun_load' + EXT.AUDIO
+  ,shoot: 'gun_shoot'  
+  ,reload: 'gun_load'  
+  ,fire: 'fire'  
+  ,leaves: 'leaves'  
+  
+  
   
 }
    
@@ -71,6 +74,7 @@ var Zombie =
 
 var Player =
 {
+    id:'PlayerCharacter',
     speed:1.5,
     health:20,
     coins:0,
@@ -87,6 +91,7 @@ var Player =
 
 var Dragon = 
 {
+    id:"Dragon",
   attack:5,
   speed:1.75,
   colour:'rgb(0, 0, 0)' 
@@ -94,6 +99,7 @@ var Dragon =
 
 var Fairy =
 {
+    id:'Fairy',
     attack: -10,
     colour:'rgb(255, 105, 180)'
 };
@@ -182,13 +188,13 @@ Crafty.c('Arrow',
     
     this.onHit('Solid',this.hitSolid);
     this.onHit('Enemy',this.hitEnemy);
-    this.onHit('PlayerCharacter',this.hitPlayer);
+    this.onHit(Player.id,this.hitPlayer);
   }
   //Enemy
   
   ,hitSolid:function(e)
   { 
-    Crafty('PlayerCharacter').updateMisses(1);//misseda shot lol
+    Crafty(Player.id).updateMisses(1);//misseda shot lol
     this.destroy();
   }
   ,hitEnemy:function(data)
@@ -266,7 +272,7 @@ Crafty.c('Object',
 });
 
 // This is the player-controlled character, it is an actor with a bunch of extra stuff
-Crafty.c('PlayerCharacter', 
+Crafty.c(Player.id, 
 {
   health:1,//avoid zero just in case
   coins:0,
@@ -368,6 +374,9 @@ Crafty.c('PlayerCharacter',
   {
     this.updateHealth( -1 * Fairy.attack);//instant death
     data[0].obj.collect(); // Fairy.collect
+    
+    
+    AUDIO.PLAY(AUDIO.fairy);
   }
   
   ,fightDragon:function(data)
@@ -381,6 +390,7 @@ Crafty.c('PlayerCharacter',
   {
     this.updateHealth(-1*config.FIRE_DAMAGE);
     data[0].obj.collect(); // Fire.collect
+    AUDIO.PLAY(AUDIO.fire);
   }
   
  ,collectCoin:function(data)
@@ -498,7 +508,7 @@ Crafty.c('Enemy',
     {
       this.destroy();
        
-     Crafty('PlayerCharacter').killedEnemy(this);
+     Crafty(Player.id).killedEnemy(this);
        
     }
      
@@ -841,7 +851,7 @@ Crafty.scene(SCENES.game, function()
   }
 
   //Crafty.e actually returns a reference to that entity!
-  this.player = Crafty.e('PlayerCharacter').at(Player.start_x, Player.start_x);
+  this.player = Crafty.e(Player.id).at(Player.start_x, Player.start_x);
   
   this.occupied[this.player.at().x][this.player.at().y] = true;
 
@@ -973,9 +983,9 @@ Crafty.scene(SCENES.game, function()
   this.bind('UpdateHUD', function() 
   { 
   //#TODO find a way to loop these?
-    hudHealth.text(Crafty('PlayerCharacter').health);
-    hudAmmo.text(Crafty('PlayerCharacter').ammo);
-    hudCoins.text(Crafty('PlayerCharacter').coins);
+    hudHealth.text(Crafty(Player.id).health);
+    hudAmmo.text(Crafty(Player.id).ammo);
+    hudCoins.text(Crafty(Player.id).coins);
   
   });
   
@@ -994,7 +1004,7 @@ Crafty.scene(SCENES.game, function()
       }  
       
       
-      var coins_current = Crafty('PlayerCharacter').coins;
+      var coins_current = Crafty(Player.id).coins;
       
       if(coins_current > 0 && coins_current % 5 == 0)
       {
@@ -1008,7 +1018,7 @@ Crafty.scene(SCENES.game, function()
   
   this.show_failure = this.bind('PlayerTookDamage',function(e)
   { 
-    if(Crafty('PlayerCharacter').health <= 0)
+    if(Crafty(Player.id).health <= 0)
     {
       Crafty.scene('Death');
     }
@@ -1046,7 +1056,7 @@ function()
 });  
    
    
-Crafty.scene('Death', function() 
+Crafty.scene(SCENES.death, function() 
 {
   Crafty.e('2D, DOM, Text')
     .attr({ x: 0, y: 0 })
@@ -1085,9 +1095,12 @@ Crafty.scene(SCENES.loading, function()
      assets.push(IMG.zombie);
 	 //audio files
 	 assets.push(AUDIO.coin);
-	 assets.push(AUDIO.fairy);
 	 assets.push(AUDIO.shoot);
+     assets.push(AUDIO.fire);
+     //TODO: these lower 3 unused
+     assets.push(AUDIO.leaves);
 	 assets.push(AUDIO.reload);
+     assets.push(AUDIO.fairy);
 	 
 	 assets.push(IMG.rocks );
  
