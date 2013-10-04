@@ -104,6 +104,12 @@ var Fairy =
     colour:'rgb(255, 105, 180)'
 };
 
+var Tree = {id:'Tree'}; 
+var Coin = {id:'Coin'};
+var Rock = {id:'Rock'};
+var Fire = {id:'Fire'};
+
+
 //TODO: allow Parts of config to  be loaded via JSON
 var config = 
 {
@@ -285,7 +291,7 @@ Crafty.c(Player.id,
     this.requires('Actor, Fourway, Color, Collision')
       .fourway(Player.speed)
       .color(Player.colour) 
-      .onHit('Coin',this.collectCoin)
+      .onHit(Coin.id,this.collectCoin)
       .onHit('Fire',this.collectFire)
       .onHit(Dragon.id,this.fightDragon)
       .onHit(Fairy.id,this.fightFairy)
@@ -494,7 +500,7 @@ Crafty.c(Player.id,
 
 
 //all our objects 
-Crafty.c('Tree', 
+Crafty.c(Tree.id, 
 {
   init: function() 
   {
@@ -788,7 +794,7 @@ Crafty.c(Fairy.id,
 
 
 //not an object since its not solid, its collectable
-Crafty.c('Coin', 
+Crafty.c(Coin.id, 
 {
   init: function() 
   {
@@ -821,7 +827,7 @@ Crafty.c('Fire',
 
 
  
-Crafty.c('Rock', 
+Crafty.c(Rock.id, 
 {
   init: function() 
   {
@@ -878,15 +884,16 @@ Crafty.scene(SCENES.game, function()
     }
   }
 
+  var map =  this.occupied;
   //Crafty.e actually returns a reference to that entity!
-  this.player = Crafty.e(Player.id).at(Player.start_x, Player.start_x); 
-  this.occupied[this.player.at().x][this.player.at().y] = true;
+ this.player = Crafty.e(Player.id).at(Player.start_x, Player.start_x); 
+ // this.occupied[this.player.at().x][this.player.at().y] = true;
   
   
- Crafty.e('Stairway').at( 20 , 20 );
- this.occupied[20][20] = true;
+ //Crafty.e('Stairway').at( 20 , 20 );
+ //this.occupied[20][20] = true;
 
-  Crafty.e('NPC').at(6, 6);
+  //Crafty.e('NPC').at(6, 6);
    
    //spawner function that is used later
    this.spawn_random_zombie = function()
@@ -911,52 +918,96 @@ Crafty.scene(SCENES.game, function()
       }
    };
   
+  //lay out where objects will be made
+  //map[Player.start_x][Player.start_y] = Player.id;
+  //for now keep border
+  for (var x = 0; x < Game.map_grid.width; x++)   {map[x][0] = Tree.id;map[x][Game.map_grid.height-1] = Tree.id;}
+  for (var y = 0; x < Game.map_grid.height; y++)  {map[0][y] = Tree.id;map[Game.map_grid.width-1][y] = Tree.id;}
+  
+  map[1][4] = Rock.id;
+  map[2][4] = Rock.id;
+  map[3][4] = Rock.id;
+  map[4][4] = Rock.id;
+  map[5][4] = Rock.id;
+  map[6][4] = Rock.id;
+  map[9][4] = Rock.id;
+  
+  map[1][5] = Fire.id;
+  map[2][6] = Fire.id;
+  map[3][8] = Fire.id;
+  map[4][10] = Fire.id;
+  map[5][12] = Fire.id;
+  map[6][16] = Fire.id;
+  map[9][20] = Fire.id;
+  
+  
+  map[1][12] = Coin.id;
+  map[3][6] = Coin.id;
+  map[8][8] = Coin.id;
+  map[17][10] = Coin.id;
+  map[25][12] = Coin.id;
+  map[16][16] = Coin.id;
+  map[19][20] = Coin.id;
+  
+  var random = false;
+  
  //remember to check for occupied squares
   for (var x = 0; x < Game.map_grid.width; x++) 
   {
     for (var y = 0; y < Game.map_grid.height; y++) 
     {
         
-      var at_edge = x == 0 || x == Game.map_grid.width -1 || y == 0 || y == Game.map_grid.height -1;
-      
-      // Place a tree at every edge square on our grid of  tiles
-      if (at_edge && !this.occupied[x][y]) 
-      {
-       
-        // Place a tree entity at the current tile
-        Crafty.e('Tree').at( x , y );
-         this.occupied[x][y] = true;
+        if(random == false)
+        { 
+            if(typeof map[x][y] != 'undefined' && map[x][y] != false)
+            {
+                
+                console.log("OK MAKE ONE::"+map[x][y]);
+              Crafty.e(map[x][y]).at( x , y );
+            }
+        }
+        else
+        {
+            
+                         
+              var at_edge = x == 0 || x == Game.map_grid.width -1 || y == 0 || y == Game.map_grid.height -1;
+              
+              // Place a tree at every edge square on our grid of  tiles
+              if (at_edge && !this.occupied[x][y]) 
+              { 
+                 // Place a tree entity at the current tile
+                 Crafty.e(Tree.id).at( x , y );
+                 this.occupied[x][y] = true; 
+              } 
+              
+              //TODO: neighbours http://jsfiddle.net/evFBq/
+              //else
+              if (Math.random() < config.ROCK_SPAWN_CHANCE && !this.occupied[x][y]) 
+              { 
+                 Crafty.e(Rock.id).at( x, y);
+                 this.occupied[x][y] = true;
+              }
+              // var max_coins = 5;
+              if (Math.random() < config.COIN_SPAWN_CHANCE) 
+              {
+                //Crafty(Coin.id).length < max_coins &&
+                if ( !this.occupied[x][y]) 
+                {
+                  Crafty.e(Coin.id).at(x, y);
+                 this.occupied[x][y] = true;
+                }
+              } 
         
-      } 
-      
-      //TODO: neighbours http://jsfiddle.net/evFBq/
-      //else
-      if (Math.random() < config.ROCK_SPAWN_CHANCE && !this.occupied[x][y]) 
-      {
-       
-         Crafty.e('Rock').at( x, y);
-         this.occupied[x][y] = true;
-      }
-      // var max_coins = 5;
-      if (Math.random() < config.COIN_SPAWN_CHANCE) 
-      {
-//Crafty('Coin').length < max_coins &&
-        if ( !this.occupied[x][y]) 
-        {
-          Crafty.e('Coin').at(x, y);
-         this.occupied[x][y] = true;
-        }
-      } 
-
-      if (Math.random() < config.FIRE_SPAWN_CHANCE) 
-      { 
-        if ( !this.occupied[x][y]) 
-        {
-          Crafty.e('Fire').at(x, y);
-         this.occupied[x][y] = true;
-        }
-      } 
-  
+              if (Math.random() < config.FIRE_SPAWN_CHANCE) 
+              { 
+                if ( !this.occupied[x][y]) 
+                {
+                  Crafty.e(Fire.id).at(x, y);
+                 this.occupied[x][y] = true;
+                }
+              } 
+   
+        }  //end if random is true          
     }//end y for loop
   }//end x for loop
  
@@ -973,9 +1024,6 @@ Crafty.scene(SCENES.game, function()
 
   //fairys and dragons both fly, so do not occupy squares
   this.dragon = Crafty.e(Dragon.id).at(25, 25);
-   
-  //dont start with default fairy
-  //Crafty.e(Fairy.id).at(50, 5);
   
   
       //Create a menu/HUD at the bottom of the screen with a button
@@ -1012,8 +1060,7 @@ Crafty.scene(SCENES.game, function()
  
       
   this.bind('UpdateHUD', function() 
-  { 
-      console.log('UpdateHUD');
+  {  
   //#TODO find a way to loop these?
     hudHealth.text(Crafty(Player.id).health);
     hudAmmo.text(Crafty(Player.id).ammo);
@@ -1023,7 +1070,7 @@ Crafty.scene(SCENES.game, function()
   
   this._CoinCollect = this.bind('CoinCollect', function() 
   {
-    if (!Crafty('Coin').length) 
+    if (!Crafty(Coin.id).length) 
     { 
      Crafty.scene(SCENES.victory);
     }
