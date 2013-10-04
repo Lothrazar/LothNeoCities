@@ -1,8 +1,47 @@
 //based on tutorial at http://buildnewgames.com/introduction-to-crafty/
 // TODO: TRACK zombie kill on head-on-collision. or jsu bounche them back.
+
+//TODO: allow config to  be loaded via JSON
 var config = 
 {
-  GRID_SIZE:16   //size of a tile
+   ASSETS:   
+   {
+       EXT:
+       {
+            IMG:'png'
+            ,AUDIO:'mp3'
+       }
+       
+       //single images
+      ,IMG:
+      {
+          coin:'goldCoin'
+          ,rock:'rock0'
+          ,flame:'flame'
+          ,zombie:'zombie'
+      }
+      
+      //sprite sheets
+      ,SPRITE:
+      {
+          rocks:'rocks_sheet'
+          
+      }
+      
+      //audio files
+      ,AUDIO:
+      {
+          coin:'coin-01'
+          ,fairy:'magic-01'
+          ,shoot:'gun_shoot'
+          ,reload:'gun_load'
+      }
+       
+   } 
+    
+    //TODO: restrucutre these into sub objects
+    
+  ,GRID_SIZE:16   //size of a tile
   //how many tiles wide and high are we
   ,GAME_WIDTH:64
   ,GAME_HEIGHT:32
@@ -267,6 +306,8 @@ Crafty.c('PlayerCharacter',
     Crafty.e("Arrow").attr({x: this.x, y: this.y , w: config.ARROW_SIZE, h: config.ARROW_SIZE, z:50}).fired(dir);
   
     this.updateAmmo(-1);//reduce ammo by one since this shot was successful
+    
+    Crafty.audio.play("gun_shoot");
   }
 
   
@@ -299,6 +340,9 @@ Crafty.c('PlayerCharacter',
   {
     this.updateCoins(1);
     data[0].obj.collect(); // Coin.collect
+    
+    
+    Crafty.audio.play("coin-01");
   }
   //update health by increment and the display as well
   ,updateHealth:function (inc)
@@ -991,10 +1035,10 @@ Crafty.scene('Loading', function()
  
 	 //load all images
 	 var assets = [];
-	 assets.push('goldCoin1.png');
+	 assets.push('goldCoin.png');
 	 assets.push('rock0.png');
 	 assets.push('flame.png');
-	 assets.push('rock_sheet.png');
+     assets.push('zombie.png');
 	 //audio files
 	 assets.push('coin-01.mp3');
 	 assets.push('magic-01.mp3');
@@ -1006,15 +1050,15 @@ Crafty.scene('Loading', function()
   Crafty.load(assets, function()
   { 
   	//after load action finishes, do this
-    Crafty.sprite(16, 'goldCoin16.png', {
+    Crafty.sprite(16, 'goldCoin.png', {
       spr_coin:    [0, 0]
     });
-    Crafty.sprite(16, 'flame16.png', {
+    Crafty.sprite(16, 'flame.png', {
       spr_flame:    [0, 0]
     });
     
     
-    Crafty.sprite(16, 'skel16_front.png', {
+    Crafty.sprite(16, 'zombie.png', {
       spr_zombie:    [0, 0]
     });
     
