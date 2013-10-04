@@ -5,29 +5,26 @@ function getRandomInt (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+//events
+var EV = 
+{
+    
+    
+};
 var EXT=
 {
     IMG:'.png'
     ,AUDIO:'.mp3'
 };
-var ASSETS =    
-{ 
+ 
    //single images
-  IMG:
-  {
-      coin:'goldCoin'+EXT.IMG
-      ,rock:'rock0'+EXT.IMG
-      ,flame:'flame'+EXT.IMG
-      ,zombie:'zombie'+EXT.IMG
-  }
-  
-  //sprite sheets
-  ,SPRITE:
-  {
-      rocks:'rock_sprites'+EXT.IMG
-  }
-  
-       
+var IMG=
+{
+  coin:'goldCoin'+EXT.IMG
+  ,rock:'rock0'+EXT.IMG
+  ,flame:'flame'+EXT.IMG
+  ,zombie:'zombie'+EXT.IMG
+  ,rocks:'rock_sprites'+EXT.IMG
 };
 
   //audio files
@@ -46,11 +43,8 @@ var AUDIO =
        Crafty.audio.play(id,1,vol); 
    }
  
-  ,coin: 'coin-01'  
-  
-  
-  ,fairy: 'magic-01'   
-  
+  ,coin: 'coin-01'   
+  ,fairy: 'magic-01'    
   ,shoot: 'gun_shoot' + EXT.AUDIO 
  
   ,reload: 'gun_load' + EXT.AUDIO
@@ -91,6 +85,19 @@ var Player =
     } 
 };
 
+var Dragon = 
+{
+  attack:5,
+  speed:1.75,
+  colour:'rgb(0, 0, 0)' 
+};
+
+var Fairy =
+{
+    attack: -10,
+    colour:'rgb(255, 105, 180)'
+};
+
 //TODO: allow Parts of config to  be loaded via JSON
 var config = 
 {
@@ -105,15 +112,10 @@ var config =
   ,ZOMBIE_COIN_SPAWN_CHANCE:0.9 //chance to spawn zombie when a coin is grabbed
   ,ZOMBIE_START_COUNT:5 //how many zombies start on the field right away (was zero)
  
- 
-  ,DRAGON_COLOUR:'rgb(0, 0, 0)'
-  ,DRAGON_DAMAGE:5
-  ,DRAGON_FIRE_CHANCE:0.04 // 1% chance of it breathing fire. if math.random less than this
-  ,DRAGON_SPEED:1.75
-  ,DRAGON_COINS_NEEDED:10
   
-  ,FAIRY_HEAL:10
-  ,FAIRY_COLOUR:'rgb(255, 105, 180)'
+  ,DRAGON_FIRE_CHANCE:0.04 // 1% chance of it breathing fire. if math.random less than this
+  ,DRAGON_COINS_NEEDED:10
+   
   ,FAIRY_COINS_NEEDED:5 // every this many coins, make new fairy
   
   ,FIRE_DAMAGE:1
@@ -123,8 +125,7 @@ var config =
   
   ,TREE_COLOUR:'rgb(20, 125, 40)'
   
-  
-  ,ROCK_COLOUR:'rgb(128, 128, 128)'
+   
   ,ROCK_SPAWN_CHANCE:0.04
   
   ,COIN_SPAWN_CHANCE:0.015
@@ -134,7 +135,7 @@ var config =
   ,ARROW_DAMAGE:1
   ,ARROW_SIZE:3
   
-  ,BACKGROUND_COLOR:'rgb(255, 255, 255)'
+  ,BACKGROUND_COLOR:'rgb(173, 255, 164)'
   
   
   ,NPC_COLOUR:'rgb(221, 168, 160)'
@@ -365,13 +366,13 @@ Crafty.c('PlayerCharacter',
   
   ,fightFairy:function(data)
   {
-    this.updateHealth(config.FAIRY_HEAL);//instant death
+    this.updateHealth( -1 * Fairy.attack);//instant death
     data[0].obj.collect(); // Fairy.collect
   }
   
   ,fightDragon:function(data)
   {
-    this.updateHealth(-1*config.DRAGON_DAMAGE);//instant death
+    this.updateHealth(-1* Dragon.attack);//instant death
     data[0].obj.collect(); // Dragon.collect
   }
   
@@ -699,7 +700,7 @@ Crafty.c('Dragon',
   init: function() 
   {
     this.requires('Enemy, Flying, Color');
-    this.color(config.DRAGON_COLOUR);
+    this.color(Dragon.colour);
  
     this.attr(
     {  
@@ -732,7 +733,7 @@ Crafty.c('Fairy',
   init: function() 
   {
     this.requires('Enemy, Flying, Color');
-    this.color(config.FAIRY_COLOUR);
+    this.color(Fairy.colour);
     this.attr(
     {  
       speed:1
@@ -824,7 +825,7 @@ Crafty.c('MenuData',
 
 /********************* end of object definitions ***********************/
 
-Crafty.scene('Game', function() 
+Crafty.scene(SCENES.game, function() 
 {
  
   // A 2D array to keep track of all occupied tiles
@@ -1028,7 +1029,7 @@ Crafty.scene('Game', function()
   
   
   //victory scene also takes two functions
-Crafty.scene('Victory', function() 
+Crafty.scene(SCENES.victory, function() 
 {
   Crafty.e('2D, DOM, Text')
     .attr({ x: 0, y: 0 })
@@ -1079,41 +1080,38 @@ Crafty.scene(SCENES.loading, function()
  
 	 //load all images
 	 var assets = [];
-	 assets.push('goldCoin.png');
-	 assets.push('rock0.png');
-	 assets.push('flame.png');
-     assets.push('zombie.png');
+	 assets.push(IMG.coin); 
+	 assets.push(IMG.flame);
+     assets.push(IMG.zombie);
 	 //audio files
-	 assets.push('coin-01.mp3');
-	 assets.push('magic-01.mp3');
-	 assets.push('gun_load.mp3');
-	 assets.push('gun_shoot.mp3');
+	 assets.push(AUDIO.coin);
+	 assets.push(AUDIO.fairy);
+	 assets.push(AUDIO.shoot);
+	 assets.push(AUDIO.reload);
 	 
-	 assets.push(ASSETS.SPRITE.rocks );
+	 assets.push(IMG.rocks );
  
   Crafty.load(assets, function()
   { 
   	//after load action finishes, do this
-    Crafty.sprite(16, 'goldCoin.png', {
-      spr_coin:    [0, 0]
+    Crafty.sprite(16, IMG.coin, 
+    {
+      'spr_coin':    [0, 0]
     });
-    Crafty.sprite(16, 'flame.png', {
-      spr_flame:    [0, 0]
-    });
-    
-    
-    Crafty.sprite(16, 'zombie.png', 
-        {
-          spr_zombie:    [0, 0]
-        }
-    );
-    
-     
-     Crafty.sprite(16, 'rock0.png', {
-      spr_rock:    [0, 0]
+    Crafty.sprite(16, IMG.flame, 
+    {
+      'spr_flame':    [0, 0]
     });
     
-     Crafty.sprite(16, ASSETS.SPRITE.rocks, 
+    
+    Crafty.sprite(16, IMG.zombie, 
+    {
+          'spr_zombie':    [0, 0]
+    });
+    
+    
+    
+     Crafty.sprite(16, IMG.rocks, 
      { 
           spr_rock0:    [0, 0] 
          ,spr_rock1:    [0, 1] 
@@ -1134,10 +1132,11 @@ Crafty.scene(SCENES.loading, function()
          
      } );
     
-    Crafty.audio.add('coin-01','coin-01.mp3');
-    Crafty.audio.add('magic-01','magic-01.mp3');
-    Crafty.audio.add('gun_shoot','gun_shoot.mp3');
-    Crafty.audio.add('gun_load','gun_load.mp3');
+    //dont load here. wait for on demand
+  //  Crafty.audio.add('coin-01','coin-01.mp3');
+   // Crafty.audio.add('magic-01','magic-01.mp3');
+  //  Crafty.audio.add('gun_shoot','gun_shoot.mp3');
+   // Crafty.audio.add('gun_load','gun_load.mp3');
     //Crafty.audio.add('coin-01','coin-01.mp3');
     
     
