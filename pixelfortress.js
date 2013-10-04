@@ -35,7 +35,7 @@ var AUDIO =
    PLAY:function(id,vol)
    {
        if(!vol ) vol = 1;//volume
-        
+        console.log("play "+id + EXT.AUDIO);
        //add it all ove again d
        Crafty.audio.add(id,id + EXT.AUDIO);
  
@@ -65,7 +65,7 @@ var SCENES =
 
 var Zombie = 
 {
-   id:'Zombie',
+   id:"Zombie",
    speed:0.9,
    attack:3,
    health:1,
@@ -76,9 +76,9 @@ var Player =
 {
     id:'PlayerCharacter',
     speed:1.5,
-    health:20,
+    health:10,
     coins:0,
-    ammo:20,
+    ammo:5,
     colour:'rgb(85, 26, 139)',
     start_x:1,
     start_y:1,
@@ -287,9 +287,10 @@ Crafty.c(Player.id,
       .color(Player.colour) 
       .onHit('Coin',this.collectCoin)
       .onHit('Fire',this.collectFire)
-      .onHit('Dragon',this.fightDragon)
-      .onHit('Fairy',this.fightFairy)
+      .onHit(Dragon.id,this.fightDragon)
+      .onHit(Fairy.id,this.fightFairy)
       .onHit(Zombie.id,this.fightZombie)
+      .onHit('Stairway',this.stairway)
       ;
     this.attr({
       w: Game.map_grid.tile.width-4,//override grid dfeaults
@@ -321,7 +322,12 @@ Crafty.c(Player.id,
   }
   ,shoot:function()
   {
-    if(this.ammo <= 0) { return; }//dont shoot if empty
+    if(this.ammo <= 0) 
+    { 
+         AUDIO.PLAY(AUDIO.reload);//TODO: give this a unique sound
+        return; 
+        
+     }//dont shoot if empty
     
     
     
@@ -358,9 +364,13 @@ Crafty.c(Player.id,
     this.updateAmmo(-1);//reduce ammo by one since this shot was successful
  
    
-    AUDIO.PLAY("gun_shoot",1);
+    AUDIO.PLAY(AUDIO.shoot,1);
  
-    
+    setTimeout(function()
+    {
+        AUDIO.PLAY(AUDIO.reload);
+        
+    },200);
   }
 
   
@@ -368,6 +378,12 @@ Crafty.c(Player.id,
   {
     this.updateHealth(-1 * Zombie.attack);
     data[0].obj.collect();// Zombie.collect
+  }
+  
+  ,stairway:function(data)
+  {
+      console.log(data[0].obj);
+      data[0].obj.collect();
   }
   
   ,fightFairy:function(data)
@@ -704,8 +720,21 @@ Crafty.c('NPC',
   },
 });
 
+Crafty.c('Stairway', 
+{
+  init: function() 
+  {
+    this.requires('Actor, Solid, Color');
+    this.color(config.NPC_COLOUR);
+     
+  },
+    collect: function() 
+  {
+    console.log('stairway todo');
+  }
+});
 
-Crafty.c('Dragon', 
+Crafty.c(Dragon.id, 
 {  
   init: function() 
   {
@@ -738,7 +767,7 @@ Crafty.c('Dragon',
 
 
 //keep fairy as enemy just for bullets
-Crafty.c('Fairy', 
+Crafty.c(Fairy.id, 
 {
   init: function() 
   {
@@ -851,9 +880,12 @@ Crafty.scene(SCENES.game, function()
   }
 
   //Crafty.e actually returns a reference to that entity!
-  this.player = Crafty.e(Player.id).at(Player.start_x, Player.start_x);
-  
+  this.player = Crafty.e(Player.id).at(Player.start_x, Player.start_x); 
   this.occupied[this.player.at().x][this.player.at().y] = true;
+  
+  
+        Crafty.e('Stairway').at( 20 , 20 );
+         this.occupied[20][20] = true;
 
   Crafty.e('NPC').at(6, 6);
    
@@ -874,7 +906,7 @@ Crafty.scene(SCENES.game, function()
         
         if(this.occupied[randX][randY] == false)
         { 
-           Crafty.e('Zombie').at(randX,randY);
+           Crafty.e(Zombie.id).at(randX,randY);
            return;//stop looping
         }
       }
@@ -941,10 +973,10 @@ Crafty.scene(SCENES.game, function()
 
 
   //fairys and dragons both fly, so do not occupy squares
-  this.dragon = Crafty.e('Dragon').at(25, 25);
+  this.dragon = Crafty.e(Dragon.id).at(25, 25);
    
   //dont start with default fairy
-  //Crafty.e('Fairy').at(50, 5);
+  //Crafty.e(Fairy.id).at(50, 5);
   
   
       //Create a menu/HUD at the bottom of the screen with a button
@@ -982,6 +1014,7 @@ Crafty.scene(SCENES.game, function()
       
   this.bind('UpdateHUD', function() 
   { 
+      console.log('UpdateHUD');
   //#TODO find a way to loop these?
     hudHealth.text(Crafty(Player.id).health);
     hudAmmo.text(Crafty(Player.id).ammo);
@@ -993,7 +1026,7 @@ Crafty.scene(SCENES.game, function()
   {
     if (!Crafty('Coin').length) 
     { 
-     Crafty.scene('Victory');
+     Crafty.scene(SCENES.victory);
     }
     else
     {
@@ -1010,7 +1043,7 @@ Crafty.scene(SCENES.game, function()
       {
         //console.log("%5 fairy event");
         
-        Crafty.e('Fairy').at(50, 5);
+        Crafty.e(Fairy.id).at(50, 5);
       }
       
     }
@@ -1020,7 +1053,7 @@ Crafty.scene(SCENES.game, function()
   { 
     if(Crafty(Player.id).health <= 0)
     {
-      Crafty.scene('Death');
+      Crafty.scene(SCENES.death);
     }
   });
    
@@ -1047,7 +1080,7 @@ Crafty.scene(SCENES.victory, function()
  
   this.restart_game = this.bind('KeyDown', function(e) 
   {
-    if(e.key == Crafty.keys['ESC'])  Crafty.scene('Game');
+    if(e.key == Crafty.keys['ESC'])  Crafty.scene(SCENES.death);
   });
 }, 
 function() 
@@ -1064,7 +1097,7 @@ Crafty.scene(SCENES.death, function()
  
   this.restart_game = this.bind('KeyDown', function(e) 
   {
-    if(e.key == Crafty.keys['ESC'])  Crafty.scene('Game');
+    if(e.key == Crafty.keys['ESC'])  Crafty.scene(SCENES.game);
   });
 }, 
 function() 
