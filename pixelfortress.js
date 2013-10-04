@@ -27,16 +27,35 @@ var ASSETS =
       rocks:'rock_sprites'+EXT.IMG
   }
   
-  //audio files
-  ,AUDIO:
-  {
-      coin:'coin-01'+EXT.AUDIO
-      ,fairy:'magic-01' +EXT.AUDIO
-      ,shoot:'gun_shoot' +EXT.AUDIO
-      ,reload:'gun_load' +EXT.AUDIO
-   }
        
 };
+
+  //audio files
+var AUDIO =
+{ 
+    //pass in id and length of your sound file
+   //workaround since either craftyjs or HTML5 support in chrome sucks for audio, doesnt restart the file after playing it once
+   PLAY:function(id,vol)
+   {
+       if(!vol ) vol = 1;//volume
+        
+       //add it all ove again d
+       Crafty.audio.add(id,id + EXT.AUDIO);
+ 
+       //Crafty.audio.stop(id); //this Should work, just stop and replay. but nooOoOOOOoo.. gottta reDoNnLOOoooOAAD
+       Crafty.audio.play(id,1,vol); 
+   }
+ 
+  ,coin: 'coin-01'  
+  
+  
+  ,fairy: 'magic-01'   
+  
+  ,shoot: 'gun_shoot' + EXT.AUDIO 
+ 
+  ,reload: 'gun_load' + EXT.AUDIO
+  
+}
    
 var SCENES =
 {
@@ -45,6 +64,31 @@ var SCENES =
   ,loading:'Loading'
   ,death:'Death'
    
+};
+
+var Zombie = 
+{
+   id:'Zombie',
+   speed:0.9,
+   attack:3,
+   health:1,
+   colour:'rgb(0, 255, 0)' ,// legacy :: overwritten by sprites 
+};
+
+var Player =
+{
+    speed:1.5,
+    health:20,
+    coins:0,
+    ammo:20,
+    colour:'rgb(85, 26, 139)',
+    start_x:1,
+    start_y:1,
+    stats:
+    {
+        misses:0,
+        kills:0,
+    } 
 };
 
 //TODO: allow Parts of config to  be loaded via JSON
@@ -57,24 +101,11 @@ var config =
   //how many tiles wide and high are we
   ,GAME_WIDTH:64
   ,GAME_HEIGHT:32
-
-  ,ZOMBIE_SPEED : 0.9
-  ,ZOMBIE_DAMAGE : 3 //damage that it deals to player
-  ,ZOMBIE_HEALTH : 1
-  ,ZOMBIE_COLOUR:'rgb(0, 255, 0)'
+ 
   ,ZOMBIE_COIN_SPAWN_CHANCE:0.9 //chance to spawn zombie when a coin is grabbed
   ,ZOMBIE_START_COUNT:5 //how many zombies start on the field right away (was zero)
-  
-  ,PLAYER_SPEED : 1.5
-  ,PLAYER_HEALTH:20 // starting
-  ,PLAYER_COINS:0
-  ,PLAYER_AMMO:20
-  ,PLAYER_COLOUR:'rgb(85, 26, 139)'
-  ,PLAYER_START_X:1
-  ,PLAYER_START_Y:1
-  ,PLAYER_MISSES : 0
-  ,PLAYER_KILLS : 0 //in case carry over from previous session
-  
+ 
+ 
   ,DRAGON_COLOUR:'rgb(0, 0, 0)'
   ,DRAGON_DAMAGE:5
   ,DRAGON_FIRE_CHANCE:0.04 // 1% chance of it breathing fire. if math.random less than this
@@ -245,13 +276,13 @@ Crafty.c('PlayerCharacter',
   {
       
     this.requires('Actor, Fourway, Color, Collision')
-      .fourway(config.PLAYER_SPEED)
-      .color(config.PLAYER_COLOUR) 
+      .fourway(Player.speed)
+      .color(Player.colour) 
       .onHit('Coin',this.collectCoin)
       .onHit('Fire',this.collectFire)
       .onHit('Dragon',this.fightDragon)
       .onHit('Fairy',this.fightFairy)
-      .onHit('Zombie',this.fightZombie)
+      .onHit(Zombie.id,this.fightZombie)
       ;
     this.attr({
       w: Game.map_grid.tile.width-4,//override grid dfeaults
@@ -267,15 +298,15 @@ Crafty.c('PlayerCharacter',
       }
     });
     
-    this.health = config.PLAYER_HEALTH;
+    this.health = Player.health;
     
     this.onHit('Solid', this.stopMovement);
     //set initial values
     this.updateHealth(0);//add zero just to refresh display
-    this.updateCoins(config.PLAYER_COINS);
-    this.updateAmmo(config.PLAYER_AMMO);
-    this.updateKills(config.PLAYER_KILLS);
-    this.updateMisses(config.PLAYER_MISSES);
+    this.updateCoins( Player.coins );
+    this.updateAmmo(Player.ammo);
+    this.updateKills(Player.stats.kills);
+    this.updateMisses(Player.stats.misses);
     
     
     //update kills and misses TODO
@@ -318,14 +349,17 @@ Crafty.c('PlayerCharacter',
     Crafty.e("Arrow").attr({x: this.x, y: this.y , w: config.ARROW_SIZE, h: config.ARROW_SIZE, z:50}).fired(dir);
   
     this.updateAmmo(-1);//reduce ammo by one since this shot was successful
+ 
+   
+    AUDIO.PLAY("gun_shoot",1);
+ 
     
-    Crafty.audio.play("gun_shoot");
   }
 
   
   ,fightZombie:function(data)
   {
-    this.updateHealth(-1 * config.ZOMBIE_DAMAGE);
+    this.updateHealth(-1 * Zombie.attack);
     data[0].obj.collect();// Zombie.collect
   }
   
@@ -353,23 +387,22 @@ Crafty.c('PlayerCharacter',
     this.updateCoins(1);
     data[0].obj.collect(); // Coin.collect
     
+    AUDIO.PLAY(AUDIO.coin);
+ 
     
-    Crafty.audio.play("coin-01");
   }
   //update health by increment and the display as well
   ,updateHealth:function (inc)
   {
     this.health += inc;
-    document.getElementById('_display_health').innerHTML = this.health;
-    
-    
+ 
     Crafty.trigger('UpdateHUD');
   }
   //update  by increment and the display as well
   ,updateCoins:function (inc)
   {
     this.coins += inc;
-    document.getElementById('_display_coins').innerHTML = this.coins;
+ 
     
     Crafty.trigger('UpdateHUD');
   }
@@ -377,8 +410,7 @@ Crafty.c('PlayerCharacter',
   ,updateAmmo:function (inc)
   {
     this.ammo += inc;
-    document.getElementById('_display_ammo').innerHTML = this.ammo;
-    
+ 
     Crafty.trigger('UpdateHUD');
   }
   
@@ -386,13 +418,13 @@ Crafty.c('PlayerCharacter',
   {
   
     this.kills+= inc;
-      document.getElementById('_display_kills').innerHTML = this.kills;
+      
       Crafty.trigger('UpdateHUD');
   }
   ,updateMisses:function(inc)
   {
     this.misses+= inc;
-    document.getElementById('_display_misses').innerHTML = this.misses;
+ 
     
     Crafty.trigger('UpdateHUD');
   }
@@ -615,10 +647,10 @@ Crafty.c('Flying',  // TODO: make fairy and dragon inherit this
   
 });//end EnemyFlying
 
-Crafty.c('Zombie', 
+Crafty.c(Zombie.id, 
 {
-  speed : config.ZOMBIE_SPEED,
-  health : config.ZOMBIE_HEALTH,
+  speed :  Zombie.speed,
+  health : Zombie.health,
   init: function() 
   {
     this.requires('Enemy, Walking, spr_zombie'); //removed Solid
@@ -808,7 +840,7 @@ Crafty.scene('Game', function()
   }
 
   //Crafty.e actually returns a reference to that entity!
-  this.player = Crafty.e('PlayerCharacter').at(config.PLAYER_START_X, config.PLAYER_START_Y);
+  this.player = Crafty.e('PlayerCharacter').at(Player.start_x, Player.start_x);
   
   this.occupied[this.player.at().x][this.player.at().y] = true;
 
