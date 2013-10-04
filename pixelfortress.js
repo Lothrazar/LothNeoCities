@@ -1,0 +1,1082 @@
+//based on tutorial at http://buildnewgames.com/introduction-to-crafty/
+// TODO: TRACK zombie kill on head-on-collision. or jsu bounche them back.
+var config = 
+{
+  GRID_SIZE:16   //size of a tile
+  //how many tiles wide and high are we
+  ,GAME_WIDTH:64
+  ,GAME_HEIGHT:32
+
+  ,ZOMBIE_SPEED : 0.9
+  ,ZOMBIE_DAMAGE : 3 //damage that it deals to player
+  ,ZOMBIE_HEALTH : 1
+  ,ZOMBIE_COLOUR:'rgb(0, 255, 0)'
+  ,ZOMBIE_COIN_SPAWN_CHANCE:0.9 //chance to spawn zombie when a coin is grabbed
+  ,ZOMBIE_START_COUNT:5 //how many zombies start on the field right away (was zero)
+  
+  ,PLAYER_SPEED : 1.5
+  ,PLAYER_HEALTH:20 // starting
+  ,PLAYER_COINS:0
+  ,PLAYER_AMMO:20
+  ,PLAYER_COLOUR:'rgb(85, 26, 139)'
+  ,PLAYER_START_X:1
+  ,PLAYER_START_Y:1
+  ,PLAYER_MISSES : 0
+  ,PLAYER_KILLS : 0 //in case carry over from previous session
+  
+  ,DRAGON_COLOUR:'rgb(0, 0, 0)'
+  ,DRAGON_DAMAGE:5
+  ,DRAGON_FIRE_CHANCE:0.04 // 1% chance of it breathing fire. if math.random less than this
+  ,DRAGON_SPEED:1.75
+  ,DRAGON_COINS_NEEDED:10
+  
+  ,FAIRY_HEAL:10
+  ,FAIRY_COLOUR:'rgb(255, 105, 180)'
+  ,FAIRY_COINS_NEEDED:5 // every this many coins, make new fairy
+  
+  ,FIRE_DAMAGE:1
+  ,FIRE_COLOUR:'rgb(255, 0, 0)'
+  ,FIRE_SPAWN_CHANCE:0.01
+  
+  
+  ,TREE_COLOUR:'rgb(20, 125, 40)'
+  
+  
+  ,ROCK_COLOUR:'rgb(128, 128, 128)'
+  ,ROCK_SPAWN_CHANCE:0.04
+  
+  ,COIN_SPAWN_CHANCE:0.015
+  ,COIN_COLOUR:'rgb(255, 215, 0)'
+  
+  ,ARROW_SPEED:10
+  ,ARROW_DAMAGE:1
+  ,ARROW_SIZE:3
+  
+  ,BACKGROUND_COLOR:'rgb(255, 255, 255)'
+  
+  
+  ,NPC_COLOUR:'rgb(221, 168, 160)'
+  
+};
+
+// The Grid component allows an element to be located
+//  on a grid of tiles
+Crafty.c('Grid', 
+{
+  init: function() 
+  {
+    this.attr({
+      w: Game.map_grid.tile.width,
+      h: Game.map_grid.tile.height
+    });
+  },
+
+  // Locate this entity at the given position on the grid
+  at: function(x, y) 
+  {
+    if (x === undefined && y === undefined) {
+      return { x: this.x/Game.map_grid.tile.width, y: this.y/Game.map_grid.tile.height }
+    }
+    else 
+    {
+      this.attr({ x: x * Game.map_grid.tile.width, y: y * Game.map_grid.tile.height });
+      return this;
+    }
+  }
+});
+
+
+Crafty.c('Arrow',
+{
+  damage:0,
+  init: function() 
+  {
+    this.damage = config.ARROW_DAMAGE;
+    this.requires('2D, Canvas, Color, Collision');
+    this.color('red');
+    //my size
+    this.attr({ w: 5, h: 2, z:50})
+    
+    this.onHit('Solid',this.hitSolid);
+    this.onHit('Enemy',this.hitEnemy);
+    this.onHit('PlayerCharacter',this.hitPlayer);
+  }
+  //Enemy
+  
+  ,hitSolid:function(e)
+  { 
+    Crafty('PlayerCharacter').updateMisses(1);//misseda shot lol
+    this.destroy();
+  }
+  ,hitEnemy:function(data)
+  { 
+    //deal damage to the enemy, might not kill it    
+    data[0].obj.updateHealth(-1 * this.damage);
+    
+   //destroy bullet every time
+    
+    this.destroy();
+  } 
+  
+  
+  ,hitPlayer:function(e)
+  {
+    //console.log('hitPlayer'); 
+  } 
+  
+  
+  //start the bullets movement. run after you create with Crafty.e
+  ,fired: function(dir) 
+  {
+      this.bind("EnterFrame", function() 
+      {
+          this.move(dir, config.ARROW_SPEED);
+          if(this.x > Crafty.viewport.width || this.x < 0) 
+              this.destroy();
+      });
+      return this;
+  }
+});
+ 
+//  custom shortcut for a grid object drawn on our 2D canvas. thatis: Actor == '2d, Canvas, Grid ' 
+Crafty.c('Actor', 
+{
+  label:'',
+  
+  init: function() 
+  {
+    this.requires('2D, Canvas, Grid, Mouse');
+    this.textShowing = false;
+    this.label = this._entityName;
+    this.text = null;
+    this.bind('MouseOver', function() 
+    {  
+    return;//DISABLED 
+      //if text is already showing, dont double show.
+      if(this.textShowing) {return;}
+      
+      
+      var text = Crafty.e("2D, DOM, Text").attr({ x: this.x, y: this.y }).text('this.label');
+     // console.log(this.label);
+      this.textShowing = true;
+      setTimeout(function()
+      { 
+        text.destroy();
+        this.textShowing = false;
+      },1000);
+    });
+    
+  }
+});
+
+ 
+
+
+
+//an Object is a solid actor with a color (used for trees,rocks,etc)
+Crafty.c('Object', 
+{
+  init: function() 
+  {
+    this.requires('Actor, Color, Solid');
+  }
+});
+
+// This is the player-controlled character, it is an actor with a bunch of extra stuff
+Crafty.c('PlayerCharacter', 
+{
+  health:1,//avoid zero just in case
+  coins:0,
+  ammo:0,
+  kills:0,
+  misses:0,
+  init: function() 
+  {
+      
+    this.requires('Actor, Fourway, Color, Collision')
+      .fourway(config.PLAYER_SPEED)
+      .color(config.PLAYER_COLOUR) 
+      .onHit('Coin',this.collectCoin)
+      .onHit('Fire',this.collectFire)
+      .onHit('Dragon',this.fightDragon)
+      .onHit('Fairy',this.fightFairy)
+      .onHit('Zombie',this.fightZombie)
+      ;
+    this.attr({
+      w: Game.map_grid.tile.width-4,//override grid dfeaults
+      h: Game.map_grid.tile.height-4
+    });
+    
+    this.bind('KeyDown', function(e) 
+    {
+      if(e.key == Crafty.keys.SPACE)
+      {
+        
+        this.shoot();
+      }
+    });
+    
+    this.health = config.PLAYER_HEALTH;
+    
+    this.onHit('Solid', this.stopMovement);
+    //set initial values
+    this.updateHealth(0);//add zero just to refresh display
+    this.updateCoins(config.PLAYER_COINS);
+    this.updateAmmo(config.PLAYER_AMMO);
+    this.updateKills(config.PLAYER_KILLS);
+    this.updateMisses(config.PLAYER_MISSES);
+    
+    
+    //update kills and misses TODO
+    
+  }
+  ,shoot:function()
+  {
+    if(this.ammo <= 0) { return; }//dont shoot if empty
+    
+    
+    
+    //origin is top left, so up and left are negative
+    
+    var movingUp = (this._movement.y < 0 );//can both be false
+    var movingDown = (this._movement.y > 0 );
+    
+    var movingLeft = (this._movement.x < 0 );
+    var movingRight = (this._movement.x > 0 );
+     
+    var  dir = '';
+    
+    //valid directions are (n,s,e,w,ne,nw,se,sw)
+    
+    //first decide if N or W
+    if(movingUp) dir = 'n';
+    if(movingDown) dir = 's';
+    
+    //either dir is empty;  or it is n/s, so it gets added to the end
+    dir += (movingLeft) ? 'w' : '';
+    dir += (movingRight) ? 'e' : '';
+    
+    //we will never add both 'w' and 'e', add at most one of them or neither
+    
+    
+    //if player is stationary, dir will still be emtpy string at this point
+    if(dir == '') {return; }
+    
+    
+  //create it, then fire it in given direction
+    Crafty.e("Arrow").attr({x: this.x, y: this.y , w: config.ARROW_SIZE, h: config.ARROW_SIZE, z:50}).fired(dir);
+  
+    this.updateAmmo(-1);//reduce ammo by one since this shot was successful
+  }
+
+  
+  ,fightZombie:function(data)
+  {
+    this.updateHealth(-1 * config.ZOMBIE_DAMAGE);
+    data[0].obj.collect();// Zombie.collect
+  }
+  
+  ,fightFairy:function(data)
+  {
+    this.updateHealth(config.FAIRY_HEAL);//instant death
+    data[0].obj.collect(); // Fairy.collect
+  }
+  
+  ,fightDragon:function(data)
+  {
+    this.updateHealth(-1*config.DRAGON_DAMAGE);//instant death
+    data[0].obj.collect(); // Dragon.collect
+  }
+  
+  
+  ,collectFire:function(data)
+  {
+    this.updateHealth(-1*config.FIRE_DAMAGE);
+    data[0].obj.collect(); // Fire.collect
+  }
+  
+ ,collectCoin:function(data)
+  {
+    this.updateCoins(1);
+    data[0].obj.collect(); // Coin.collect
+  }
+  //update health by increment and the display as well
+  ,updateHealth:function (inc)
+  {
+    this.health += inc;
+    document.getElementById('_display_health').innerHTML = this.health;
+    
+    
+    Crafty.trigger('UpdateHUD');
+  }
+  //update  by increment and the display as well
+  ,updateCoins:function (inc)
+  {
+    this.coins += inc;
+    document.getElementById('_display_coins').innerHTML = this.coins;
+    
+    Crafty.trigger('UpdateHUD');
+  }
+  
+  ,updateAmmo:function (inc)
+  {
+    this.ammo += inc;
+    document.getElementById('_display_ammo').innerHTML = this.ammo;
+    
+    Crafty.trigger('UpdateHUD');
+  }
+  
+  ,updateKills:function(inc)
+  {
+  
+    this.kills+= inc;
+      document.getElementById('_display_kills').innerHTML = this.kills;
+      Crafty.trigger('UpdateHUD');
+  }
+  ,updateMisses:function(inc)
+  {
+    this.misses+= inc;
+    document.getElementById('_display_misses').innerHTML = this.misses;
+    
+    Crafty.trigger('UpdateHUD');
+  }
+  
+  ,killedEnemy:function(enemy)
+  {
+  // if (enemy.__c.Zombie == true) //then it was a zombie, else soem other guy
+  
+   // console.log('killedEnemy');
+    
+    this.updateKills(1);
+  }
+   
+  // Stops the movement
+  //underscore speed and movement are craftyjs variables
+  ,stopMovement: function(e) 
+  {
+  
+    if (this._movement) 
+    {
+      this.x -= this._movement.x;
+      if (this.hit('Solid') != false) 
+      {
+        this.x += this._movement.x;
+        this.y -= this._movement.y;
+        if (this.hit('Solid') != false) 
+        {
+          this.x -= this._movement.x;
+          this.y -= this._movement.y;
+        }
+      }
+    } 
+    else 
+    {
+      this._speed = 0;
+    }
+  }
+  
+});
+
+
+//all our objects 
+Crafty.c('Tree', 
+{
+  init: function() 
+  {
+    this.requires('Object');
+    this.color(config.TREE_COLOUR);
+  },
+});
+ 
+ 
+
+//all enemies must come from this. special type of actor
+//used by arrows (ammo) to distinguish betweens actors, objects, and enemies
+//all enemies have health
+Crafty.c('Enemy', 
+{
+  health:1,//minimum to start. customized in subclass
+  init: function() 
+  {
+    this.requires('Actor');    
+  }
+  
+  ,updateHealth:function(inc)
+  {
+    this.health += inc;
+    
+    if(this.health <= 0) 
+    {
+      this.destroy();
+       
+     Crafty('PlayerCharacter').killedEnemy(this);
+       
+    }
+     
+  } 
+});
+
+//a type of enemythat walks on the ground and avoids all things Solid 
+Crafty.c('Walking', 
+{
+  speed:0.1,
+  init: function() 
+  {
+    this.requires('Actor, Collision'); 
+    this.attr(
+    {  
+      w: config.GRID_SIZE, 
+      h: config.GRID_SIZE, 
+      dX: this.speed, 
+  		dY: 0
+    });
+    this.bind('EnterFrame', function () 
+    {
+    
+       //just move myself based on my speed
+    	this.x += this.dX;
+  		this.y += this.dY;
+     
+  	});
+    
+    this.onHit('Solid', this.turnCorner);
+    
+  }
+  
+  ,turnCorner:function(e)
+  {
+    var turn = (Math.random() < 0.5) ? -1 : 1;//randomly turn left or right
+    //to avoid looping
+    
+    if(this.dY == 0)//not going up or down
+    {
+
+      this.x -= this.dX; //first, back up from this step that put us inside the block
+      this.dY = turn * this.dX;//by same amt
+      this.dX = 0;
+ 
+    }
+    else if(this.dX == 0)//not going left or right
+    {
+      this.y -= this.dY; //first, back up from this step that put us inside the block
+      
+      this.dX = turn * this.dY;//convert that Y movement into X movement
+      this.dY = 0; //halt movement in Y direction
+ 
+    }
+    
+  }//end turncorner 
+});//end EnemyWalking
+
+
+
+Crafty.c('Flying',  // TODO: make fairy and dragon inherit this
+{ 
+  angle:0,
+  angle_direction:0, // +1 or -1 for CW or CCW
+  speed_rotation : 0.04,//how fast it turns corners
+  speed:0,
+  timer_movement:0, //count timer for the is_turning flag
+  timer_movement_max : 50 , //when timer hits this max, swap the is_turning flag
+  is_turning:false, //boolean to tell if turning in an arc, or going straight
+  speed:0.1,
+  init: function() 
+  {
+    this.requires('Actor');
+
+    this.attr(
+    {  
+      speed : this.speed,
+      w: config.GRID_SIZE, 
+      h: config.GRID_SIZE, 
+      z:11 , //z-index
+    	dX: 0, 
+  		dY: 0
+    });
+     
+    //enterframe: this makes it move with our deltas (dX, dY)
+  	this.bind('EnterFrame', function () 
+    {
+      //first , decide if we are hitting the wall
+      
+       if (this.y <= 0 || this.y >= Game.height() || this.x <= 0 || this.x >= Game.width() ) 
+       {
+         //if so pull a full 180
+         this.angle += Math.PI; 
+       }
+      
+      
+      //then, decide if we will go straight, or turn. 
+      
+      if(this.timer_movement > this.timer_movement_max)  
+      { 
+        // switch between straight and turning
+        
+        this.is_turning = !this.is_turning;
+        //this is where we randomize if we are turning CW or CCW for this 'timer' segment
+        this.angle_direction = (Math.random() < 0.5) ? 1 : -1;
+        
+        //reset timer
+        this.timer_movement = 0;
+          
+      }
+      //else keep doing what we are doing (straight or corner)
+      
+      if(this.is_turning)
+      {
+        //if we are turning, then change the angle. 
+          
+        this.angle += this.angle_direction * this.speed_rotation;
+      }
+      //otherwise angle stays the same
+      
+      
+      this._move();
+     
+      //TODO: move event (dragon spit fire, etc)
+    
+  	})
+     
+  },
+  
+  _move:function()
+  { 
+    
+     //keep it within 360 , mock modular arithmatic
+     if(this.angle > 2*Math.PI) this.angle  -= 2*Math.PI;
+    //angular movement
+  	
+    
+    //trig used for both straight and turning
+    //if we are going straight, then the angle just doesnt change every time
+    
+    this.x +=  Math.sin(this.angle) * this.speed;
+		this.y +=  Math.cos(this.angle) * this.speed;
+    
+    
+    this.timer_movement ++;
+  }
+  
+});//end EnemyFlying
+
+Crafty.c('Zombie', 
+{
+  speed : config.ZOMBIE_SPEED,
+  health : config.ZOMBIE_HEALTH,
+  init: function() 
+  {
+    this.requires('Enemy, Walking, spr_zombie'); //removed Solid
+    
+    //replaced spr over colour
+   // this.color(config.ZOMBIE_COLOUR);
+ 
+  }//end zombie init
+ 
+  
+  ,collect: function() 
+  {
+    this.destroy();
+   
+    Crafty.trigger('PlayerTookDamage', this);//check for death. TODO name change from firecollect to healthchangeevent
+  }
+}); //end of Zombie definition
+
+
+Crafty.c('NPC', 
+{
+  init: function() 
+  {
+    this.requires('Actor,Walking, Color,Mouse');
+    this.color(config.NPC_COLOUR);
+    this.bind('MouseOver', function() 
+    {
+            
+      //this.color("yellow");
+            
+          
+      var text = Crafty.e("2D, DOM, Text").attr({ x: this.x, y: this.y }).text("Hello");
+      
+      setTimeout(function()
+      {
+      //  console.log('destroy');
+        text.destroy();
+      },1000);
+    });
+  },
+});
+
+
+Crafty.c('Dragon', 
+{  
+  init: function() 
+  {
+    this.requires('Enemy, Flying, Color');
+    this.color(config.DRAGON_COLOUR);
+ 
+    this.attr(
+    {  
+      speed : config.DRAGON_SPEED 
+    });
+      /* 
+      if(Math.random() < config.DRAGON_FIRE_CHANCE)
+      {
+         //spit fire out 
+         Crafty.e('Fire').at(Math.floor(this.x/config.GRID_SIZE), Math.floor(this.y/config.GRID_SIZE));
+       
+      }
+    */
+  	
+     
+  },
+   
+  collect: function() 
+  {
+    this.destroy(); 
+    Crafty.trigger('PlayerTookDamage', this);  
+  }
+});//end Dragon
+
+
+
+//keep fairy as enemy just for bullets
+Crafty.c('Fairy', 
+{
+  init: function() 
+  {
+    this.requires('Enemy, Flying, Color');
+    this.color(config.FAIRY_COLOUR);
+    this.attr(
+    {  
+      speed:1
+    });
+     
+  },
+ 
+  collect: function() 
+  {
+    this.destroy();
+  }
+});// end Faeire
+
+
+
+//not an object since its not solid, its collectable
+Crafty.c('Coin', 
+{
+  init: function() 
+  {
+    this.requires('Actor,  spr_coin')
+      //.color(config.COIN_COLOUR) //'Color'
+      ;
+  },
+ 
+  collect: function() 
+  {
+    this.destroy();
+    Crafty.trigger('CoinCollect', this);
+  }
+});
+
+Crafty.c('Fire', 
+{
+  init: function() 
+  {
+    this.requires('Actor, spr_flame') ;//      .color(config.FIRE_COLOUR)
+  },
+ 
+  collect: function() 
+  {
+    this.destroy();
+    Crafty.trigger('PlayerTookDamage', this);  
+  }
+});
+
+
+
+ 
+Crafty.c('Rock', 
+{
+  init: function() 
+  {
+    this.requires('Actor, Solid, spr_rock'); //spr_sheet_stone Color, 
+    // this.color(config.ROCK_COLOUR);
+  },
+});
+
+
+ 
+////////////menu stuff
+Crafty.c('MenuLabel', 
+{
+  init: function() 
+  {
+    this.requires("2D, DOM, Text");
+     
+    this.css({"font": "9pt Arial", "color": "#F00", "text-align": "left"});
+    this.attr({ w:64, h:16 }); 
+
+  }
+});
+
+Crafty.c('MenuData', 
+{
+  init: function() 
+  {
+    this.requires("2D, DOM, Text");
+     
+    this.css({"font": "9pt Arial", "color": "#F00", "text-align": "left"});
+    this.attr({ w:64, h:16 }); 
+    
+  }
+});
+
+
+
+/********************* end of object definitions ***********************/
+
+Crafty.scene('Game', function() 
+{
+ 
+  // A 2D array to keep track of all occupied tiles
+  
+  this.occupied = new Array(Game.map_grid.width);
+  for (var i = 0; i < Game.map_grid.width; i++) 
+  {
+    this.occupied[i] = new Array(Game.map_grid.height);
+    for (var y = 0; y < Game.map_grid.height; y++) 
+    {
+      this.occupied[i][y] = false;
+    }
+  }
+
+  //Crafty.e actually returns a reference to that entity!
+  this.player = Crafty.e('PlayerCharacter').at(config.PLAYER_START_X, config.PLAYER_START_Y);
+  
+  this.occupied[this.player.at().x][this.player.at().y] = true;
+
+  Crafty.e('NPC').at(6, 6);
+   
+   //spawner function that is used later
+   this.spawn_random_zombie = function()
+   {
+      var tries=0, MAX_FAILS = 10;
+      
+      //try to make only one. but might be occupied
+      while(tries < MAX_FAILS)
+      {
+        tries++;
+      
+      
+        //try and make a random zombie
+        var randX = Crafty.math.randomInt(0,Game.map_grid.width-1);
+        var randY = Crafty.math.randomInt(0,Game.map_grid.height-1);
+        
+        if(this.occupied[randX][randY] == false)
+        { 
+           Crafty.e('Zombie').at(randX,randY);
+           return;//stop looping
+        }
+      }
+   };
+  
+ //remember to check for occupied squares
+  for (var x = 0; x < Game.map_grid.width; x++) 
+  {
+    for (var y = 0; y < Game.map_grid.height; y++) 
+    {
+        
+      var at_edge = x == 0 || x == Game.map_grid.width -1 || y == 0 || y == Game.map_grid.height -1;
+      
+      // Place a tree at every edge square on our grid of  tiles
+      if (at_edge && !this.occupied[x][y]) 
+      {
+       
+        // Place a tree entity at the current tile
+        Crafty.e('Tree').at( x , y );
+         this.occupied[x][y] = true;
+        
+      } 
+      
+      //TODO: neighbours http://jsfiddle.net/evFBq/
+      //else
+      if (Math.random() < config.ROCK_SPAWN_CHANCE && !this.occupied[x][y]) 
+      {
+       
+         Crafty.e('Rock').at( x, y);
+         this.occupied[x][y] = true;
+      }
+      // var max_coins = 5;
+      if (Math.random() < config.COIN_SPAWN_CHANCE) 
+      {
+//Crafty('Coin').length < max_coins &&
+        if ( !this.occupied[x][y]) 
+        {
+          Crafty.e('Coin').at(x, y);
+         this.occupied[x][y] = true;
+        }
+      } 
+
+      if (Math.random() < config.FIRE_SPAWN_CHANCE) 
+      { 
+        if ( !this.occupied[x][y]) 
+        {
+          Crafty.e('Fire').at(x, y);
+         this.occupied[x][y] = true;
+        }
+      } 
+  
+    }//end y for loop
+  }//end x for loop
+ 
+ //make initial mobs
+  var zombiesSpawned = 0;
+  
+  while(zombiesSpawned < config.ZOMBIE_START_COUNT)
+  {
+    this.spawn_random_zombie(); 
+    //even if the spawn failed, count anyway so we dont loop forever
+    zombiesSpawned++;
+  }
+
+
+  //fairys and dragons both fly, so do not occupy squares
+  this.dragon = Crafty.e('Dragon').at(25, 25);
+   
+  //dont start with default fairy
+  //Crafty.e('Fairy').at(50, 5);
+  
+  
+      //Create a menu/HUD at the bottom of the screen with a button
+  var menuBkg = Crafty.e("2D, DOM, Color");
+      menuBkg.color('rgb(0,0,0)');
+      menuBkg.attr({ w:Game.hud.width, h: Game.hud.height , x:0-20, y:Game.height() - Game.hud.height});
+  
+  var X_SPACING = 10;
+  var Y_SPACING = 1;
+  
+  var lblHealth = Crafty.e("MenuLabel");
+      lblHealth.text('Health'); 
+      lblHealth.attr({ x:menuBkg.x+X_SPACING, y:menuBkg.y+Y_SPACING });
+      
+   var hudHealth = Crafty.e("MenuData");
+      hudHealth.text('0'); 
+      hudHealth.attr({ x:menuBkg.x+8*X_SPACING, y:menuBkg.y+Y_SPACING }); 
+      
+   var lblAmmo = Crafty.e("MenuLabel");
+      lblAmmo.text('Ammo'); 
+      lblAmmo.attr({ x:menuBkg.x+12*X_SPACING, y:menuBkg.y+Y_SPACING });    
+  
+    var hudAmmo = Crafty.e("MenuData");
+      hudAmmo.text('0'); 
+      hudAmmo.attr({ x:menuBkg.x+20*X_SPACING, y:menuBkg.y+Y_SPACING }); 
+    
+    var lblCoins = Crafty.e("MenuLabel");
+      lblCoins.text('Coins'); 
+      lblCoins.attr({ x:menuBkg.x+28*X_SPACING, y:menuBkg.y+Y_SPACING });    
+  
+    var hudCoins = Crafty.e("MenuData");
+      hudCoins.text('0'); 
+      hudCoins.attr({ x:menuBkg.x+32*X_SPACING, y:menuBkg.y+Y_SPACING }); 
+ 
+      
+  this.bind('UpdateHUD', function() 
+  { 
+  //#TODO find a way to loop these?
+    hudHealth.text(Crafty('PlayerCharacter').health);
+    hudAmmo.text(Crafty('PlayerCharacter').ammo);
+    hudCoins.text(Crafty('PlayerCharacter').coins);
+  
+  });
+  
+  this._CoinCollect = this.bind('CoinCollect', function() 
+  {
+    if (!Crafty('Coin').length) 
+    { 
+     Crafty.scene('Victory');
+    }
+    else
+    {
+      
+      if(Math.random() < config.ZOMBIE_COIN_SPAWN_CHANCE)
+      {
+        this.spawn_random_zombie(); 
+      }  
+      
+      
+      var coins_current = Crafty('PlayerCharacter').coins;
+      
+      if(coins_current > 0 && coins_current % 5 == 0)
+      {
+        //console.log("%5 fairy event");
+        
+        Crafty.e('Fairy').at(50, 5);
+      }
+      
+    }
+  });
+  
+  this.show_failure = this.bind('PlayerTookDamage',function(e)
+  { 
+    if(Crafty('PlayerCharacter').health <= 0)
+    {
+      Crafty.scene('Death');
+    }
+  });
+   
+    
+}//end scene definition, first function
+, function() 
+{
+//unbind some functions
+  this.unbind('CoinCollect', this._CoinCollect);
+  
+}//second function passed to scene
+);//end Game scene
+  
+   
+   
+  
+  
+  //victory scene also takes two functions
+Crafty.scene('Victory', 
+function() 
+{
+  Crafty.e('2D, DOM, Text')
+    .attr({ x: 0, y: 0 })
+    .text('Victory!  Press ESC to play again.');
+ 
+  this.restart_game = this.bind('KeyDown', function(e) 
+  {
+    if(e.key == Crafty.keys['ESC'])  Crafty.scene('Game');
+  });
+}, 
+function() 
+{
+  this.unbind('KeyDown', this.restart_game);
+});  
+   
+   
+Crafty.scene('Death', 
+function() 
+{
+  Crafty.e('2D, DOM, Text')
+    .attr({ x: 0, y: 0 })
+    .text('Death! Your health has hit zero!  Press ESC to play again.');
+ 
+  this.restart_game = this.bind('KeyDown', function(e) 
+  {
+    if(e.key == Crafty.keys['ESC'])  Crafty.scene('Game');
+  });
+}, 
+function() 
+{
+  this.unbind('KeyDown', this.restart_game);
+});  
+   
+
+
+// Loading scene
+// -------------
+// Handles the loading of binary assets such as images and audio files
+Crafty.scene('Loading', function()
+{
+  // Draw some text for the player to see in case the file
+  //  takes a noticeable amount of time to load
+  Crafty.e('2D, DOM, Text')
+    .text('Loading...')
+    .attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
+    //.css($text_css)
+    ;
+ 
+ 
+	 //load all images
+	 var assets = [];
+	 assets.push('goldCoin1.png');
+	 assets.push('rock0.png');
+	 assets.push('flame.png');
+	 assets.push('rock_sheet.png');
+	 //audio files
+	 assets.push('coin-01.mp3');
+	 assets.push('magic-01.mp3');
+	 assets.push('gun_load.mp3');
+	 assets.push('gun_shoot.mp3');
+	 //assets.push('');
+	 //assets.push('');
+	  
+  Crafty.load(assets, function()
+  { 
+  	//after load action finishes, do this
+    Crafty.sprite(16, 'goldCoin16.png', {
+      spr_coin:    [0, 0]
+    });
+    Crafty.sprite(16, 'flame16.png', {
+      spr_flame:    [0, 0]
+    });
+    
+    
+    Crafty.sprite(16, 'skel16_front.png', {
+      spr_zombie:    [0, 0]
+    });
+    
+    
+    
+     Crafty.sprite(16, 'rock0.png', {
+      spr_rock:    [0, 0]
+    });
+    
+    Crafty.audio.add('coin-01','coin-01.mp3');
+    Crafty.audio.add('magic-01','magic-01.mp3');
+    Crafty.audio.add('gun_shoot','gun_shoot.mp3');
+    Crafty.audio.add('gun_load','gun_load.mp3');
+    //Crafty.audio.add('coin-01','coin-01.mp3');
+    
+    
+    // Now that our sprites are ready to draw, start the game
+    Crafty.scene('Game');
+  })
+});
+   
+   
+//finally we can start the game
+Game = 
+{
+  // Initialize and start our game
+  start: function() 
+  {
+    // Start crafty and set a background color so that we can see its working
+    
+    Crafty.init(Game.width(), Game.height() +   Game.hud.height);
+     
+    Crafty.background(config.BACKGROUND_COLOR);
+     Crafty.scene('Loading'); 
+  }
+  
+  ,
+  map_grid: 
+  {
+    //how many tiles each direction
+    width: config.GAME_WIDTH,
+    height: config.GAME_HEIGHT,
+    //size of each tile
+    tile: 
+    {
+      width: config.GRID_SIZE,
+      height: config.GRID_SIZE
+    }
+  },
+   
+  hud:
+  {
+    height: config.GRID_SIZE + 4,
+    width: config.GAME_WIDTH * config.GRID_SIZE
+  },
+  
+  width: function() 
+  {
+    return this.map_grid.width * this.map_grid.tile.width ;
+  },
+  height: function() 
+  {
+    return this.map_grid.height * this.map_grid.tile.height;
+  }
+}; //end of Game.
