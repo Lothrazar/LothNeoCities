@@ -1,47 +1,59 @@
 //based on tutorial at http://buildnewgames.com/introduction-to-crafty/
 // TODO: TRACK zombie kill on head-on-collision. or jsu bounche them back.
 
-//TODO: allow config to  be loaded via JSON
+function getRandomInt (min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+var EXT=
+{
+    IMG:'.png'
+    ,AUDIO:'.mp3'
+};
+var ASSETS =    
+{ 
+   //single images
+  IMG:
+  {
+      coin:'goldCoin'+EXT.IMG
+      ,rock:'rock0'+EXT.IMG
+      ,flame:'flame'+EXT.IMG
+      ,zombie:'zombie'+EXT.IMG
+  }
+  
+  //sprite sheets
+  ,SPRITE:
+  {
+      rocks:'rock_sprites'+EXT.IMG
+  }
+  
+  //audio files
+  ,AUDIO:
+  {
+      coin:'coin-01'+EXT.AUDIO
+      ,fairy:'magic-01' +EXT.AUDIO
+      ,shoot:'gun_shoot' +EXT.AUDIO
+      ,reload:'gun_load' +EXT.AUDIO
+   }
+       
+};
+   
+var SCENES =
+{
+  victory: 'Victory'  
+  ,game:'Game'
+  ,loading:'Loading'
+  ,death:'Death'
+   
+};
+
+//TODO: allow Parts of config to  be loaded via JSON
 var config = 
 {
-   ASSETS:   
-   {
-       EXT:
-       {
-            IMG:'png'
-            ,AUDIO:'mp3'
-       }
-       
-       //single images
-      ,IMG:
-      {
-          coin:'goldCoin'
-          ,rock:'rock0'
-          ,flame:'flame'
-          ,zombie:'zombie'
-      }
-      
-      //sprite sheets
-      ,SPRITE:
-      {
-          rocks:'rocks_sheet'
-          
-      }
-      
-      //audio files
-      ,AUDIO:
-      {
-          coin:'coin-01'
-          ,fairy:'magic-01'
-          ,shoot:'gun_shoot'
-          ,reload:'gun_load'
-      }
-       
-   } 
     
     //TODO: restrucutre these into sub objects
     
-  ,GRID_SIZE:16   //size of a tile
+  GRID_SIZE:16   //size of a tile
   //how many tiles wide and high are we
   ,GAME_WIDTH:64
   ,GAME_HEIGHT:32
@@ -742,7 +754,9 @@ Crafty.c('Rock',
 {
   init: function() 
   {
-    this.requires('Actor, Solid, spr_rock'); //spr_sheet_stone Color, 
+      
+      
+    this.requires('Actor, Solid, spr_rock'+getRandomInt(0,15)); //spr_sheet_stone Color, 
     // this.color(config.ROCK_COLOUR);
   },
 });
@@ -982,8 +996,7 @@ Crafty.scene('Game', function()
   
   
   //victory scene also takes two functions
-Crafty.scene('Victory', 
-function() 
+Crafty.scene('Victory', function() 
 {
   Crafty.e('2D, DOM, Text')
     .attr({ x: 0, y: 0 })
@@ -1000,8 +1013,7 @@ function()
 });  
    
    
-Crafty.scene('Death', 
-function() 
+Crafty.scene('Death', function() 
 {
   Crafty.e('2D, DOM, Text')
     .attr({ x: 0, y: 0 })
@@ -1022,7 +1034,7 @@ function()
 // Loading scene
 // -------------
 // Handles the loading of binary assets such as images and audio files
-Crafty.scene('Loading', function()
+Crafty.scene(SCENES.loading, function()
 {
   // Draw some text for the player to see in case the file
   //  takes a noticeable amount of time to load
@@ -1044,9 +1056,9 @@ Crafty.scene('Loading', function()
 	 assets.push('magic-01.mp3');
 	 assets.push('gun_load.mp3');
 	 assets.push('gun_shoot.mp3');
-	 //assets.push('');
-	 //assets.push('');
-	  
+	 
+	 assets.push(ASSETS.SPRITE.rocks );
+ 
   Crafty.load(assets, function()
   { 
   	//after load action finishes, do this
@@ -1058,15 +1070,37 @@ Crafty.scene('Loading', function()
     });
     
     
-    Crafty.sprite(16, 'zombie.png', {
-      spr_zombie:    [0, 0]
-    });
+    Crafty.sprite(16, 'zombie.png', 
+        {
+          spr_zombie:    [0, 0]
+        }
+    );
     
-    
-    
+     
      Crafty.sprite(16, 'rock0.png', {
       spr_rock:    [0, 0]
     });
+    
+     Crafty.sprite(16, ASSETS.SPRITE.rocks, 
+     { 
+          spr_rock0:    [0, 0] 
+         ,spr_rock1:    [0, 1] 
+         ,spr_rock2:    [0, 2] 
+         ,spr_rock3:    [0, 3] 
+         ,spr_rock4:    [1, 0] 
+         ,spr_rock5:    [1, 1] 
+         ,spr_rock6:    [1, 2] 
+         ,spr_rock7:    [1, 3] 
+         ,spr_rock8:    [2, 0] 
+         ,spr_rock9:    [2, 1] 
+         ,spr_rock10:   [2, 2] 
+         ,spr_rock11:   [2, 3] 
+         ,spr_rock12:   [3, 3] 
+         ,spr_rock13:   [3, 0] 
+         ,spr_rock14:   [3, 1] 
+         ,spr_rock15:   [3, 2] 
+         
+     } );
     
     Crafty.audio.add('coin-01','coin-01.mp3');
     Crafty.audio.add('magic-01','magic-01.mp3');
@@ -1076,7 +1110,7 @@ Crafty.scene('Loading', function()
     
     
     // Now that our sprites are ready to draw, start the game
-    Crafty.scene('Game');
+    Crafty.scene(SCENES.game);
   })
 });
    
@@ -1092,7 +1126,7 @@ Game =
     Crafty.init(Game.width(), Game.height() +   Game.hud.height);
      
     Crafty.background(config.BACKGROUND_COLOR);
-     Crafty.scene('Loading'); 
+     Crafty.scene(SCENES.loading); 
   }
   
   ,
