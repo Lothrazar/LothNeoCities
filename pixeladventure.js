@@ -873,56 +873,38 @@ Crafty.scene(SCENES.game, function()
  
   // A 2D array to keep track of all occupied tiles
   
-  this.occupied = new Array(Game.map_grid.width);
+   var map = new Array(Game.map_grid.width);
   for (var i = 0; i < Game.map_grid.width; i++) 
   {
-    this.occupied[i] = new Array(Game.map_grid.height);
+    map[i] = new Array(Game.map_grid.height);
     for (var y = 0; y < Game.map_grid.height; y++) 
     {
-      this.occupied[i][y] = false;
+      map[i][y] = false;
     }
   }
-
-  var map =  this.occupied;
+ 
   //Crafty.e actually returns a reference to that entity!
- this.player = Crafty.e(Player.id).at(Player.start_x, Player.start_x); 
- // this.occupied[this.player.at().x][this.player.at().y] = true;
+  this.player = Crafty.e(Player.id).at(Player.start_x, Player.start_x); 
+ 
+  this.dragon = Crafty.e(Dragon.id).at(25, 25);
   
-  
- //Crafty.e('Stairway').at( 20 , 20 );
- //this.occupied[20][20] = true;
-
-  //Crafty.e('NPC').at(6, 6);
-   
-   //spawner function that is used later
-   this.spawn_random_zombie = function()
-   {
-      var tries=0, MAX_FAILS = 10;
-      
-      //try to make only one. but might be occupied
-      while(tries < MAX_FAILS)
-      {
-        tries++;
-      
-      
-        //try and make a random zombie
-        var randX = Crafty.math.randomInt(0,Game.map_grid.width-1);
-        var randY = Crafty.math.randomInt(0,Game.map_grid.height-1);
-        
-        if(this.occupied[randX][randY] == false)
-        { 
-           Crafty.e(Zombie.id).at(randX,randY);
-           return;//stop looping
-        }
-      }
-   };
-  
-  //lay out where objects will be made
-  //map[Player.start_x][Player.start_y] = Player.id;
+  //lay out where objects will be made 
   //for now keep border
-  for (var x = 0; x < Game.map_grid.width; x++)   {map[x][0] = Tree.id;map[x][Game.map_grid.height-1] = Tree.id;}
-  for (var y = 0; x < Game.map_grid.height; y++)  {map[0][y] = Tree.id;map[Game.map_grid.width-1][y] = Tree.id;}
+  for (var x = 0; x < Game.map_grid.width; x++)   
+  {
+      map[x][0] = Tree.id;
+      
+      map[x][Game.map_grid.max_y] = Tree.id;
+  }
+  for (var y = 0; y < Game.map_grid.height; y++)  
+  {
+      map[0][y] = Tree.id;
+      map[Game.map_grid.max_x][y] = Tree.id;
+  }
   
+  console.log(Game.map_grid.max_x +' x ' + Game.map_grid.max_y);
+  
+  console.log()
   map[1][4] = Rock.id;
   map[2][4] = Rock.id;
   map[3][4] = Rock.id;
@@ -938,92 +920,35 @@ Crafty.scene(SCENES.game, function()
   map[5][12] = Fire.id;
   map[6][16] = Fire.id;
   map[9][20] = Fire.id;
-  
-  
+   
   map[1][12] = Coin.id;
   map[3][6] = Coin.id;
   map[8][8] = Coin.id;
   map[17][10] = Coin.id;
   map[25][12] = Coin.id;
   map[16][16] = Coin.id;
-  map[19][20] = Coin.id;
-  
+  map[19][20] = Coin.id; 
+   
   var random = false;
-  
- //remember to check for occupied squares
+  var o;
+//now build the pre-defined map
   for (var x = 0; x < Game.map_grid.width; x++) 
   {
     for (var y = 0; y < Game.map_grid.height; y++) 
-    {
-        
-        if(random == false)
+    { 
+        if(typeof map[x][y] != 'undefined' && map[x][y] != false)
         { 
-            if(typeof map[x][y] != 'undefined' && map[x][y] != false)
-            { 
-              Crafty.e(map[x][y]).at( x , y );
-            }
+          o = Crafty.e(map[x][y]).at( x , y );
+          
+        //  if(x==0)  Crafty.e("2D, DOM, Text").attr({ x: x*16, y: y*16 }).textFont({ size: '6px' }).text(y);
+          
+         // if(y==0)  Crafty.e("2D, DOM, Text").attr({ x: x*16, y: y*16 }).text(x).textFont({ size: '8px' });
         }
-        else
-        {
-            
-                         
-              var at_edge = x == 0 || x == Game.map_grid.width -1 || y == 0 || y == Game.map_grid.height -1;
-              
-              // Place a tree at every edge square on our grid of  tiles
-              if (at_edge && !this.occupied[x][y]) 
-              { 
-                 // Place a tree entity at the current tile
-                 Crafty.e(Tree.id).at( x , y );
-                 this.occupied[x][y] = true; 
-              } 
-              
-              //TODO: neighbours http://jsfiddle.net/evFBq/
-              //else
-              if (Math.random() < config.ROCK_SPAWN_CHANCE && !this.occupied[x][y]) 
-              { 
-                 Crafty.e(Rock.id).at( x, y);
-                 this.occupied[x][y] = true;
-              }
-              // var max_coins = 5;
-              if (Math.random() < config.COIN_SPAWN_CHANCE) 
-              {
-                //Crafty(Coin.id).length < max_coins &&
-                if ( !this.occupied[x][y]) 
-                {
-                  Crafty.e(Coin.id).at(x, y);
-                 this.occupied[x][y] = true;
-                }
-              } 
-        
-              if (Math.random() < config.FIRE_SPAWN_CHANCE) 
-              { 
-                if ( !this.occupied[x][y]) 
-                {
-                  Crafty.e(Fire.id).at(x, y);
-                 this.occupied[x][y] = true;
-                }
-              } 
-   
-        }  //end if random is true          
+      
     }//end y for loop
   }//end x for loop
- 
- //make initial mobs
-  var zombiesSpawned = 0;
   
-  if(random == false) while(zombiesSpawned < config.ZOMBIE_START_COUNT)
-  {
-    this.spawn_random_zombie(); 
-    //even if the spawn failed, count anyway so we dont loop forever
-    zombiesSpawned++;
-  }
-
-
-  //fairys and dragons both fly, so do not occupy squares
-  this.dragon = Crafty.e(Dragon.id).at(25, 25);
-  
-  
-      //Create a menu/HUD at the bottom of the screen with a button
+  //Create a menu/HUD at the bottom of the screen with a button
   var menuBkg = Crafty.e("2D, DOM, Color");
       menuBkg.color('rgb(0,0,0)');
       menuBkg.attr({ w:Game.hud.width, h: Game.hud.height , x:0-20, y:Game.height() - Game.hud.height});
@@ -1054,8 +979,7 @@ Crafty.scene(SCENES.game, function()
     var hudCoins = Crafty.e("MenuData");
       hudCoins.text('0'); 
       hudCoins.attr({ x:menuBkg.x+32*X_SPACING, y:menuBkg.y+Y_SPACING }); 
- 
-      
+  
   this.bind('UpdateHUD', function() 
   {  
   //#TODO find a way to loop these?
@@ -1064,6 +988,7 @@ Crafty.scene(SCENES.game, function()
     hudCoins.text(Crafty(Player.id).coins);
   
   });
+
   
   this._CoinCollect = this.bind('CoinCollect', function() 
   {
@@ -1072,23 +997,18 @@ Crafty.scene(SCENES.game, function()
      Crafty.scene(SCENES.victory);
     }
     else
-    {
-      
+    { 
       if(Math.random() < config.ZOMBIE_COIN_SPAWN_CHANCE)
       {
-        this.spawn_random_zombie(); 
+         Crafty.e(Zombie.id).at(50,10);
       }  
-      
-      
+       
       var coins_current = Crafty(Player.id).coins;
       
       if(coins_current > 0 && coins_current % 5 == 0)
-      {
-        //console.log("%5 fairy event");
-        
+      { 
         Crafty.e(Fairy.id).at(50, 5);
-      }
-      
+      } 
     }
   });
   
@@ -1174,7 +1094,7 @@ Crafty.scene(SCENES.loading, function()
 	 assets.push(AUDIO.coin);
 	 assets.push(AUDIO.shoot);
      assets.push(AUDIO.fire);
-     //TODO: these lower 3 unused
+ 
      assets.push(AUDIO.leaves);
 	 assets.push(AUDIO.reload);
      assets.push(AUDIO.fairy);
@@ -1257,6 +1177,14 @@ Game =
     width: config.GAME_WIDTH,
     height: config.GAME_HEIGHT,
     //size of each tile
+    
+    min_y:0,
+    min_x:0,
+    
+    max_x:config.GAME_WIDTH-1,
+    max_y:config.GAME_HEIGHT-1,
+    
+    
     tile: 
     {
       width: config.GRID_SIZE,
