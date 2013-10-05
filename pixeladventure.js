@@ -232,6 +232,7 @@ Crafty.scene(SCENES.loading, function()
 	 assets.push(IMG.coin); 
 	 assets.push(IMG.flame);
      assets.push(IMG.zombie);
+     assets.push(IMG.dungeon_sheet);
 	 //audio files
 	 assets.push(AUDIO.coin);
 	 assets.push(AUDIO.shoot);
@@ -240,6 +241,7 @@ Crafty.scene(SCENES.loading, function()
      assets.push(AUDIO.leaves);
 	 assets.push(AUDIO.reload);
      assets.push(AUDIO.fairy);
+	 
 	 
 	 assets.push(IMG.rocks );
  
@@ -283,13 +285,28 @@ Crafty.scene(SCENES.loading, function()
          ,spr_rock15:   [3, 2] 
          
      } );
-    
-    //dont load here. wait for on demand
-  //  Crafty.audio.add('coin-01','coin-01.mp3');
-   // Crafty.audio.add('magic-01','magic-01.mp3');
-  //  Crafty.audio.add('gun_shoot','gun_shoot.mp3');
-   // Crafty.audio.add('gun_load','gun_load.mp3');
-    //Crafty.audio.add('coin-01','coin-01.mp3');
+     
+      
+    Crafty.sprite(16, IMG.dungeon_sheet, 
+     { 
+          spr_wall_black:    [0, 2] 
+         ,spr_wall_blue:    [0, 1] 
+         ,spr_wall_green:    [0, 3] 
+         ,spr_rock3:    [0, 4] /*
+         ,spr_rock4:    [1, 0] 
+         ,spr_rock5:    [1, 1] 
+         ,spr_rock6:    [1, 2] 
+         ,spr_rock7:    [1, 3] 
+         ,spr_rock8:    [2, 0] 
+         ,spr_rock9:    [2, 1] 
+         ,spr_rock10:   [2, 2] 
+         ,spr_rock11:   [2, 3] 
+         ,spr_rock12:   [3, 3] 
+         ,spr_rock13:   [3, 0] 
+         ,spr_rock14:   [3, 1] 
+         ,spr_rock15:   [3, 2] */
+         
+     } );
     
     
     // Now that our sprites are ready to draw, start the game

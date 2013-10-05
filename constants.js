@@ -35,6 +35,7 @@ var IMG=
   ,flame:'flame'+EXT.IMG
   ,zombie:'zombie'+EXT.IMG
   ,rocks:'rock_sprites'+EXT.IMG
+  ,dungeon_sheet:'dungeon16'+EXT.IMG
 };
 
   //audio files
