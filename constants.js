@@ -149,7 +149,7 @@ var config =
   ,ARROW_DAMAGE:1
   ,ARROW_SIZE:3
   
-  ,BACKGROUND_COLOR:'rgb(173, 255, 164)'
+  ,BACKGROUND_COLOR:'rgb(0, 0, 0)'
   
   
   ,NPC_COLOUR:'rgb(221, 168, 160)'
@@ -241,7 +241,7 @@ var config =
   ,ARROW_DAMAGE:1
   ,ARROW_SIZE:3
   
-  ,BACKGROUND_COLOR:'rgb(173, 255, 164)'
+  ,BACKGROUND_COLOR:'rgb(0, 0, 0)'
   
   
   ,NPC_COLOUR:'rgb(221, 168, 160)'
