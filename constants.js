@@ -202,6 +202,7 @@ var Coin = {id:'Coin'};
 var Rock = {id:'Rock'};
 var Fire = {id:'Fire'};
 var Wall = {id:'Wall'};
+var Water = {id:'Water'};
 
 
 //TODO: allow Parts of config to  be loaded via JSON

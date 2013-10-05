@@ -56,7 +56,7 @@ Crafty.c(Tree.id,
   },
 });
  
- Crafty.c('Wall', 
+Crafty.c(Wall.id, 
 {
   init: function() 
   {
@@ -64,3 +64,14 @@ Crafty.c(Tree.id,
   },
 });
 
+Crafty.c(Water.id, 
+{
+  init: function() 
+  {
+    this.requires('Actor,  spr_water'); 
+  },
+});
+
+
+
+//
