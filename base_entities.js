@@ -124,19 +124,6 @@ Crafty.c('Actor',
 });
 
 
- 
-
-//all our objects 
-Crafty.c(Tree.id, 
-{
-  init: function() 
-  {
-    this.requires('Actor, Color, Solid');
-    this.color(config.TREE_COLOUR);
-  },
-});
- 
- 
 
 //all enemies must come from this. special type of actor
 //used by arrows (ammo) to distinguish betweens actors, objects, and enemies

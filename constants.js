@@ -201,6 +201,7 @@ var Tree = {id:'Tree'};
 var Coin = {id:'Coin'};
 var Rock = {id:'Rock'};
 var Fire = {id:'Fire'};
+var Wall = {id:'Wall'};
 
 
 //TODO: allow Parts of config to  be loaded via JSON

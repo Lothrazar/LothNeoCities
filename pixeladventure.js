@@ -28,14 +28,14 @@ Crafty.scene(SCENES.game, function()
   //for now keep border
   for (var x = 0; x < Game.map_grid.width; x++)   
   {
-      map[x][0] = Tree.id;
+      map[x][0] = Wall.id;
       
-      map[x][Game.map_grid.max_y] = Tree.id;
+      map[x][Game.map_grid.max_y] = Wall.id;
   }
   for (var y = 0; y < Game.map_grid.height; y++)  
   {
-      map[0][y] = Tree.id;
-      map[Game.map_grid.max_x][y] = Tree.id;
+      map[0][y] = Wall.id;
+      map[Game.map_grid.max_x][y] = Wall.id;
   }
   
   console.log(Game.map_grid.max_x +' x ' + Game.map_grid.max_y);
@@ -64,6 +64,7 @@ Crafty.scene(SCENES.game, function()
   map[25][12] = Coin.id;
   map[16][16] = Coin.id;
   map[19][20] = Coin.id; 
+  map[19][21] = Tree.id; 
    
   var random = false;
   var o;
@@ -289,9 +290,9 @@ Crafty.scene(SCENES.loading, function()
       
     Crafty.sprite(16, IMG.dungeon_sheet, 
      { 
-          spr_wall_black:    [0, 2] 
-         ,spr_wall_blue:    [0, 1] 
-         ,spr_wall_green:    [0, 3] 
+          spr_wall_black:    [2, 0] 
+         ,spr_wall_blue:     [3, 0] 
+         ,spr_wall_green:    [4, 0] 
          ,spr_rock3:    [0, 4] /*
          ,spr_rock4:    [1, 0] 
          ,spr_rock5:    [1, 1] 

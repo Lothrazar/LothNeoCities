@@ -22,6 +22,25 @@ Crafty.c(Zombie.id,
 }); //end of Zombie definition
 
 
+//keep fairy as enemy just for bullets
+Crafty.c(Fairy.id, 
+{
+  init: function() 
+  {
+    this.requires('Enemy, Flying, Color');
+    this.color(Fairy.colour);
+    this.attr(
+    {  
+      speed:1
+    });
+     
+  },
+ 
+  collect: function() 
+  {
+    this.destroy();
+  }
+});// end Faeire
 
 
 Crafty.c(Dragon.id, 

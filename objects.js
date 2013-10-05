@@ -1,22 +1,3 @@
-//keep fairy as enemy just for bullets
-Crafty.c(Fairy.id, 
-{
-  init: function() 
-  {
-    this.requires('Enemy, Flying, Color');
-    this.color(Fairy.colour);
-    this.attr(
-    {  
-      speed:1
-    });
-     
-  },
- 
-  collect: function() 
-  {
-    this.destroy();
-  }
-});// end Faeire
 
 //not an object since its not solid, its collectable
 Crafty.c(Coin.id, 
@@ -60,6 +41,26 @@ Crafty.c(Rock.id,
       
     this.requires('Actor, Solid, spr_rock'+getRandomInt(0,15)); //spr_sheet_stone Color, 
     // this.color(config.ROCK_COLOUR);
+  },
+});
+
+
+
+  
+Crafty.c(Tree.id, 
+{
+  init: function() 
+  {
+    this.requires('Actor, Color, Solid');
+    this.color(config.TREE_COLOUR);
+  },
+});
+ 
+ Crafty.c('Wall', 
+{
+  init: function() 
+  {
+    this.requires('Actor, Solid, spr_wall_black'); 
   },
 });
 
