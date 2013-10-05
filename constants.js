@@ -168,8 +168,8 @@ var Zombie =
 var Player =
 {
     id:'PlayerCharacter',
-    speed:1.5,
-    health:10,
+    speed:2.2,
+    health:1000,
     coins:0,
     ammo:5,
     colour:'rgb(85, 26, 139)',
@@ -203,6 +203,7 @@ var Rock = {id:'Rock'};
 var Fire = {id:'Fire'};
 var Wall = {id:'Wall'};
 var Water = {id:'Water'};
+var Shallow = {id:'Shallow'};
 
 
 //TODO: allow Parts of config to  be loaded via JSON

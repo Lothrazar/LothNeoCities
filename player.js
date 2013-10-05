@@ -5,6 +5,11 @@ Crafty.c(Player.id,
   ammo:0,
   kills:0,
   misses:0,
+  is_drowning:false,
+  speed_flat:Player.speed,
+  speed_current:Player.speed,
+  speed_shallow:Player.speed/3,
+  speed_water:Player.speed/6,
   init: function() 
   {
       
@@ -16,12 +21,16 @@ Crafty.c(Player.id,
       .onHit(Dragon.id,this.fightDragon)
       .onHit(Fairy.id,this.fightFairy)
       .onHit(Zombie.id,this.fightZombie)
-      .onHit(Water.id,this.enterWater,this.leaveWater)
+      .onHit(Shallow.id,this.enterWaterShallow,this.leaveWaterShallow)
+      .onHit(Water.id,this.enterWaterDeep,this.leaveWaterDeep)
       ;
     this.attr({
       w: Game.map_grid.tile.width-4,//override grid dfeaults
       h: Game.map_grid.tile.height-4
     });
+    
+    
+    this.bind('Moved',this.onMoved);
     
     this.z = 999;//prevent player rendering behind the water
     
@@ -37,8 +46,7 @@ Crafty.c(Player.id,
     this.health = Player.health;
     
     this.onHit('Solid', this.stopMovement);
-    //set initial values
-    this.updateHealth(0);//add zero just to refresh display
+ 
     this.updateCoins( Player.coins );
     this.updateAmmo(Player.ammo);
     this.updateKills(Player.stats.kills);
@@ -48,14 +56,46 @@ Crafty.c(Player.id,
     //update kills and misses TODO
     
   }
-  
-  ,enterWater:function()
+  // be careful
+  ,setSpeed:function(newspeed)
   { 
-      this.fourway(Player.speed-1);
+      if(newspeed <= 0 )  //dont do this
+      {
+          console.log('warning, speed zero or less');
+          return;
+      }
+      if(this.speed_current != newspeed)
+      { //if its already the same as current, do nothing
+        this.speed_current = newspeed;
+        this.fourway(newspeed); 
+      }
   }
-  ,leaveWater:function()
+  ,onMoved:function()
+  {
+      //this works
+      if(this.is_drowning)
+      { 
+        this.updateHealth( -1  );
+      }
+  
+  }
+  ,enterWaterDeep:function()
+  {   
+      this.is_drowning = true;
+      this.setSpeed(this.speed_water);
+  }
+  ,leaveWaterDeep:function()
   { 
-      this.fourway(Player.speed);
+      this.is_drowning = false; 
+      this.setSpeed(this.speed_flat);
+  }
+  ,enterWaterShallow:function()
+  { 
+      this.setSpeed(this.speed_shallow);
+  }
+  ,leaveWaterShallow:function()
+  {  
+      this.setSpeed(this.speed_flat);
   }
   
   ,shoot:function()
@@ -108,7 +148,7 @@ Crafty.c(Player.id,
     {
         AUDIO.PLAY(AUDIO.reload);
         
-    },200);
+    },180);
   }
 
   
@@ -157,10 +197,10 @@ Crafty.c(Player.id,
   }
   //update health by increment and the display as well
   ,updateHealth:function (inc)
-  {
-    this.health += inc;
+  { 
+      this.health += inc;
  
-    Crafty.trigger('UpdateHUD');
+      Crafty.trigger('UpdateHUD');
   }
   //update  by increment and the display as well
   ,updateCoins:function (inc)
