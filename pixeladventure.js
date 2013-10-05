@@ -140,14 +140,17 @@ Crafty.scene(SCENES.game, function()
     }
   });
   
-  this.show_failure = this.bind('PlayerTookDamage',function(e)
-  { 
-    if(Crafty(Player.id).health <= 0)
+      this.bind('PlayerTookDamage',function(e)
+      {
+          //TODO deprec
+      });
+      
+    this.show_failure = this.bind('Death',function(e)
     {
       Crafty.scene(SCENES.death);
-    }
-  });
+    });
    
+   //set initial hud
    Crafty.trigger('UpdateHUD');
     
 }//end scene definition, first function

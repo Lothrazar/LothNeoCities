@@ -15,9 +15,7 @@ Crafty.c(Zombie.id,
   
   ,collect: function() 
   {
-    this.destroy();
-   
-    Crafty.trigger('PlayerTookDamage', this);//check for death. TODO name change from firecollect to healthchangeevent
+    this.destroy(); 
   }
 }); //end of Zombie definition
 
@@ -68,8 +66,7 @@ Crafty.c(Dragon.id,
    
   collect: function() 
   {
-    this.destroy(); 
-    Crafty.trigger('PlayerTookDamage', this);  
+    this.destroy();   
   }
 });//end Dragon
 

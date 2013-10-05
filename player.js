@@ -201,6 +201,11 @@ Crafty.c(Player.id,
       this.health += inc;
  
       Crafty.trigger('UpdateHUD');
+      Crafty.trigger('PlayerTookDamage');
+      if(this.health <= 0)
+      { 
+         Crafty.trigger('Death');
+      }
   }
   //update  by increment and the display as well
   ,updateCoins:function (inc)

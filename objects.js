@@ -25,8 +25,7 @@ Crafty.c(Fire.id,
  
   collect: function() 
   {
-    this.destroy();
-    Crafty.trigger('PlayerTookDamage', this);  
+    this.destroy(); 
   }
 });
 
