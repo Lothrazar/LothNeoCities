@@ -72,18 +72,24 @@ Crafty.scene(SCENES.game, function()
   {
     for (var y = 0; y < Game.map_grid.height; y++) 
     { 
+            Crafty.e('Darkness').at(x,y);
         if(typeof map[x][y] != 'undefined' && map[x][y] != false)
         { 
           o = Crafty.e(map[x][y]).at( x , y );
-          
-        //  if(x==0)  Crafty.e("2D, DOM, Text").attr({ x: x*16, y: y*16 }).textFont({ size: '6px' }).text(y);
-          
-         // if(y==0)  Crafty.e("2D, DOM, Text").attr({ x: x*16, y: y*16 }).text(x).textFont({ size: '8px' });
+
+          o.attr({alpha:1});
+
+
+        }
+        else
+        {
+              
         }
       
     }//end y for loop
   }//end x for loop
   
+   
   //Create a menu/HUD at the bottom of the screen with a button
   var menuBkg = Crafty.e("2D, DOM, Color");
       menuBkg.color('rgb(0,0,0)');
@@ -127,7 +133,7 @@ Crafty.scene(SCENES.game, function()
 
   
   this._CoinCollect = this.bind('CoinCollect', function() 
-  {
+  { 
     if (!Crafty(Coin.id).length) 
     { 
      Crafty.scene(SCENES.victory);

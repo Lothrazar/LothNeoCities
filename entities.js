@@ -86,10 +86,11 @@ Crafty.c('Actor',
   
   init: function() 
   {
-    this.requires('2D, Canvas, Grid, Mouse');
+    this.requires('2D, Canvas, Grid');
     this.textShowing = false;
     this.label = this._entityName;
     this.text = null;
+    /*
     this.bind('MouseOver', function() 
     {  
     return;//DISABLED 
@@ -106,23 +107,24 @@ Crafty.c('Actor',
         this.textShowing = false;
       },1000);
     });
-    
+    */
   }
 });
 
- 
-
-
-
-//an Object is a solid actor with a color (used for trees,rocks,etc)
-Crafty.c('Object', 
+ Crafty.c('Darkness', 
 {
   init: function() 
   {
-    this.requires('Actor, Color, Solid');
-  }
+    this.requires('Actor, Color') ;//      .color(config.FIRE_COLOUR)
+    
+    this.color('rgb(0,0,0)');
+    
+    this.attr({alpha:0.8});
+  } 
 });
 
+
+ 
 // This is the player-controlled character, it is an actor with a bunch of extra stuff
 Crafty.c(Player.id, 
 {
@@ -349,7 +351,7 @@ Crafty.c(Tree.id,
 {
   init: function() 
   {
-    this.requires('Object');
+    this.requires('Actor, Color, Solid');
     this.color(config.TREE_COLOUR);
   },
 });
