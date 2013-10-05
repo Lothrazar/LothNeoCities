@@ -1,4 +1,3 @@
-
 //not an object since its not solid, its collectable
 Crafty.c(Coin.id, 
 {
@@ -16,6 +15,7 @@ Crafty.c(Coin.id,
   }
 });
 
+
 Crafty.c(Fire.id, 
 {
   init: function() 
@@ -30,8 +30,7 @@ Crafty.c(Fire.id,
   }
 });
 
-
-
+ 
  
 Crafty.c(Rock.id, 
 {
@@ -44,34 +43,4 @@ Crafty.c(Rock.id,
   },
 });
 
-
-
-  
-Crafty.c(Tree.id, 
-{
-  init: function() 
-  {
-    this.requires('Actor, Color, Solid');
-    this.color(config.TREE_COLOUR);
-  },
-});
  
-Crafty.c(Wall.id, 
-{
-  init: function() 
-  {
-    this.requires('Actor, Solid, spr_wall_black'); 
-  },
-});
-
-Crafty.c(Water.id, 
-{
-  init: function() 
-  {
-    this.requires('Actor,  spr_water'); 
-  },
-});
-
-
-
-//

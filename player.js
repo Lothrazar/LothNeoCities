@@ -16,12 +16,14 @@ Crafty.c(Player.id,
       .onHit(Dragon.id,this.fightDragon)
       .onHit(Fairy.id,this.fightFairy)
       .onHit(Zombie.id,this.fightZombie)
-      .onHit('Stairway',this.stairway)
+      .onHit(Water.id,this.enterWater,this.leaveWater)
       ;
     this.attr({
       w: Game.map_grid.tile.width-4,//override grid dfeaults
       h: Game.map_grid.tile.height-4
     });
+    
+    this.z = 999;//prevent player rendering behind the water
     
     this.bind('KeyDown', function(e) 
     {
@@ -46,6 +48,16 @@ Crafty.c(Player.id,
     //update kills and misses TODO
     
   }
+  
+  ,enterWater:function()
+  { 
+      this.fourway(Player.speed-1);
+  }
+  ,leaveWater:function()
+  { 
+      this.fourway(Player.speed);
+  }
+  
   ,shoot:function()
   {
     if(this.ammo <= 0) 
@@ -184,9 +196,7 @@ Crafty.c(Player.id,
   ,killedEnemy:function(enemy)
   {
   // if (enemy.__c.Zombie == true) //then it was a zombie, else soem other guy
-  
-   // console.log('killedEnemy');
-    
+   
     this.updateKills(1);
   }
    
