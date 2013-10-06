@@ -73,7 +73,7 @@ Crafty.scene(SCENES.game, function()
       
       }catch(e){console.log(e,x,y);}
   }
-  
+  Crafty.e(Loot.id).at(5,5);
    
   //Create a menu/HUD at the bottom of the screen with a button
   var menuBkg = Crafty.e("2D, DOM, Color");

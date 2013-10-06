@@ -27,57 +27,6 @@ Crafty.c('Grid',
 });
 
 
-Crafty.c('Arrow',
-{
-  damage:0,
-  init: function() 
-  {
-    this.damage = config.ARROW_DAMAGE;
-    this.requires('2D, Canvas, Color, Collision');
-    this.color('red');
-    //my size
-    this.attr({ w: 5, h: 2, z:50})
-    
-    this.onHit('Solid',this.hitSolid);
-    this.onHit('Enemy',this.hitEnemy);
-    this.onHit(Player.id,this.hitPlayer);
-  }
-  //Enemy
-  
-  ,hitSolid:function(e)
-  { 
-    Crafty(Player.id).updateMisses(1);//misseda shot lol
-    this.destroy();
-  }
-  ,hitEnemy:function(data)
-  { 
-    //deal damage to the enemy, might not kill it    
-    data[0].obj.updateHealth(-1 * this.damage);
-    
-   //destroy bullet every time
-    
-    this.destroy();
-  } 
-  
-  
-  ,hitPlayer:function(e)
-  {
-    //console.log('hitPlayer'); 
-  } 
-  
-  
-  //start the bullets movement. run after you create with Crafty.e
-  ,fired: function(dir) 
-  {
-      this.bind("EnterFrame", function() 
-      {
-          this.move(dir, config.ARROW_SPEED);
-          if(this.x > Crafty.viewport.width || this.x < 0) 
-              this.destroy();
-      });
-      return this;
-  }
-});
  
 //  custom shortcut for a grid object drawn on our 2D canvas. thatis: Actor == '2d, Canvas, Grid ' 
 Crafty.c('Actor', 

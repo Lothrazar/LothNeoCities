@@ -162,6 +162,7 @@ var Tree = {id:'Tree'};
 var Coin = {id:'Coin'};
 var Rock = {id:'Rock'};
 var Fire = {id:'Fire'};
+var Loot = {id:'Loot'};
 
 
 

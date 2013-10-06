@@ -118,6 +118,30 @@ Crafty.c('Gun',
 
 
 
+Crafty.c(Loot.id,
+{
+   init:function()
+   {
+        this.requires('Actor,  spr_wall_yellow');//TODO: texture temporary
+       
+       
+   } 
+   ,content:null
+   ,pickup:function(holder)
+   {
+       console.log('pickup',holder);
+       
+       if(this.content)
+       { 
+           //todo: fill contents with gun, sword, etc
+            holder.addToInventory(this);
+       }
+       
+       this.destroy();
+       
+   }
+});
+
 Crafty.c('Arrow',
 {
   damage:0,
@@ -176,3 +200,5 @@ Crafty.c('Arrow',
       return this;
   }
 });
+
+

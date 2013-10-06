@@ -30,6 +30,7 @@ Crafty.c(Player.id,
       .onHit(Water.id,this.enterWaterDeep,this.leaveWaterDeep)
       .onHit(Lava.id,this.enterLava,this.leaveLava)
       .onHit(NPC.id,this.hitNPC)
+      .onHit(Loot.id,this.pickupLoot)
       ; 
     this.attr(
     {
@@ -112,7 +113,7 @@ Crafty.c(Player.id,
           
           break;
           case Crafty.keys.CTRL:
-          
+             this.checkInventory();
           break;
           case Crafty.keys.ALT:
           
@@ -136,6 +137,15 @@ Crafty.c(Player.id,
     
     //update kills and misses TODO
     
+  }
+  ,checkInventory:function()
+  {
+      console.log(this.inventory);
+  }
+  ,addToInventory:function(item)
+  {
+      console.log('add',item);
+      this.inventory.push(item);
   }
   ,teleportTo:function(_x,_y)
   { 
@@ -199,6 +209,11 @@ Crafty.c(Player.id,
     
     npc.speak("Hello you");
     
+}
+,pickupLoot:function(data)
+{
+    var loot = data[0].obj;
+    loot.pickup(this);//picked up by me the player
 }
   
   ,fightZombie:function(data)
