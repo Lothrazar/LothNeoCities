@@ -38,6 +38,8 @@ Crafty.c(Player.id,
     });
     
     
+   
+    
     this.bind('Moved',this.onMoved);
     
     this.z = 999;//prevent player rendering behind the water

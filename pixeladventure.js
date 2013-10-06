@@ -51,8 +51,8 @@ Crafty.scene(SCENES.game, function()
    ];
  
     
-    
- 
+    //this.x-config.GRID_SIZE,this.y
+  Crafty.e('Sword').at(2,2);
   var o,id;
   
   for (var x = 0; x < Game.map_grid.width; x++)   for (var y = 0; y < Game.map_grid.height; y++) 
@@ -222,7 +222,7 @@ Crafty.scene(SCENES.loading, function()
 	 assets.push(IMG.flame);
      assets.push(IMG.zombie);
      assets.push(IMG.dungeon_sheet);
-     assets.push('opensource16_1.png');
+     assets.push(IMG.opensheet_1);
 	 //audio files
 	 assets.push(AUDIO.coin);
 	 assets.push(AUDIO.shoot);
@@ -233,6 +233,7 @@ Crafty.scene(SCENES.loading, function()
      assets.push(AUDIO.fairy);
 	 
 	 assets.push(IMG.rocks );
+	 assets.push(IMG.sword_1);
  
   Crafty.load(assets, function()
   { 
@@ -296,10 +297,16 @@ Crafty.scene(SCENES.loading, function()
          ,spr_waterdk:      [29, 0] 
          
      } );
+     Crafty.sprite(SHEET_RES, IMG.sword_1,//'opensource16_1.png'
+     {
+          sword_1 : [0,0]  
+         //go to 16  
+        
+     });
      
      var open_count = 8; 
-     
-     Crafty.sprite(SHEET_RES,'opensource16_1.png',
+    
+     Crafty.sprite(SHEET_RES,IMG.opensheet_1,//'opensource16_1.png'
      {
           spr_tree_11 : [0,0] 
          ,spr_tree_2 : [1,0]   
