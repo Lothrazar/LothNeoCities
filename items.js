@@ -25,7 +25,7 @@ Crafty.c('Sword',
            //it has a holder
            if(this.holder)
            {
-               console.log('weapon set its own via holder');
+              // console.log('weapon set its own via holder');
                this.x=this.holder.x;
                this.y=this.holder.y;
                
@@ -37,7 +37,7 @@ Crafty.c('Sword',
    } 
    ,slice:function()
    {
-       console.log("slice");
+     //  console.log("slice");
        this.slicing=true;
        this.start=10;
        this.end=70;
@@ -99,8 +99,9 @@ Crafty.c('Gun',
         
     
     }
+   // console.log('shoot',this.holder.x,this.holder.y,dir);
   //create it, then fire it in given direction
-    Crafty.e("Arrow").attr({x: this.x, y: this.y , w: config.ARROW_SIZE, h: config.ARROW_SIZE, z:50}).fired(dir);
+    Crafty.e("Arrow").attr({x: this.holder.x, y: this.holder.y , w: config.ARROW_SIZE, h: config.ARROW_SIZE, z:50}).fired(dir);
   
     this.holder.updateAmmo(-1);//reduce ammo by one since this shot was successful
  
@@ -112,5 +113,66 @@ Crafty.c('Gun',
         AUDIO.PLAY(AUDIO.reload);
         
     },180);
+  }
+});
+
+
+
+Crafty.c('Arrow',
+{
+  damage:0,
+  init: function() 
+  {
+    this.damage = config.ARROW_DAMAGE;
+    this.requires('2D, Canvas, Color, Collision');
+    this.color('red');
+    //my size
+    this.attr({ w: 5, h: 2, z:50})
+    
+    this.onHit('Solid',this.hitSolid);
+    this.onHit('Enemy',this.hitEnemy);
+    this.onHit(Player.id,this.hitPlayer);
+  }
+  //Enemy
+  
+  ,hitSolid:function(e)
+  { 
+    Crafty(Player.id).updateMisses(1);//misseda shot lol
+    this.destroy();
+  }
+  ,hitEnemy:function(data)
+  { 
+    //deal damage to the enemy, might not kill it    
+    data[0].obj.updateHealth(-1 * this.damage);
+    
+   //destroy bullet every time
+    
+    this.destroy();
+  } 
+  
+  
+  ,hitPlayer:function(e)
+  {
+    //console.log('hitPlayer'); 
+  } 
+  
+  
+  //start the bullets movement. run after you create with Crafty.e
+  ,fired: function(dir) 
+  {
+
+      if(dir == 'se'){this.x+10;this.y+=10;}//TODO: hmm workaround so it doesnt get stuck in my ?foot?
+      
+      this.bind("EnterFrame", function() 
+      {
+          
+          this.move(dir, config.ARROW_SPEED);
+          if(this.x > Crafty.viewport.width || this.x < 0) 
+          {
+              console.log('Arrow.destroy');
+              this.destroy();
+          }
+      });
+      return this;
   }
 });
