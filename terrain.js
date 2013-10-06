@@ -1,6 +1,6 @@
 
 
-  
+  /*
 Crafty.c(Tree.id, 
 {
   init: function() 
@@ -9,7 +9,16 @@ Crafty.c(Tree.id,
     this.color(config.TREE_COLOUR);
   },
 });
- 
+ */
+  
+Crafty.c(Tree.id, 
+{
+  init: function() 
+  {
+    this.requires('Actor, Solid, spr_tree_1');
+    this.color(config.TREE_COLOUR);
+  },
+});
 Crafty.c(Wall.id, 
 {
   init: function() 

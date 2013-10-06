@@ -125,8 +125,8 @@ var config =
   ,GAME_WIDTH:64
   ,GAME_HEIGHT:32
  
-  ,ZOMBIE_COIN_SPAWN_CHANCE:0.9 //chance to spawn zombie when a coin is grabbed
-  ,ZOMBIE_START_COUNT:5 //how many zombies start on the field right away (was zero)
+ // ,ZOMBIE_COIN_SPAWN_CHANCE:0.9 //chance to spawn zombie when a coin is grabbed
+ // ,ZOMBIE_START_COUNT:5 //how many zombies start on the field right away (was zero)
  
   
   ,DRAGON_FIRE_CHANCE:0.04 // 1% chance of it breathing fire. if math.random less than this
@@ -134,18 +134,18 @@ var config =
    
   ,FAIRY_COINS_NEEDED:5 // every this many coins, make new fairy
   
-  ,FIRE_DAMAGE:1
-  ,FIRE_COLOUR:'rgb(255, 0, 0)'
+  ,FIRE_DAMAGE:30
+  //,FIRE_COLOUR:'rgb(255, 0, 0)'
   ,FIRE_SPAWN_CHANCE:0.01
   
   
   ,TREE_COLOUR:'rgb(20, 125, 40)'
   
    
-  ,ROCK_SPAWN_CHANCE:0.04
+  //,ROCK_SPAWN_CHANCE:0.04
   
-  ,COIN_SPAWN_CHANCE:0.015
-  ,COIN_COLOUR:'rgb(255, 215, 0)'
+  //,COIN_SPAWN_CHANCE:0.015
+ // ,COIN_COLOUR:'rgb(255, 215, 0)'
   
   ,ARROW_SPEED:10
   ,ARROW_DAMAGE:1
@@ -163,7 +163,7 @@ var Zombie =
    id:"Zombie",
    speed:0.9,
    attack:3,
-   health:1,
+   health:50,
    colour:'rgb(0, 255, 0)' ,// legacy :: overwritten by sprites 
 };
 
@@ -199,14 +199,14 @@ var Fairy =
     colour:'rgb(255, 105, 180)'
 };
 
-var Tree = {id:'Tree'}; 
+var Tree = {id:'Tree'}; //TODO color or sprite
 var Coin = {id:'Coin'};
 var Rock = {id:'Rock'};
 var Fire = {id:'Fire'};
 var Wall = {id:'Wall'};
 var Water = {id:'Water'};
-var Shallow = {id:'Shallow'};
-var Lava = {id:'Lava'};
+var Shallow = {id:'Shallow'}; 
+var Lava = {id:'Lava'}; 
 
 
 //TODO: allow Parts of config to  be loaded via JSON

@@ -3,9 +3,10 @@ Crafty.c(Zombie.id,
 {
   speed :  Zombie.speed,
   health : Zombie.health,
+  attack : Zombie.attack, 
   init: function() 
   {
-    this.requires('Enemy, Walking, spr_zombie'); //removed Solid
+    this.requires('Solid, Enemy, Walking, spr_zombie'); //removed Solid
     
     //replaced spr over colour
    // this.color(config.ZOMBIE_COLOUR);

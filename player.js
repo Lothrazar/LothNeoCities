@@ -159,8 +159,9 @@ Crafty.c(Player.id,
   
   ,fightZombie:function(data)
   {
-    this.updateHealth(-1 * Zombie.attack);
-    data[0].obj.collect();// Zombie.collect
+      var zombie = data[0].obj;
+    this.updateHealth(-1 * zombie.attack);
+   // zombie.collect();//  This destroys the zombie in one hit.  Zombie.collect
   }
   
   ,stairway:function(data)

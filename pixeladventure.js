@@ -236,25 +236,26 @@ Crafty.scene(SCENES.loading, function()
  
   Crafty.load(assets, function()
   { 
+     var SHEET_RES = 16;
   	//after load action finishes, do this
-    Crafty.sprite(16, IMG.coin, 
+    Crafty.sprite(SHEET_RES, IMG.coin, 
     {
       'spr_coin':    [0, 0]
     });
-    Crafty.sprite(16, IMG.flame, 
+    Crafty.sprite(SHEET_RES, IMG.flame, 
     {
       'spr_flame':    [0, 0]
     });
     
     
-    Crafty.sprite(16, IMG.zombie, 
+    Crafty.sprite(SHEET_RES, IMG.zombie, 
     {
           'spr_zombie':    [0, 0]
     });
     
     
     
-     Crafty.sprite(16, IMG.rocks, 
+     Crafty.sprite(SHEET_RES, IMG.rocks, 
      { 
           spr_rock0:    [0, 0] 
          ,spr_rock1:    [0, 1] 
@@ -276,7 +277,7 @@ Crafty.scene(SCENES.loading, function()
      } );
      
       
-    Crafty.sprite(16, IMG.dungeon_sheet, 
+    Crafty.sprite(SHEET_RES, IMG.dungeon_sheet, 
      { 
           spr_wall_black:    [2, 0] 
          ,spr_wall_blue:     [3, 0] 
@@ -295,6 +296,18 @@ Crafty.scene(SCENES.loading, function()
          ,spr_waterdk:      [29, 0] 
          
      } );
+     
+     var open_count = 8; 
+     
+     Crafty.sprite(SHEET_RES,'opensource16_1.png',
+     {
+          spr_tree_1 : [0,0] 
+         ,spr_tree_2 : [1,0]   
+         ,spr_tree_3 : [2,0]   
+         ,spr_tree_4 : [3,0] 
+         //go to 16  
+        
+     });
     
     
     // Now that our sprites are ready to draw, start the game
