@@ -18,6 +18,7 @@ Crafty.c(Player.id,
   inventory:[],
   init: function() 
   { 
+      
     this.requires('Actor, Fourway, Color, Collision, Solid')
       .fourway(Player.speed)
       .color(Player.colour) 
@@ -51,16 +52,25 @@ Crafty.c(Player.id,
       {
           
           case Crafty.keys.E: 
-              this.shoot(null);
+              //this.shoot(null);
           break;
-          case Crafty.keys.Q: 
-
+          case Crafty.keys.Q:
           break;
-          case Crafty.keys.F:  
-          
+          case Crafty.keys.F:   
+          console.log('sword', this.x  ,this.y );
+                this.weapon =  Crafty.e('Sword').at( this.x/config.GRID_SIZE  ,this.y/config.GRID_SIZE );
+                
+                this.weapon.holder=this;//tell the sword hey, i am holding you. move with me
+               
+          console.log(this.weapon);
+                
+                this.weapon.slice();
+                
+               
+          console.log('this.weapon.slice');
           break;
           case Crafty.keys.TAB:  
-          
+            
           break;
           case Crafty.keys.Add:
           
@@ -117,7 +127,7 @@ Crafty.c(Player.id,
     this.health = Player.health;
     
     this.onHit('Solid', this.stopMovement);
- console.log('Player.ammo',Player.ammo);
+ 
     this.updateCoins( Player.coins );
     this.updateAmmo(Player.ammo);
     this.updateKills(Player.stats.kills);
@@ -373,6 +383,15 @@ Crafty.c(Player.id,
       {
           
         this.updateHealth( -5  );
+      }
+      
+      if(this.weapon)
+      {
+            //whenever I move, also move my weapon as well
+            //relative position is fixed
+         // this.weapon.x = this.x;
+          //this.weapon.y = this.y;
+          
       }
   }
 });
