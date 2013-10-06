@@ -43,17 +43,22 @@ var IMG=
   //audio files
 var AUDIO =
 { 
+    DEFAULT_VOLUME:0.5,
     //pass in id and length of your sound file
    //workaround since either craftyjs or HTML5 support in chrome sucks for audio, doesnt restart the file after playing it once
    PLAY:function(id,vol)
    {
-       if(!vol ) vol = 1;//volume
+       if(!vol  || vol >= 1 || vol < 0 ) vol = AUDIO.DEFAULT_VOLUME;//volume
+  
+       
   
        //add it all ove again d
        Crafty.audio.add(id,id + EXT.AUDIO);
  
        //Crafty.audio.stop(id); //this Should work, just stop and replay. but nooOoOOOOoo.. gottta reDoNnLOOoooOAAD
-       Crafty.audio.play(id,1,vol); 
+       var repeats = 1;
+       
+       Crafty.audio.play(id,repeats,vol); 
    }
  
   ,coin: 'coin-01'   
@@ -82,7 +87,7 @@ var Player =
     speed:1.5,
     health:10,
     coins:0,
-    ammo:5,
+    ammo:50,
     colour:'rgb(85, 26, 139)',
     start_x:1,
     start_y:1,
@@ -92,7 +97,7 @@ var Player =
         kills:0,
     } 
 };
-
+console.log('constants Player.ammo',Player.ammo);
 var Dragon = 
 {
     id:"Dragon",
@@ -207,6 +212,7 @@ var Wall = {id:'Wall'};
 var Water = {id:'Water'};
 var Shallow = {id:'Shallow'}; 
 var Lava = {id:'Lava'}; 
+var NPC = {id:'NPC'}; 
 
 
 //TODO: allow Parts of config to  be loaded via JSON

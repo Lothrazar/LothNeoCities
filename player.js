@@ -12,9 +12,13 @@ Crafty.c(Player.id,
   speed_current:Player.speed,
   speed_shallow:Player.speed/3,
   speed_water:Player.speed/6,
+  
+  weapon:null,
+  
+  inventory:[],
   init: function() 
   { 
-    this.requires('Actor, Fourway, Color, Collision')
+    this.requires('Actor, Fourway, Color, Collision, Solid')
       .fourway(Player.speed)
       .color(Player.colour) 
       .onHit(Coin.id,this.collectCoin)
@@ -25,6 +29,7 @@ Crafty.c(Player.id,
       .onHit(Shallow.id,this.enterWaterShallow,this.leaveWaterShallow)
       .onHit(Water.id,this.enterWaterDeep,this.leaveWaterDeep)
       .onHit(Lava.id,this.enterLava,this.leaveLava)
+      .onHit(NPC.id,this.hitNPC)
       ;
     this.attr(
     {
@@ -39,17 +44,57 @@ Crafty.c(Player.id,
     
     this.bind('KeyDown', function(e) 
     {
-      if(e.key == Crafty.keys.SPACE)
+       
+      switch(e.key )
       {
-        
-        this.shoot();
+          
+          case Crafty.keys.SPACE: 
+              this.shoot(null);
+          break;
+          case Crafty.keys.NUMPAD_0:
+            
+          break;
+          case Crafty.keys.NUMPAD_1:
+            this.shoot('sw');
+          break;
+          case Crafty.keys.NUMPAD_2:
+            this.shoot('s'); 
+          break;
+          case Crafty.keys.NUMPAD_3:
+            this.shoot('se'); 
+          break;
+          case Crafty.keys.NUMPAD_4:
+            this.shoot('w'); 
+          break;
+          case Crafty.keys.NUMPAD_5:
+             
+          break;
+          case Crafty.keys.NUMPAD_6:
+            this.shoot('e'); 
+          break;
+          case Crafty.keys.NUMPAD_7:
+            this.shoot('nw'); 
+          break;
+          case Crafty.keys.NUMPAD_8:
+            this.shoot('n'); 
+          break;
+          case Crafty.keys.NUMPAD_9:
+            this.shoot('ne'); 
+          break;
+          case Crafty.keys.SHIFT:
+            this.teleportTo(10,10);
+          break;
+          
+          
+          
+          
       }
     });
     
     this.health = Player.health;
     
     this.onHit('Solid', this.stopMovement);
- 
+ console.log('Player.ammo',Player.ammo);
     this.updateCoins( Player.coins );
     this.updateAmmo(Player.ammo);
     this.updateKills(Player.stats.kills);
@@ -58,6 +103,11 @@ Crafty.c(Player.id,
     
     //update kills and misses TODO
     
+  }
+  ,teleportTo:function(x,y)
+  {
+      
+      
   }
   // be careful
   ,setSpeed:function(newspeed)
@@ -103,11 +153,11 @@ Crafty.c(Player.id,
       
   }
   
-  ,shoot:function()
+  ,shoot:function(dir)
   {
     if(this.ammo <= 0) 
     { 
-         AUDIO.PLAY(AUDIO.reload);//TODO: give this a unique sound
+         AUDIO.PLAY(AUDIO.reload);////left at default volume
         return; 
         
      }//dont shoot if empty
@@ -122,25 +172,29 @@ Crafty.c(Player.id,
     var movingLeft = (this._movement.x < 0 );
     var movingRight = (this._movement.x > 0 );
      
-    var  dir = '';
+    if(dir===null)
+    {
+        //default direction to movement
+        
     
-    //valid directions are (n,s,e,w,ne,nw,se,sw)
+        //valid directions are (n,s,e,w,ne,nw,se,sw)
+        
+        //first decide if N or W
+        if(movingUp) dir = 'n';
+        if(movingDown) dir = 's';
+        
+        //either dir is empty;  or it is n/s, so it gets added to the end
+        dir += (movingLeft) ? 'w' : '';
+        dir += (movingRight) ? 'e' : '';
+        
+        //we will never add both 'w' and 'e', add at most one of them or neither
+        
+        
+        //if player is stationary, dir will still be emtpy string at this point
+        if(dir == '') {return; }
+        
     
-    //first decide if N or W
-    if(movingUp) dir = 'n';
-    if(movingDown) dir = 's';
-    
-    //either dir is empty;  or it is n/s, so it gets added to the end
-    dir += (movingLeft) ? 'w' : '';
-    dir += (movingRight) ? 'e' : '';
-    
-    //we will never add both 'w' and 'e', add at most one of them or neither
-    
-    
-    //if player is stationary, dir will still be emtpy string at this point
-    if(dir == '') {return; }
-    
-    
+    }
   //create it, then fire it in given direction
     Crafty.e("Arrow").attr({x: this.x, y: this.y , w: config.ARROW_SIZE, h: config.ARROW_SIZE, z:50}).fired(dir);
   
@@ -156,6 +210,13 @@ Crafty.c(Player.id,
     },180);
   }
 
+,hitNPC:function(data)
+{
+    var npc = data[0].obj;
+    
+    npc.speak("Hello you");
+    
+}
   
   ,fightZombie:function(data)
   {

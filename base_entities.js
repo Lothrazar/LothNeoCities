@@ -301,43 +301,88 @@ Crafty.c('Flying',  // TODO: make fairy and dragon inherit this
   
 });//end EnemyFlying
 
-Crafty.c('NPC', 
+
+Crafty.c('Speak',
 {
-  init: function() 
+     init: function() 
   {
     this.requires('Actor,Walking, Color,Mouse');
     this.color(config.NPC_COLOUR);
-    this.bind('MouseOver', function() 
-    {
-            
-      //this.color("yellow");
-            
-          
-      var text = Crafty.e("2D, DOM, Text").attr({ x: this.x, y: this.y }).text("Hello");
+   }
+   
+    ,speak : function(msg,timeout) 
+    { 
+        if(!msg) msg="empty";
+        if(timeout<=0) timeout=1000;
+        
+      var text = Crafty.e("2D, DOM, Text").attr({ x: this.x, y: this.y }).text(msg);
       
       setTimeout(function()
       { 
         text.destroy();
-      },1000);
+      },timeout);
+    }
+    
+    
+  
+});
+
+Crafty.c("EntityMouseOver",
+{
+    
+  init: function() 
+  {
+    this.bind('MouseOver', function() 
+    {
+            this.mouseover();
     });
+  }
+  
+ , mouseover:function(){}
+});
+
+Crafty.c('NPC', 
+{
+  init: function() 
+  {
+    this.requires('Actor, Walking, Color, Speak, Solid');
+    this.color(config.NPC_COLOUR);
+ 
   },
 });
 
-Crafty.c('Stairway', 
+Crafty.c('Teleport', 
 {
   init: function() 
   {
     this.requires('Actor, Solid, Color');
     this.color('rgb(139,119,101)');
      
-  },
-    collect: function() 
-  {
-    console.log('stairway todo');
   }
+ //TODO; when player walks on this, TP them somewhere else
+  
 });
 
 
+
+Crafty.c('SceneChanger', 
+{
+    
+    //when player walks on this, change to new scene
+  init: function() 
+  {
+    this.requires('Actor, Solid, Color');
+    this.color('rgb(139,119,101)');
+     
+  }
+  ,to_scene:function()
+  {
+      //TODO: how to really do this
+      return this.my_scene;
+  }
+  
+  
+});
 
 
 
