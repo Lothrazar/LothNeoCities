@@ -6,13 +6,14 @@ Crafty.c(Player.id,
   kills:0,
   misses:0,
   is_drowning:false,
+  is_burning_lava:false,
+  is_burning_fire:false,
   speed_flat:Player.speed,
   speed_current:Player.speed,
   speed_shallow:Player.speed/3,
   speed_water:Player.speed/6,
   init: function() 
-  {
-      
+  { 
     this.requires('Actor, Fourway, Color, Collision')
       .fourway(Player.speed)
       .color(Player.colour) 
@@ -23,8 +24,10 @@ Crafty.c(Player.id,
       .onHit(Zombie.id,this.fightZombie)
       .onHit(Shallow.id,this.enterWaterShallow,this.leaveWaterShallow)
       .onHit(Water.id,this.enterWaterDeep,this.leaveWaterDeep)
+      .onHit(Lava.id,this.enterLava,this.leaveLava)
       ;
-    this.attr({
+    this.attr(
+    {
       w: Game.map_grid.tile.width-4,//override grid dfeaults
       h: Game.map_grid.tile.height-4
     });
@@ -70,15 +73,7 @@ Crafty.c(Player.id,
         this.fourway(newspeed); 
       }
   }
-  ,onMoved:function()
-  {
-      //this works
-      if(this.is_drowning)
-      { 
-        this.updateHealth( -1  );
-      }
-  
-  }
+ 
   ,enterWaterDeep:function()
   {   
       this.is_drowning = true;
@@ -96,6 +91,16 @@ Crafty.c(Player.id,
   ,leaveWaterShallow:function()
   {  
       this.setSpeed(this.speed_flat);
+  }
+  
+  ,enterLava:function()
+  {
+      this.is_burning_lava = true;
+  }
+  ,leaveLava:function()
+  {
+      this.is_burning_lava = false;
+      
   }
   
   ,shoot:function()
@@ -270,4 +275,17 @@ Crafty.c(Player.id,
     }
   }
   
+   ,onMoved:function()
+  {
+      //this works
+      if(this.is_drowning)
+      { 
+        this.updateHealth( -1  );
+      }
+      if(this.is_burning_lava)
+      {
+          
+        this.updateHealth( -5  );
+      }
+  }
 });

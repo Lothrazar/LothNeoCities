@@ -14,7 +14,7 @@ Crafty.c(Wall.id,
 {
   init: function() 
   {
-    this.requires('Actor, Solid, spr_wall_black'); 
+    this.requires('Actor, Solid, spr_wall_greydk'); 
   },
 });
 
@@ -34,5 +34,16 @@ Crafty.c(Shallow.id,
   init: function() 
   {
     this.requires('Actor,  spr_waterdk'); 
+    this.attr({z:-1});
   },
 });
+
+Crafty.c(Lava.id, 
+{
+  init: function() 
+  {
+    this.requires('Actor,  spr_lava'); 
+    this.attr({z:-1});
+  },
+});
+ 

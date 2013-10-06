@@ -4,6 +4,8 @@
 function getRandomInt (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+function coinflip(){ return Math.floor( Math.random() * 2 ) ===1; }
+   
    
 var SCENES =
 {
@@ -204,6 +206,7 @@ var Fire = {id:'Fire'};
 var Wall = {id:'Wall'};
 var Water = {id:'Water'};
 var Shallow = {id:'Shallow'};
+var Lava = {id:'Lava'};
 
 
 //TODO: allow Parts of config to  be loaded via JSON

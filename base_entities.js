@@ -158,24 +158,35 @@ Crafty.c('Walking',
   init: function() 
   {
     this.requires('Actor, Collision'); 
+    //randomize initial direction of up/down, left/right
+    var UD=0, LR=0;
+    if(coinflip()) 
+    {
+      //move vertically   , so pick up or down at random
+       if(coinflip()) UD = -1* this.speed; else  UD = this.speed; 
+    }
+    else
+    {
+        //move horiz
+       if(coinflip()) LR = -1* this.speed; else  LR = this.speed;
+    }
+    //it will never happen with both zero now
+
     this.attr(
     {  
       w: config.GRID_SIZE, 
       h: config.GRID_SIZE, 
-      dX: this.speed, 
-        dY: 0
+      dX: LR, 
+      dY: UD
     });
     this.bind('EnterFrame', function () 
-    {
-    
+    { 
        //just move myself based on my speed
         this.x += this.dX;
-        this.y += this.dY;
-     
+        this.y += this.dY; 
     });
     
-    this.onHit('Solid', this.turnCorner);
-    
+    this.onHit('Solid', this.turnCorner); 
   }
   
   ,turnCorner:function(e)
@@ -184,22 +195,18 @@ Crafty.c('Walking',
     //to avoid looping
     
     if(this.dY == 0)//not going up or down
-    {
-
-      this.x -= this.dX; //first, back up from this step that put us inside the block
-      this.dY = turn * this.dX;//by same amt
-      this.dX = 0;
- 
+    { 
+        this.x -= this.dX; //first, back up from this step that put us inside the block
+        this.dY = turn * this.dX;//by same amt
+        this.dX = 0; 
     }
     else if(this.dX == 0)//not going left or right
     {
-      this.y -= this.dY; //first, back up from this step that put us inside the block
+       this.y -= this.dY; //first, back up from this step that put us inside the block
       
-      this.dX = turn * this.dY;//convert that Y movement into X movement
-      this.dY = 0; //halt movement in Y direction
- 
-    }
-    
+        this.dX = turn * this.dY;//convert that Y movement into X movement
+        this.dY = 0; //halt movement in Y direction
+    } 
   }//end turncorner 
 });//end EnemyWalking
 
