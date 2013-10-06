@@ -56,6 +56,7 @@ var SCENES =
   ,game:'Game'
   ,loading:'Loading'
   ,death:'Death'
+  ,inv:"Inventory"
    
 };
 
@@ -175,22 +176,7 @@ var Zombie =
    colour:'rgb(0, 255, 0)' ,// legacy :: overwritten by sprites 
 };
 
-var Player =
-{
-    id:'PlayerCharacter',
-    speed:2.2,
-    health:1000,
-    coins:0,
-    ammo:5,
-    colour:'rgb(85, 26, 139)',
-    start_x:1,
-    start_y:1,
-    stats:
-    {
-        misses:0,
-        kills:0,
-    } 
-};
+
 
 var Dragon = 
 {

@@ -134,9 +134,12 @@ Crafty.c(Loot.id,
        if(this.content)
        { 
            //todo: fill contents with gun, sword, etc
-            holder.addToInventory(this);
+            holder.addToInventory(this.content);
        }
-       
+       else
+       {
+           console.log('pickup null Loot');
+       }
        this.destroy();
        
    }

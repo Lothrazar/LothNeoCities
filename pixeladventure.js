@@ -73,7 +73,7 @@ Crafty.scene(SCENES.game, function()
       
       }catch(e){console.log(e,x,y);}
   }
-  Crafty.e(Loot.id).at(5,5);
+  Crafty.e(Loot.id).at(5,5).content = {id:'Sword'};
    
   //Create a menu/HUD at the bottom of the screen with a button
   var menuBkg = Crafty.e("2D, DOM, Color");
@@ -182,7 +182,25 @@ function()
 {
   this.unbind('KeyDown', this.restart_game);
 });  
-   
+    
+  //victory scene also takes two functions
+Crafty.scene(SCENES.inv, function() 
+{
+  Crafty.e('2D, DOM, Text')
+    .attr({ x: 0, y: 0 })
+    .text('INVENTORY!  Press ESC to play again.');
+ 
+  this.restart_game = this.bind('KeyDown', function(e) 
+  {
+    if(e.key == Crafty.keys['ESC'])   Crafty.scene(SCENES.game);
+  });
+}, 
+function() 
+{
+    
+  this.unbind('KeyDown', this.restart_game);
+});  
+    
    
 Crafty.scene(SCENES.death, function() 
 {

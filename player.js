@@ -1,3 +1,21 @@
+var Player =
+{
+    // initial stats
+    id:'PlayerCharacter',
+    speed:1.5,
+    health:1000,
+    coins:0,
+    ammo:5,
+    colour:'rgb(85, 26, 139)',
+    start_x:1,
+    start_y:1,
+    stats:
+    {
+        misses:0,
+        kills:0,
+    } 
+};
+
 Crafty.c(Player.id, 
 {
   health:1,//avoid zero just in case
@@ -77,6 +95,7 @@ Crafty.c(Player.id,
           
           break;
           case Crafty.keys.NUMPAD_0:
+            Crafty.scene(SCENES.inv);
             
           break;
           case Crafty.keys.NUMPAD_1:
@@ -140,6 +159,7 @@ Crafty.c(Player.id,
   }
   ,checkInventory:function()
   {
+      //TODO : this
       console.log(this.inventory);
   }
   ,addToInventory:function(item)
