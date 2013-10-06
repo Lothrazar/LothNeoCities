@@ -30,7 +30,7 @@ Crafty.c(Player.id,
       .onHit(Water.id,this.enterWaterDeep,this.leaveWaterDeep)
       .onHit(Lava.id,this.enterLava,this.leaveLava)
       .onHit(NPC.id,this.hitNPC)
-      ;
+      ; 
     this.attr(
     {
       w: Game.map_grid.tile.width-4,//override grid dfeaults
@@ -48,8 +48,20 @@ Crafty.c(Player.id,
       switch(e.key )
       {
           
-          case Crafty.keys.SPACE: 
+          case Crafty.keys.E: 
               this.shoot(null);
+          break;
+          case Crafty.keys.Q: 
+
+          break;
+          case Crafty.keys.F:  
+          
+          break;
+          case Crafty.keys.TAB:  
+          
+          break;
+          case Crafty.keys.Add:
+          
           break;
           case Crafty.keys.NUMPAD_0:
             
@@ -84,7 +96,16 @@ Crafty.c(Player.id,
           case Crafty.keys.SHIFT:
             this.teleportTo(10,10);
           break;
+          case Crafty.keys.SPACE:
           
+          break;
+          case Crafty.keys.CTRL:
+          
+          break;
+          case Crafty.keys.ALT:
+          
+          break;
+         
           
           
           
@@ -104,9 +125,11 @@ Crafty.c(Player.id,
     //update kills and misses TODO
     
   }
-  ,teleportTo:function(x,y)
-  {
-      
+  ,teleportTo:function(_x,_y)
+  { 
+     this.x = _x * config.GRID_SIZE;
+     this.y = _y * config.GRID_SIZE;
+     
       
   }
   // be careful

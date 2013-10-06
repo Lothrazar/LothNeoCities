@@ -293,7 +293,7 @@ Crafty.c('Flying',  // TODO: make fairy and dragon inherit this
     //if we are going straight, then the angle just doesnt change every time
     
     this.x +=  Math.sin(this.angle) * this.speed;
-        this.y +=  Math.cos(this.angle) * this.speed;
+    this.y +=  Math.cos(this.angle) * this.speed;
     
     
     this.timer_movement ++;
