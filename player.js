@@ -95,7 +95,7 @@ Crafty.c(Player.id,
           
           break;
           case Crafty.keys.NUMPAD_0:
-            Crafty.scene(SCENES.inv);
+            //Crafty.scene(SCENES.inv);
             
           break;
           case Crafty.keys.NUMPAD_1:

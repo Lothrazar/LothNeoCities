@@ -158,6 +158,7 @@ Crafty.c('Arrow',
     
     this.onHit('Solid',this.hitSolid);
     this.onHit('Enemy',this.hitEnemy);
+    this.onHit('Zombie',this.hitEnemy);
     this.onHit(Player.id,this.hitPlayer);
   }
   //Enemy
@@ -169,6 +170,7 @@ Crafty.c('Arrow',
   }
   ,hitEnemy:function(data)
   { 
+      
     //deal damage to the enemy, might not kill it    
     data[0].obj.updateHealth(-1 * this.damage);
     

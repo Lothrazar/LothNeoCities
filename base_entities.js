@@ -87,8 +87,10 @@ Crafty.c('Enemy',
   
   ,updateHealth:function(inc)
   {
+    console.log('enemy updateHealth' );
+      
     this.health += inc;
-    
+    console.log('enemytookdamage',this.health);
     if(this.health <= 0) 
     {
       this.destroy();

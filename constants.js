@@ -56,7 +56,7 @@ var SCENES =
   ,game:'Game'
   ,loading:'Loading'
   ,death:'Death'
-  ,inv:"Inventory"
+ // ,inv:"Inventory"
    
 };
 

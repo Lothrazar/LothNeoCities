@@ -183,24 +183,7 @@ function()
   this.unbind('KeyDown', this.restart_game);
 });  
     
-  //victory scene also takes two functions
-Crafty.scene(SCENES.inv, function() 
-{
-  Crafty.e('2D, DOM, Text')
-    .attr({ x: 0, y: 0 })
-    .text('INVENTORY!  Press ESC to play again.');
  
-  this.restart_game = this.bind('KeyDown', function(e) 
-  {
-    if(e.key == Crafty.keys['ESC'])   Crafty.scene(SCENES.game);
-  });
-}, 
-function() 
-{
-    
-  this.unbind('KeyDown', this.restart_game);
-});  
-    
    
 Crafty.scene(SCENES.death, function() 
 {
@@ -326,10 +309,10 @@ Crafty.scene(SCENES.loading, function()
     
      Crafty.sprite(SHEET_RES,IMG.opensheet_1,//'opensource16_1.png'
      {
-          spr_tree_11 : [0,0] 
-         ,spr_tree_2 : [1,0]   
-         ,spr_tree_3 : [2,0]   
-         ,spr_tree_1 : [3,0] 
+          spr_tree_0 : [0,0] 
+         ,spr_tree_1 : [1,0]   
+         ,spr_tree_2 : [2,0]   
+         ,spr_tree_3 : [3,0] 
          //go to 16  
         
      });
