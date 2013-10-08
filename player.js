@@ -31,6 +31,7 @@ Crafty.c(Player.id,
   speed_shallow:Player.speed/3,
   speed_water:Player.speed/6,
   
+ //TODO consolidate data here
   weapon:null,
   gun:null,
   inventory:[],
@@ -59,6 +60,7 @@ Crafty.c(Player.id,
     
       this.gun = Crafty.e('Gun').at(this.x,this.y);
    this.gun.holder = this;//for updateammo reverse call
+    this.gun.name = "gun.name";
     
     this.bind('Moved',this.onMoved);
     
@@ -111,7 +113,7 @@ Crafty.c(Player.id,
             this.shoot('w'); 
           break;
           case Crafty.keys.NUMPAD_5:
-             
+             this.weapon_change(null);
           break;
           case Crafty.keys.NUMPAD_6:
             this.shoot('e'); 
@@ -220,8 +222,15 @@ Crafty.c(Player.id,
   
   ,shoot:function(dir)
   {
+      //todo: change to this.weapon
       this.gun.shoot(dir);
   }
+
+,weapon_change:function(w)
+{
+    console.log('weapon_change');
+    if(w) this.weapon = w;
+}
 
 ,hitNPC:function(data)
 {

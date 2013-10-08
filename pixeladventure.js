@@ -15,7 +15,7 @@ Crafty.scene(SCENES.game, function()
    
    var map = 
    [
-     [F,W,W,W,W,W,F,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 0
+     ['Tree1',W,W,W,W,W,F,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 0
     ,[W,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W] // 1  
     ,[W,0,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,W,W,W,W,W,W,W,W,W,Z,W,W,W,W,W,W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 2
     ,[W,W,W,W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,W,W,W,W,W,Z,W,W,W,W,W,W,W,W] // 3
@@ -107,13 +107,22 @@ Crafty.scene(SCENES.game, function()
     var hudCoins = Crafty.e("MenuData");
       hudCoins.text('0'); 
       hudCoins.attr({ x:menuBkg.x+32*X_SPACING, y:menuBkg.y+Y_SPACING }); 
+      
+    var lblWeapon= Crafty.e("MenuLabel");
+      lblWeapon.text('Gun'); 
+      lblWeapon.attr({ x:menuBkg.x+64*X_SPACING, y:menuBkg.y+Y_SPACING });   
   
   this.bind('UpdateHUD', function() 
   {  
   //#TODO find a way to loop these?
-    hudHealth.text(Crafty(Player.id).health);
-    hudAmmo.text(Crafty(Player.id).ammo);
-    hudCoins.text(Crafty(Player.id).coins);
+    var p = Crafty(Player.id);
+    
+    hudHealth.text(p.health);
+    hudAmmo.text(p.ammo);
+    hudCoins.text(p.coins);
+    
+    if(p.gun)
+        lblWeapon.text(p.gun.name);
   
   });
 
