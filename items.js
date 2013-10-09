@@ -128,8 +128,19 @@ Crafty.c(Loot.id,
    } 
    ,content:null
    ,pickup:function(holder)
-   {
-       console.log('pickup',holder);
+   { 
+       console.log('call new scene'); 
+        Game.args = {stairway:{x:5,y:5}};
+        /*
+         Game.args.stairway.x++;
+         Game.args.stairway.y++;
+         
+          Crafty.e(Loot.id).at(Game.args.stairway.x,Game.args.stairway.y);*/
+        console.log( Game.args,' Game.args');
+     Crafty.scene(SCENES.game);
+      
+      return;
+       
        
        if(this.content)
        { 

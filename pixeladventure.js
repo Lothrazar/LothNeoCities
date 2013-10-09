@@ -1,29 +1,20 @@
 
+ //todo constants
+ Maps = {};
  
-
-Crafty.scene(SCENES.game, function() 
-{
-  
-  //Crafty.e actually returns a reference to that entity!
-  this.player = Crafty.e(Player.id).at(Player.start_x, Player.start_x); 
- this.player.ammo=500;
- this.dragon = Crafty.e(Dragon.id).at(25, 25);
-  
-   
-   //shortcuts so my map looks like a grid
-   var R=Rock.id, W=Wall.id, C=Coin.id, F=Fire.id,Z=Zombie.id,T=Water.id,S=Shallow.id,L=Lava.id,F=Tree.id,N=NPC.id;
-   
-   var map = 
-   [
-     ['Tree1',W,W,W,W,W,F,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 0
-    ,[W,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W] // 1  
-    ,[W,0,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,W,W,W,W,W,W,W,W,W,Z,W,W,W,W,W,W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 2
-    ,[W,W,W,W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,W,W,W,W,W,Z,W,W,W,W,W,W,W,W] // 3
-    ,[W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 4
-    ,[W,Z,0,0,0,0,0,0,0,0,C,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,F,F,F,F,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 5
-    ,[W,W,W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,T,0,0,0,0,0,0,0,0,0,0,0,F,F,F,F,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,W] // 6
-    ,[W,0,0,0,0,F,0,0,0,0,0,0,0,0,0,0,0,0,0,S,T,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 7
-    ,[W,0,0,0,0,F,F,F,0,0,0,0,0,0,0,0,0,0,S,T,T,T,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,C,0,0,0,0,0,0,0,W] // 8
+ Maps.list = [];
+   var R=Rock.id, W=Wall.id, C=Coin.id, F=Fire.id,Z=Zombie.id,D=Water.id,S=Shallow.id,L=Lava.id,T=Tree.id,N=NPC.id;
+   //D for deep water, S for shallow.
+ var myFirstMap = [
+   ['Tree1',W,W,W,W,W,F,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 0
+    ,[W,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,D,D,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W] // 1  
+    ,[W,0,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,D,W,W,W,W,W,W,W,W,Z,W,W,W,W,W,W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 2
+    ,[W,W,W,W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,D,0,0,0,0,0,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,W,W,W,W,W,Z,W,W,W,W,W,W,W,W] // 3
+    ,[W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 4
+    ,[W,Z,0,0,0,0,0,0,0,0,C,0,0,0,0,0,0,0,0,D,0,0,0,0,0,0,0,0,0,0,0,0,F,F,F,F,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 5
+    ,[W,W,W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,D,D,0,0,0,0,0,0,0,0,0,0,0,F,F,F,F,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,W] // 6
+    ,[W,0,0,0,0,T,T,0,0,0,0,0,0,0,0,0,0,0,0,S,D,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 7
+    ,[W,0,0,0,0,T,T,F,0,0,0,0,0,0,0,0,0,0,S,D,D,T,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,C,0,0,0,0,0,0,0,W] // 8
     ,[W,0,0,0,0,0,0,0,T,0,0,0,0,0,0,0,0,0,S,T,T,T,T,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 9
     ,[W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,T,S,S,0,T,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 10
     ,[W,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 11
@@ -47,34 +38,174 @@ Crafty.scene(SCENES.game, function()
     ,[W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,C,0,0,0,0,0,0,W,W] // 29
     ,[W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 30
     ,[W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 30
+ 
+ ];
+ Maps.list.push(myFirstMap);
+ 
+ 
+ var mysecondmap =  
+   [
+     [0,0,W,W,W,W,F,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 0
+    ,[0,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W] // 1  
+    ,[F,0,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,W,W,W,W,W,W,W,W,W,Z,W,W,W,W,W,W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 2
+    ,[F,F,F,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,W,W,W,W,W,Z,W,W,W,W,W,W,W,W] // 3
+    ,[F,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 4
+    ,[F,Z,0,0,0,0,0,0,0,0,C,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,F,F,F,F,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 5
+    ,[W,W,W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,T,0,0,0,0,0,0,0,0,0,0,0,F,F,F,F,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,W] // 6
+    ,[W,0,0,0,0,F,F,F,0,0,0,0,0,0,0,0,0,0,T,T,T,T,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,C,0,0,0,0,0,0,0,W] // 8
+    ,[W,0,0,0,0,0,0,0,T,0,0,0,0,0,0,0,0,0,T,T,T,T,T,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 9
+    ,[W,0,0,0,0,F,0,0,0,0,0,0,0,0,0,0,0,0,0,S,T,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 7
+    ,[W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,T,T,T,0,T,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 10
+    ,[W,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,T,0,0,0,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 11
+    ,[W,0,0,0,0,0,0,0,0,0,0,T,T,0,0,0,0,0,0,0,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 12
+    ,[W,0,0,0,0,0,0,0,0,0,0,T,F,0,0,0,0,0,0,0,S,0,0,0,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 13
+    ,[W,0,0,0,0,0,0,N,0,0,0,0,0,0,0,0,0,0,0,0,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 14
+    ,[W,0,0,0,0,0,0,0,0,0,0,0,F,0,0,0,0,0,0,0,S,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 15
+    ,[W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 16
+    ,[W,0,0,0,0,0,0,0,0,0,0,0,T,0,0,0,0,0,0,0,0,0,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 17
+    ,[W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 18
+    ,[W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,C,0,0,0,0,0,0,0,0,0,0,0,0,W] // 19
+    ,[W,0,0,0,F,0,0,0,0,0,0,0,T,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 20
+    ,[W,0,0,0,0,F,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,C,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 21
+    ,[W,W,0,F,F,0,L,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,W,W] // 22
+    ,[W,W,W,W,L,L,L,0,0,0,L,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,W,W,W,W] // 23
+    ,[W,W,W,W,W,0,0,0,0,0,0,L,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,W,W,W,W] // 24
+    ,[W,W,W,W,W,W,0,0,0,0,0,L,L,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,0,0,W,W,W,W,W] // 25
+    ,[W,0,0,0,0,0,0,0,0,0,0,0,L,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W] // 26
+    ,[W,0,0,0,0,C,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,C,W] // 27
+    ,[W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W] // 28
+    ,[W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,C,0,0,0,0,0,0,W,W] // 29
+    ,[W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 30
+    ,[W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 30
     
    ];
+   
+ Maps.list.push(mysecondmap);
+   
+   
+   
+   
+   
+   
+ Maps.current = 0;
+ console.log('hardcode Maps.current = 0');
+ 
+Crafty.scene(SCENES.game, function() 
+{
+ 
+   var R=Rock.id, W=Wall.id, C=Coin.id, F=Fire.id,Z=Zombie.id,T=Water.id,S=Shallow.id,L=Lava.id,F=Tree.id,N=NPC.id;
+    console.log("NEW SCENE>GAME", Game.args);
+    console.log(' Maps.current', Maps.current);
+     if(Game.args)
+     {
+         //just some way that we dont stop and get stuck on the same stairway tile each time
+         //and make copies since player is right now at fixed location 1.
+         //also note thta player has property 'Persist'
+         //the loot stairwaytile does not have persist. but it was being created at fixed location.
+      // //   Game.args.stairway.x++;
+       // // Game.args.stairway.y++;
+         
+       //   Crafty.e(Loot.id).at(Game.args.stairway.x,Game.args.stairway.y);
+         console.log('Game.args after',Game.args);
+     }
+    
+    
+    if( Maps.current == 0)
+    {
+     console.log('wow the first level');   
+        
+    
+         //its default state/location
+         console.log('create fixed Loot at 25,25');
+          Crafty.e(Loot.id).at(25,25);
+    }
  
     
-    //this.x-config.GRID_SIZE,this.y
  
-  var o,id;
+    
+ 
+  //Crafty.e actually returns a reference to that entity!
+  this.player = Crafty.e(Player.id).at(Player.start_x, Player.start_x); //hardcoded stuff here too
+ this.player.ammo=500;//hardcoded maybe
+ this.dragon = Crafty.e(Dragon.id).at(25, 25);//maybe hardcoded
   
-  for (var x = 0; x < Game.map_grid.width; x++)   for (var y = 0; y < Game.map_grid.height; y++) 
-  {   
-     // Crafty.e('Darkness').at(x,y);
-     
-     try{
-      id = map[y][x] ; 
-      
-      if( id ) //checks for false/zero
-      { 
-         o = Crafty.e( id ).at( x , y );
-
-        //o.attr({alpha:1});
- 
-      }
-      
-      
-      }catch(e){console.log(e,x,y);}
-  }
-  Crafty.e(Loot.id).at(5,5).content = {id:'Sword'};
+    
    
+    this.setmap = function(newMap)
+    { 
+        //this.x-config.GRID_SIZE,this.y
+     console.log('setmap',newMap);
+          var o,id;
+          
+          for (var x = 0; x < Game.map_grid.width; x++)   for (var y = 0; y < Game.map_grid.height; y++) 
+          {   
+              this.entity_map = [];
+              
+             // Crafty.e('Darkness').at(x,y);
+             
+             try
+             {
+                  id = newMap[y][x] ; //id of the block or item or whatever for Crafty to create. such as Rock.id or Tree.id
+                  //right now we setting empty space as zero
+                  
+                  if( id ) //checks for false/zero
+                  { 
+                      // o = 
+                     Crafty.e( id ).at( x , y );
+            
+                    //o.attr({alpha:1});
+              
+                  }
+                  else
+                  {
+                      //id is zero or empty
+                      //
+                      //
+                      
+                  }
+                  
+              
+              }catch(e){console.log(e,x,y);}
+          }
+          
+          
+   }
+   
+   this.clearmap = function()
+   {
+       console.log('??clearmap');
+       var entitylist,e;
+       for (var x = 0; x < Game.map_grid.width; x++)   for (var y = 0; y < Game.map_grid.height; y++) 
+          {   
+              entitylist = this.entity_map[x][y];
+              
+              foreach(e in entitylist)
+              {
+                  e.destroy();
+                  
+              }
+              
+              
+              
+          }
+   }
+   
+   console.log('now using Maps.current not always zero;');
+   if(!Maps.current) Maps.current=0;//as good as parsing to int
+   
+   console.log('set to map number ',Maps.current);
+   this.setmap(Maps.list[Maps.current]);//trust that CURRENT has been set as initial
+
+
+  
+     console.log('Maps.current++');
+    Maps.current++;
+ 
+ 
+ 
+ 
+ 
+     console.log('ALL my hardcoded hud values from Game.vars');
   //Create a menu/HUD at the bottom of the screen with a button
   var menuBkg = Crafty.e("2D, DOM, Color");
       menuBkg.color('rgb(0,0,0)');
@@ -166,6 +297,7 @@ Crafty.scene(SCENES.game, function()
 , function() 
 {
 //unbind some functions
+console.log('scene.game unloading');
   this.unbind('CoinCollect', this._CoinCollect);
   
 }//second function passed to scene
@@ -210,8 +342,7 @@ function()
   this.unbind('KeyDown', this.restart_game);
 });  
    
-
-
+ 
 // Loading scene
 // -------------
 // Handles the loading of binary assets such as images and audio files
@@ -328,7 +459,8 @@ Crafty.scene(SCENES.loading, function()
     
     
     // Now that our sprites are ready to draw, start the game
-    Crafty.scene(SCENES.game);
+     Crafty.scene(SCENES.game);
+ 
   })
 });
    
@@ -344,7 +476,7 @@ Game =
     Crafty.init(Game.width(), Game.height() +   Game.hud.height);
      
     Crafty.background(config.BACKGROUND_COLOR);
-     Crafty.scene(SCENES.loading); 
+    Crafty.scene(SCENES.loading); 
   }
   
   ,
