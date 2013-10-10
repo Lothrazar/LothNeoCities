@@ -51,14 +51,15 @@ Crafty.c(Player.id,
       .onHit(Lava.id,this.enterLava,this.leaveLava)
       .onHit(NPC.id,this.hitNPC)
       .onHit(Loot.id,this.pickupLoot)
+      .onHit(Stairway.id,this.takeStairway)
       ; 
     this.onHit('Solid', this.onHitSolid);
     this.bind('Moved',this.onMoved);
     
     this.attr(
     {
-      w: Game.map_grid.tile.width-4,//override grid dfeaults
-      h: Game.map_grid.tile.height-4
+         w: Game.u - 1//override grid dfeaults
+        ,h: Game.u - 1
     });
     
     
@@ -142,9 +143,6 @@ Crafty.c(Player.id,
           case Crafty.keys.ALT:
           
           break;
-         
-          
-          
           
       }
     });
@@ -241,6 +239,11 @@ Crafty.c(Player.id,
         
         npc.speak("Hello you");
         
+    }
+    ,takeStairway:function(data)
+    {
+        var stair = data[0].obj;
+        stair.pickup(this);//hit by me the player
     }
     ,pickupLoot:function(data)
     {

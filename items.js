@@ -117,12 +117,11 @@ Crafty.c('Gun',
 });
 
 
-
-Crafty.c(Loot.id,
+Crafty.c(Stairway.id,
 {
    init:function()
    {
-        this.requires('Actor,  spr_wall_yellow');//TODO: texture temporary
+        this.requires('Actor,  spr_stair_1');//TODO: texture temporary
        
        
    } 
@@ -130,17 +129,27 @@ Crafty.c(Loot.id,
    ,pickup:function(holder)
    { 
        console.log('call new scene'); 
-        Game.args = {stairway:{x:5,y:5}};
-        /*
-         Game.args.stairway.x++;
-         Game.args.stairway.y++;
-         
-          Crafty.e(Loot.id).at(Game.args.stairway.x,Game.args.stairway.y);*/
-        console.log( Game.args,' Game.args');
+        //Game.args = {stairway:{x:5,y:5}};
+        //??is holder the player?
+        if(Game.player)Game.player._move_x(16); 
+        
+       // console.log( Game.args,' Game.args');
      Crafty.scene(SCENES.game);
       
-      return;
-       
+ 
+   }
+});
+Crafty.c(Loot.id,
+{
+   init:function()
+   {
+        this.requires('Actor,  spr_stair_1');//TODO: texture temporary
+        
+   } 
+   ,content:null
+   ,pickup:function(holder)
+   { 
+      
        
        if(this.content)
        { 

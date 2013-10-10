@@ -6,9 +6,10 @@ Crafty.c('Grid',
 {
   init: function() 
   {
-    this.attr({
-      w: Game.map_grid.tile.width,
-      h: Game.map_grid.tile.height
+    this.attr(
+    {
+      w: Game.u,//unit
+      h: Game.u
     });
   },
 
@@ -16,11 +17,11 @@ Crafty.c('Grid',
   at: function(x, y) 
   {
     if (x === undefined && y === undefined) {
-      return { x: this.x/Game.map_grid.tile.width, y: this.y/Game.map_grid.tile.height }
+      return { x: this.x/Game.u, y: this.y/Game.u }
     }
     else 
     {
-      this.attr({ x: x * Game.map_grid.tile.width, y: y * Game.map_grid.tile.height });
+      this.attr({ x: x * Game.u, y: y * Game.u});
       return this;
     }
   }
@@ -192,7 +193,7 @@ Crafty.c('Flying',  // TODO: make fairy and dragon inherit this
     {
       //first , decide if we are hitting the wall
       
-       if (this.y <= 0 || this.y >= Game.height() || this.x <= 0 || this.x >= Game.width() ) 
+       if (this.y <= 0 || this.y >= Game.height_px || this.x <= 0 || this.x >= Game.width_px ) 
        {
          //if so pull a full 180
          this.angle += Math.PI; 

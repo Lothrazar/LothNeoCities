@@ -3,21 +3,21 @@
  Maps = {};
  
  Maps.list = [];
-   var R=Rock.id, W=Wall.id, C=Coin.id, F=Fire.id,Z=Zombie.id,D=Water.id,S=Shallow.id,L=Lava.id,T=Tree.id,N=NPC.id;
+   var R=Rock.id, W=Wall.id, C=Coin.id, F=Fire.id,Z=Zombie.id,D=Water.id,S=Shallow.id,L=Lava.id,T=Tree.id,N=NPC.id,R=Stairway.id;
    //D for deep water, S for shallow.
  var myFirstMap = [
-   ['Tree1',W,W,W,W,W,F,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 0
+     [T,W,W,W,W,W,F,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 0
     ,[W,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,D,D,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W] // 1  
     ,[W,0,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,D,W,W,W,W,W,W,W,W,Z,W,W,W,W,W,W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 2
     ,[W,W,W,W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,D,0,0,0,0,0,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,W,W,W,W,W,Z,W,W,W,W,W,W,W,W] // 3
     ,[W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 4
-    ,[W,Z,0,0,0,0,0,0,0,0,C,0,0,0,0,0,0,0,0,D,0,0,0,0,0,0,0,0,0,0,0,0,F,F,F,F,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 5
-    ,[W,W,W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,D,D,0,0,0,0,0,0,0,0,0,0,0,F,F,F,F,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,W] // 6
+    ,[W,Z,0,0,0,T,0,0,0,0,C,0,0,0,0,0,0,0,0,D,0,0,0,0,0,0,0,0,0,0,0,0,F,F,F,F,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 5
+    ,[W,W,W,0,0,T,0,T,0,0,0,0,0,0,0,0,0,0,0,D,D,0,0,0,0,0,0,0,0,0,0,0,F,F,F,F,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,W] // 6
     ,[W,0,0,0,0,T,T,0,0,0,0,0,0,0,0,0,0,0,0,S,D,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 7
     ,[W,0,0,0,0,T,T,F,0,0,0,0,0,0,0,0,0,0,S,D,D,T,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,C,0,0,0,0,0,0,0,W] // 8
     ,[W,0,0,0,0,0,0,0,T,0,0,0,0,0,0,0,0,0,S,T,T,T,T,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 9
-    ,[W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,T,S,S,0,T,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 10
-    ,[W,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 11
+    ,[W,0,0,0,T,T,T,T,0,0,0,0,0,0,0,0,0,0,T,S,S,0,T,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 10
+    ,[W,0,0,Z,0,0,0,T,0,0,0,0,0,0,0,0,0,0,0,0,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 11
     ,[W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 12
     ,[W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,S,0,0,0,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 13
     ,[W,0,0,0,0,0,0,N,0,0,0,0,0,0,0,0,0,0,0,0,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 14
@@ -32,13 +32,12 @@
     ,[W,W,W,W,L,L,L,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,W,W,W,W] // 23
     ,[W,W,W,W,W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,W,W,W,W] // 24
     ,[W,W,W,W,W,W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W,0,0,W,W,W,W,W] // 25
-    ,[W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W] // 26
+    ,[W,0,0,0,0,0,0,0,0,0,0,0,0,R,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W] // 26
     ,[W,0,0,0,0,C,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,C,W] // 27
     ,[W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W] // 28
     ,[W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,C,0,0,0,0,0,0,W,W] // 29
     ,[W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 30
-    ,[W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 30
- 
+    ,[W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 31
  ];
  Maps.list.push(myFirstMap);
  
@@ -59,7 +58,7 @@
     ,[W,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,T,0,0,0,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 11
     ,[W,0,0,0,0,0,0,0,0,0,0,T,T,0,0,0,0,0,0,0,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 12
     ,[W,0,0,0,0,0,0,0,0,0,0,T,F,0,0,0,0,0,0,0,S,0,0,0,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 13
-    ,[W,0,0,0,0,0,0,N,0,0,0,0,0,0,0,0,0,0,0,0,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 14
+    ,[W,0,0,0,0,0,0,T,0,0,0,0,0,0,0,0,0,0,0,0,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 14
     ,[W,0,0,0,0,0,0,0,0,0,0,0,F,0,0,0,0,0,0,0,S,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 15
     ,[W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 16
     ,[W,0,0,0,0,0,0,0,0,0,0,0,T,0,0,0,0,0,0,0,0,0,S,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W] // 17
@@ -76,8 +75,7 @@
     ,[W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Z,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,W,W] // 28
     ,[W,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,C,0,0,0,0,0,0,W,W] // 29
     ,[W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 30
-    ,[W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 30
-    
+    ,[W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W] // 31
    ];
    
  Maps.list.push(mysecondmap);
@@ -88,14 +86,10 @@
    
    
  Maps.current = 0;
- console.log('hardcode Maps.current = 0');
+ 
  
 Crafty.scene(SCENES.game, function() 
-{
- 
-   //var R=Rock.id, W=Wall.id, C=Coin.id, F=Fire.id,Z=Zombie.id,T=Water.id,S=Shallow.id,L=Lava.id,F=Tree.id,N=NPC.id;
- 
-    console.log(' Maps.current', Maps.current);
+{ 
      if(Game.args)
      {
          //used to pass arguments between reloads of this scene
@@ -104,10 +98,7 @@ Crafty.scene(SCENES.game, function()
     
     if( Maps.current == 0)
     { 
-        Game.player = Crafty.e(Player.id).at(Player.start_x, Player.start_x);  
-      
-         console.log('create fixed Loot at 25,25');
-          Crafty.e(Loot.id).at(25,25);
+        Game.player = Crafty.e(Player.id).at(Player.start_x, Player.start_x);   
     }
  
     
@@ -126,7 +117,7 @@ Crafty.scene(SCENES.game, function()
  
           var id;
           
-          for (var x = 0; x < Game.map_grid.width; x++)   for (var y = 0; y < Game.map_grid.height; y++) 
+          for (var x = 0; x < Game.width; x++)   for (var y = 0; y < Game.height; y++) 
           {   
               this.entity_map = [];
               
@@ -149,7 +140,7 @@ Crafty.scene(SCENES.game, function()
                   {
                       //id is zero or empty
                       //
-                      //
+                      // this is where we would create 'air' block, or whatever
                       
                   }
                   
@@ -160,48 +151,25 @@ Crafty.scene(SCENES.game, function()
           
    }
    
-   this.clearmap = function()
-   {
-       console.log('??clearmap');
-       var entitylist,e;
-       for (var x = 0; x < Game.map_grid.width; x++)   for (var y = 0; y < Game.map_grid.height; y++) 
-          {   
-              entitylist = this.entity_map[x][y];
-              
-              foreach(e in entitylist)
-              {
-                  e.destroy();
-                  
-              }
-              
-              
-              
-          }
-   }
-   
-   console.log('now using Maps.current not always zero;');
-   if(!Maps.current) Maps.current=0;//as good as parsing to int
-   
-   console.log('set to map number ',Maps.current);
-   this.setmap(Maps.list[Maps.current]);//trust that CURRENT has been set as initial
-
-
   
-     console.log('Maps.current++');
+    
+   if(!Maps.current) Maps.current = 0;//as good as parsing to int
+    
+   this.setmap(Maps.list[Maps.current]);//trust that CURRENT has been set as initial
+ 
     Maps.current++;
- 
- 
- 
- 
- 
+  
+  
+  
+  
      console.log('ALL my hardcoded hud values from Game.vars');
   //Create a menu/HUD at the bottom of the screen with a button
   var menuBkg = Crafty.e("2D, DOM, Color");
       menuBkg.color('rgb(0,0,0)');
-      menuBkg.attr({ w:Game.hud.width, h: Game.hud.height , x:0-20, y:Game.height() - Game.hud.height});
+      menuBkg.attr({ w:Game.hud.width, h: Game.hud.height , x:0, y:Game.height_px - Game.hud.height});
   
   //fixes
-  var X_SPACING = 10;
+  var X_SPACING = 9;
   var Y_SPACING = 1;
   
   var lblHealth = Crafty.e("MenuLabel");
@@ -341,11 +309,10 @@ Crafty.scene(SCENES.loading, function()
   //  takes a noticeable amount of time to load
   Crafty.e('2D, DOM, Text')
     .text('Loading...')
-    .attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
+    .attr({ x: 0, y:  Game.height_px /2 - 24, w: Game.width_px })
     //.css($text_css)
     ;
- 
- 
+  
 	 //load all images
 	 var assets = [];
 	 assets.push(IMG.coin); 
@@ -408,7 +375,7 @@ Crafty.scene(SCENES.loading, function()
      } );
      
       
-    Crafty.sprite(SHEET_RES, IMG.dungeon_sheet, 
+    Crafty.sprite(SHEET_RES, IMG.dungeon_sheet,  // dungeon16.png
      { 
           spr_wall_black:    [2, 0] 
          ,spr_wall_blue:     [3, 0] 
@@ -425,6 +392,8 @@ Crafty.scene(SCENES.loading, function()
          ,spr_lava:         [27, 0] 
          ,spr_water:        [28, 0] 
          ,spr_waterdk:      [29, 0] 
+         
+         ,spr_stair_1:      [3, 1] 
          
      } );
      Crafty.sprite(SHEET_RES, IMG.sword_1,//'opensource16_1.png'
@@ -455,54 +424,42 @@ Crafty.scene(SCENES.loading, function()
    
    
 //finally we can start the game
-Game = 
+//custom wrapper of my constants, and starting crafty
+Game = {};
+Game.player = null;//pointer to player (I may phase this out)
+Game.start = function() 
 {
-  // Initialize and start our game
-  player:null,
-  start: function() 
-  {
     // Start crafty and set a background color so that we can see its working
     
-    Crafty.init(Game.width(), Game.height() +   Game.hud.height);
+    Crafty.init( Game.width_px,  Game.height_px );
      
     Crafty.background(config.BACKGROUND_COLOR);
     Crafty.scene(SCENES.loading); 
-  }
-  
-  ,
-  map_grid: 
-  {
-    //how many tiles each direction
-    width: config.GAME_WIDTH,
-    height: config.GAME_HEIGHT,
-    //size of each tile
+}
+
+Game.u = 16;//size of each tile. short for unit
+ 
+Game.width = 64;//how many tiles each direction
+Game.height = 32;
+
+    //the same thing but for indexed by zero arrays
+Game.max_x = Game.width -1;
+Game.max_y = Game.height -1;
     
-    min_y:0,
-    min_x:0,
-    
-    max_x:config.GAME_WIDTH-1,
-    max_y:config.GAME_HEIGHT-1,
-    
-    
-    tile: 
-    {
-      width: config.GRID_SIZE,
-      height: config.GRID_SIZE
-    }
-  },
+Game.min_y = 0;
+Game.min_x = 0;
+
+//pixel version
+Game.width_px = Game.width * Game.u;
+Game.height_px = Game.width * Game.u;
+
+//Game.map_grid phased out
    
-  hud:
-  {
-    height: config.GRID_SIZE + 4,
-    width: config.GAME_WIDTH * config.GRID_SIZE
-  },
-  
-  width: function() 
-  {
-    return this.map_grid.width * this.map_grid.tile.width ;
-  },
-  height: function() 
-  {
-    return this.map_grid.height * this.map_grid.tile.height;
-  }
-}; //end of Game.
+//hud size
+Game.hud =
+{
+    height: 20,
+    width: Game.width * Game.u
+}; 
+
+ 
