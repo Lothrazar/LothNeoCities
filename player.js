@@ -281,7 +281,9 @@ Crafty.c(Player.id,
   
   ,collectFire:function(data)
   {
-    this.updateHealth(-1*config.FIRE_DAMAGE);
+      console.log('todo: fire damage config');
+      var dmg = 1;
+    this.updateHealth(-1* dmg);
     data[0].obj.collect(); // Fire.collect
     AUDIO.PLAY(AUDIO.fire);
   }

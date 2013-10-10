@@ -155,7 +155,8 @@ Crafty.scene(SCENES.game, function()
     }
     else
     { 
-      if(Math.random() < config.ZOMBIE_COIN_SPAWN_CHANCE)
+        console.log('TODO zombie randomizer');
+      if(Math.random() < 0.5)
       {
          Crafty.e(Zombie.id).at(50,10);
       }  
