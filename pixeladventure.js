@@ -103,9 +103,7 @@ Crafty.scene(SCENES.game, function()
     
     
     if( Maps.current == 0)
-    {
-         console.log('wow the first level. create the player');   
-            
+    { 
         Game.player = Crafty.e(Player.id).at(Player.start_x, Player.start_x);  
       
          console.log('create fixed Loot at 25,25');

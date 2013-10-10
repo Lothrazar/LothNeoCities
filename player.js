@@ -52,6 +52,9 @@ Crafty.c(Player.id,
       .onHit(NPC.id,this.hitNPC)
       .onHit(Loot.id,this.pickupLoot)
       ; 
+    this.onHit('Solid', this.onHitSolid);
+    this.bind('Moved',this.onMoved);
+    
     this.attr(
     {
       w: Game.map_grid.tile.width-4,//override grid dfeaults
@@ -59,11 +62,10 @@ Crafty.c(Player.id,
     });
     
     
-      this.gun = Crafty.e('Gun').at(this.x,this.y);
-   this.gun.holder = this;//for updateammo reverse call
+    this.gun = Crafty.e('Gun').at(this.x,this.y);
+    this.gun.holder = this;//for updateammo reverse call
     this.gun.name = "gun.name";
     
-    this.bind('Moved',this.onMoved);
     
     this.z = 999;//prevent player rendering behind the water
     
@@ -149,7 +151,6 @@ Crafty.c(Player.id,
     
     this.health = Player.health;
     
-    this.onHit('Solid', this.stopMovement);
  
     this.updateCoins( Player.coins );
     this.updateAmmo(Player.ammo);
@@ -172,6 +173,7 @@ Crafty.c(Player.id,
   }
   ,teleportTo:function(_x,_y)
   { 
+      //not used yet but it works
      this.x = _x * config.GRID_SIZE;
      this.y = _y * config.GRID_SIZE;
      
@@ -227,25 +229,25 @@ Crafty.c(Player.id,
       this.gun.shoot(dir);
   }
 
-,weapon_change:function(w)
-{
-    console.log('weapon_change');
-    if(w) this.weapon = w;
-}
-
-,hitNPC:function(data)
-{
-    var npc = data[0].obj;
+    ,weapon_change:function(w)
+    {
+        console.log('weapon_change');
+        if(w) this.weapon = w;
+    }
     
-    npc.speak("Hello you");
-    
-}
-,pickupLoot:function(data)
-{
-    var loot = data[0].obj;
-    loot.pickup(this);//picked up by me the player
-}
-  
+    ,hitNPC:function(data)
+    {
+        var npc = data[0].obj;
+        
+        npc.speak("Hello you");
+        
+    }
+    ,pickupLoot:function(data)
+    {
+        var loot = data[0].obj;
+        loot.pickup(this);//picked up by me the player
+    }
+      
   ,fightZombie:function(data)
   {
       var zombie = data[0].obj;
@@ -339,34 +341,60 @@ Crafty.c(Player.id,
    
     this.updateKills(1);
   }
-   
+  //functions to force movement
+  ,_move_x:function(delta_x)
+  {
+      this.x += delta_x; 
+  }
+  ,_move_y:function(delta_y)
+  {
+      this.y += delta_y; 
+  }
   // Stops the movement
   //underscore speed and movement are craftyjs variables
-  ,stopMovement: function(e) 
+  ,onHitSolid: function(e) 
   {
-  
+ 
     if (this._movement) 
-    {
-      this.x -= this._movement.x;
-      if (this.hit('Solid') != false) 
-      {
-        this.x += this._movement.x;
-        this.y -= this._movement.y;
-        if (this.hit('Solid') != false) 
-        {
-          this.x -= this._movement.x;
-          this.y -= this._movement.y;
-        }
+    {  
+       //assume its x blocking our path
+        
+      this._move_x(-1 *  this._movement.x  );//back up by one horizontal step
+      if (this.hit('Solid') != false)  //are we still in collision
+      { 
+         this._move_x( this._movement.x  );//step back to where we were before
       }
+      
+      //are we stil colliding? check upward movement. but if the above fixed us, do nothing
+      if(this.hit('Solid'))
+      {
+            this._move_y(-1 *  this._movement.y  );//backup by one vertical step
+            if (this.hit('Solid') != false)  
+            { 
+                this._move_y(   this._movement.y  );//back to where we started
+            }
+            //by this point, reversing x or y seperately did not avoid the collision. so it must be diagonal 
+           if(this.hit('Solid'))// if its still a problem
+           {
+               //still didnt work. so must be a collision on both sides at once 
+                this._move_x(-1 *  this._movement.x  );
+                this._move_y(-1 *  this._movement.y  );
+           } 
+       } 
+       
+       
     } 
     else 
     {
+      //this case never happens anymore
       this._speed = 0;
     }
   }
   
    ,onMoved:function()
   {
+      this.x_last = this.x;
+      this.y_last = this.y;
       //this works
       if(this.is_drowning)
       { 
