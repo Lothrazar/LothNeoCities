@@ -38,7 +38,7 @@ Crafty.c(Player.id,
   init: function() 
   { 
       //when persist is on, player gets copied again, since player was creted inside the Scene.game 
-    this.requires('Actor, Fourway, Color, Collision, Solid')//Persist
+    this.requires('Actor, Fourway, Color, Collision, Solid, Persist')//Persist
       .fourway(Player.speed)
       .color(Player.colour) 
       .onHit(Coin.id,this.collectCoin)

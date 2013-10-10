@@ -93,29 +93,21 @@
 Crafty.scene(SCENES.game, function() 
 {
  
-   var R=Rock.id, W=Wall.id, C=Coin.id, F=Fire.id,Z=Zombie.id,T=Water.id,S=Shallow.id,L=Lava.id,F=Tree.id,N=NPC.id;
-    console.log("NEW SCENE>GAME", Game.args);
+   //var R=Rock.id, W=Wall.id, C=Coin.id, F=Fire.id,Z=Zombie.id,T=Water.id,S=Shallow.id,L=Lava.id,F=Tree.id,N=NPC.id;
+ 
     console.log(' Maps.current', Maps.current);
      if(Game.args)
      {
-         //just some way that we dont stop and get stuck on the same stairway tile each time
-         //and make copies since player is right now at fixed location 1.
-         //also note thta player has property 'Persist'
-         //the loot stairwaytile does not have persist. but it was being created at fixed location.
-      // //   Game.args.stairway.x++;
-       // // Game.args.stairway.y++;
-         
-       //   Crafty.e(Loot.id).at(Game.args.stairway.x,Game.args.stairway.y);
-         console.log('Game.args after',Game.args);
+         //used to pass arguments between reloads of this scene
      }
     
     
     if( Maps.current == 0)
     {
-     console.log('wow the first level');   
-        
-    
-         //its default state/location
+         console.log('wow the first level. create the player');   
+            
+        Game.player = Crafty.e(Player.id).at(Player.start_x, Player.start_x);  
+      
          console.log('create fixed Loot at 25,25');
           Crafty.e(Loot.id).at(25,25);
     }
@@ -125,17 +117,16 @@ Crafty.scene(SCENES.game, function()
     
  
   //Crafty.e actually returns a reference to that entity!
-  this.player = Crafty.e(Player.id).at(Player.start_x, Player.start_x); //hardcoded stuff here too
- this.player.ammo=500;//hardcoded maybe
+  //
+ 
  this.dragon = Crafty.e(Dragon.id).at(25, 25);//maybe hardcoded
   
     
    
     this.setmap = function(newMap)
     { 
-        //this.x-config.GRID_SIZE,this.y
-     console.log('setmap',newMap);
-          var o,id;
+ 
+          var id;
           
           for (var x = 0; x < Game.map_grid.width; x++)   for (var y = 0; y < Game.map_grid.height; y++) 
           {   
@@ -246,7 +237,7 @@ Crafty.scene(SCENES.game, function()
   this.bind('UpdateHUD', function() 
   {  
   //#TODO find a way to loop these?
-    var p = Crafty(Player.id);
+    var p = Game.player || Crafty(Player.id);
     
     hudHealth.text(p.health);
     hudAmmo.text(p.ammo);
@@ -271,7 +262,7 @@ Crafty.scene(SCENES.game, function()
          Crafty.e(Zombie.id).at(50,10);
       }  
        
-      var coins_current = Crafty(Player.id).coins;
+      var coins_current =  Game.player.coins;// Crafty(Player.id).coins;
       
       if(coins_current > 0 && coins_current % 5 == 0)
       { 
@@ -469,6 +460,7 @@ Crafty.scene(SCENES.loading, function()
 Game = 
 {
   // Initialize and start our game
+  player:null,
   start: function() 
   {
     // Start crafty and set a background color so that we can see its working
