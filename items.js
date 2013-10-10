@@ -101,7 +101,7 @@ Crafty.c('Gun',
     }
    // console.log('shoot',this.holder.x,this.holder.y,dir);
   //create it, then fire it in given direction
-    Crafty.e("Arrow").attr({x: this.holder.x, y: this.holder.y , w: config.ARROW_SIZE, h: config.ARROW_SIZE, z:50}).fired(dir);
+    Crafty.e("Arrow").attr({x: this.holder.x, y: this.holder.y , w: Arrow.size, h: Arrow.size, z:50}).fired(dir);
   
     this.holder.updateAmmo(-1);//reduce ammo by one since this shot was successful
  
@@ -128,17 +128,14 @@ Crafty.c(Stairway.id,
    ,content:null
    ,pickup:function(holder)
    { 
-       console.log('call new scene'); 
-        //Game.args = {stairway:{x:5,y:5}};
-        //??is holder the player?
-        if(Game.player)Game.player._move_x(16); 
-        
-       // console.log( Game.args,' Game.args');
-     Crafty.scene(SCENES.game);
-      
- 
+       console.log('call new scene');  
+       
+       // if(Game.player)Game.player._move_x(16); 
+         
+        Crafty.scene(SCENES.game); 
    }
 });
+
 Crafty.c(Loot.id,
 {
    init:function()
@@ -164,13 +161,13 @@ Crafty.c(Loot.id,
        
    }
 });
-
-Crafty.c('Arrow',
+ 
+Crafty.c(Arrow.id,
 {
   damage:0,
   init: function() 
   {
-    this.damage = config.ARROW_DAMAGE;
+    this.damage = Arrow.attack;
     this.requires('2D, Canvas, Color, Collision');
     this.color('red');
     //my size
@@ -178,7 +175,7 @@ Crafty.c('Arrow',
     
     this.onHit('Solid',this.hitSolid);
     this.onHit('Enemy',this.hitEnemy);
-    this.onHit('Zombie',this.hitEnemy);
+    this.onHit(Zombie.id,this.hitEnemy);
     this.onHit(Player.id,this.hitPlayer);
   }
   //Enemy
@@ -215,10 +212,10 @@ Crafty.c('Arrow',
       this.bind("EnterFrame", function() 
       {
           
-          this.move(dir, config.ARROW_SPEED);
+          this.move(dir, Arrow.speed);
           if(this.x > Crafty.viewport.width || this.x < 0) 
           {
-              console.log('Arrow.destroy');
+              console.log('Arrow.destroy. TODO: count as a  miss');
               this.destroy();
           }
       });

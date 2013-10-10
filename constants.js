@@ -20,47 +20,11 @@ function getRandomArbitary (min, max) {
 function getRandomInt (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
-//TODO: allow Parts of config to  be loaded via JSON
-var config = 
-{
-    
-    //TODO: restrucutre these into sub objects
-    
-  GRID_SIZE:16   //size of a tile
-  //how many tiles wide and high are we
-  ,GAME_WIDTH:64
-  ,GAME_HEIGHT:32
  
- // ,ZOMBIE_COIN_SPAWN_CHANCE:0.9 //chance to spawn zombie when a coin is grabbed
- // ,ZOMBIE_START_COUNT:5 //how many zombies start on the field right away (was zero)
- 
-  
-  ,DRAGON_FIRE_CHANCE:0.04 // 1% chance of it breathing fire. if math.random less than this
-  ,DRAGON_COINS_NEEDED:10
+var config = //config is being phased out
+{  
+   BACKGROUND_COLOR:'rgb(255, 255, 255)'
    
-  ,FAIRY_COINS_NEEDED:5 // every this many coins, make new fairy
-  
-  ,FIRE_DAMAGE:30
-  //,FIRE_COLOUR:'rgb(255, 0, 0)'
-  ,FIRE_SPAWN_CHANCE:0.01
-  
-  
-  ,TREE_COLOUR:'rgb(20, 125, 40)'
-  
-   
-  //,ROCK_SPAWN_CHANCE:0.04
-  
-  //,COIN_SPAWN_CHANCE:0.015
- // ,COIN_COLOUR:'rgb(255, 215, 0)'
-  
-  ,ARROW_SPEED:10
-  ,ARROW_DAMAGE:1
-  ,ARROW_SIZE:3
-  
-  ,BACKGROUND_COLOR:'rgb(0, 0, 0)'
-  
-  
   ,NPC_COLOUR:'rgb(221, 168, 160)'
   
 };
@@ -75,6 +39,7 @@ var SCENES =
 };
 
 //events
+console.log('TODO events');
 var EV = 
 {
     
@@ -126,10 +91,7 @@ var AUDIO =
   ,shoot: 'gun_shoot'  
   ,reload: 'gun_load'  
   ,fire: 'fire'  
-  ,leaves: 'leaves'  
-  
-  
-  
+  ,leaves: 'leaves'   
 }
 
 var Zombie = 
@@ -207,6 +169,15 @@ var Fairy =
     colour:'rgb(255, 105, 180)'
 };
 
+var Arrow =
+{
+   id:"Arrow"
+  ,speed:10
+  ,attack:1
+  ,size:3
+  
+}
+
 var Tree = {id:'Tree'}; //TODO color or sprite
 var Coin = {id:'Coin'};
 var Rock = {id:'Rock'};
@@ -218,26 +189,4 @@ var Lava = {id:'Lava'};
 var NPC = {id:'NPC'}; 
 var Stairway = {id:'Stairway'}; 
 
-
-//TODO: allow Parts of config to  be loaded via JSON
-var config = 
-{  
  
-  ZOMBIE_COIN_SPAWN_CHANCE:0.9 //chance to spawn zombie when a coin is grabbed
- 
-  ,DRAGON_FIRE_CHANCE:0.04 // 1% chance of it breathing fire. if math.random less than this
-  ,DRAGON_COINS_NEEDED:10
-   
-  ,FAIRY_COINS_NEEDED:5 // every this many coins, make new fairy
-  
-  ,FIRE_DAMAGE:1 
-     
-  ,ARROW_SPEED:10
-  ,ARROW_DAMAGE:1
-  ,ARROW_SIZE:3
-  
-  ,BACKGROUND_COLOR:'rgb(255, 255, 255)'
-   
-  ,NPC_COLOUR:'rgb(221, 168, 160)'
-  
-};
