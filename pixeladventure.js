@@ -156,13 +156,8 @@ Crafty.scene(SCENES.game, function()
    if(!Maps.current) Maps.current = 0;//as good as parsing to int
     
    this.setmap(Maps.list[Maps.current]);//trust that CURRENT has been set as initial
- 
-    Maps.current++;
   
-  
-  
-  
-     console.log('ALL my hardcoded hud values from Game.vars');
+     console.log('TODO ALL my hardcoded hud values from Game.vars');
   //Create a menu/HUD at the bottom of the screen with a button
   var menuBkg = Crafty.e("2D, DOM, Color");
       menuBkg.color('rgb(0,0,0)');

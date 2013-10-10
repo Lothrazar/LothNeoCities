@@ -117,24 +117,7 @@ Crafty.c('Gun',
 });
 
 
-Crafty.c(Stairway.id,
-{
-   init:function()
-   {
-        this.requires('Actor,  spr_stair_1');//TODO: texture temporary
-       
-       
-   } 
-   ,content:null
-   ,pickup:function(holder)
-   { 
-       console.log('call new scene');  
-       
-       // if(Game.player)Game.player._move_x(16); 
-         
-        Crafty.scene(SCENES.game); 
-   }
-});
+
 
 Crafty.c(Loot.id,
 {
