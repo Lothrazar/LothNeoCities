@@ -13,11 +13,12 @@ Game.start = function()
     Crafty.scene(SCENES.loading); 
 }
 //hud size
+/*
 Game.hud =
 {
     height: 20,
     width: Game.width * Game.u
-};
+};*/
 Game.u = 16;//size of each tile. short for unit
 
 Game.width = 64;//how many tiles each direction
@@ -62,8 +63,7 @@ Crafty.scene(SCENES.game, function()
               
              // Crafty.e('Darkness').at(x,y);
              
-             try
-             {
+   
                   id = newMap[y][x] ; //id of the block or item or whatever for Crafty to create. such as Rock.id or Tree.id
                   //right now we setting empty space as zero
                   
@@ -82,9 +82,7 @@ Crafty.scene(SCENES.game, function()
                       // this is where we would create 'air' block, or whatever
                       
                   }
-                  
-              
-              }catch(e){console.log(e,x,y);}
+                   
           }
           
           
@@ -100,7 +98,7 @@ Crafty.scene(SCENES.game, function()
   //Create a menu/HUD at the bottom of the screen with a button
   var menuBkg = Crafty.e("2D, DOM, Color");
       menuBkg.color('rgb(0,0,0)');
-      menuBkg.attr({ w:Game.hud.width, h: Game.hud.height , x:0, y:0 });
+      menuBkg.attr({ w:HUD.width, h: HUD.height , x:0, y:0 });
   
   //fixes
   var X_SPACING = 9;

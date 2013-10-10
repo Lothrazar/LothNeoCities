@@ -126,8 +126,8 @@ Crafty.c('Walking',
 
     this.attr(
     {  
-      w: config.GRID_SIZE, 
-      h: config.GRID_SIZE, 
+      w: Game.u, 
+      h: Game.u, 
       dX: LR, 
       dY: UD
     });
@@ -181,8 +181,8 @@ Crafty.c('Flying',  // TODO: make fairy and dragon inherit this
     this.attr(
     {  
       speed : this.speed,
-      w: config.GRID_SIZE, 
-      h: config.GRID_SIZE, 
+      w: Game.u, 
+      h: Game.u, 
       z:11 , //z-index
         dX: 0, 
         dY: 0

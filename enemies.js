@@ -51,7 +51,7 @@ Crafty.c(Dragon.id,
  
     this.attr(
     {  
-      speed : config.DRAGON_SPEED 
+      speed : Dragon.speed
     });
       /* 
       if(Math.random() < config.DRAGON_FIRE_CHANCE)

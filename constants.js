@@ -21,11 +21,7 @@ function getRandomInt (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
  
-var config = //config is being phased out
-{  
-    NPC_COLOUR:'rgb(221, 168, 160)'
-  
-};
+ 
 var SCENES =
 {
   victory: 'Victory'  
