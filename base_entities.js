@@ -256,23 +256,27 @@ Crafty.c('Flying',  // TODO: make fairy and dragon inherit this
 
 Crafty.c('Speak',
 {
-     init: function() 
+  init: function() 
   {
-    this.requires('Actor,Walking, Color,Mouse');
-    this.color(config.NPC_COLOUR);
+    this.requires('Actor');
+    
    }
-   
+   ,speaking:false
     ,speak : function(msg,timeout) 
     { 
+        if(this.speaking)
+        {
+            console.log('already speaking');
+            return;
+        }
+        console.log("NEW MSG");
         if(!msg) msg="empty";
-        if(timeout<=0) timeout=1000;
+        if(timeout<=0) timeout=100000;
         
       var text = Crafty.e("2D, DOM, Text").attr({ x: this.x, y: this.y }).text(msg);
-      
-      setTimeout(function()
-      { 
-        text.destroy();
-      },timeout);
+      this.speaking = true;
+     
+//todo; set speaking false after
     }
     
     
@@ -297,8 +301,9 @@ Crafty.c('NPC',
 {
   init: function() 
   {
-    this.requires('Actor, Walking, Color, Speak, Solid');
-    this.color(config.NPC_COLOUR);
+    this.requires('Speak, Color, Solid');//walking
+    this.color('red');//'rgb(221, 168, 160)'
+ 
  
   },
 });

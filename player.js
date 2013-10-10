@@ -95,7 +95,7 @@ Crafty.c(Player.id,
           console.log('this.weapon.slice');
           break;
           case Crafty.keys.TAB:  
-            
+            console.log('TAB');
           break;
           case Crafty.keys.Add:
           

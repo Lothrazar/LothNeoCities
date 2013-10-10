@@ -23,9 +23,7 @@ function getRandomInt (min, max) {
  
 var config = //config is being phased out
 {  
-   BACKGROUND_COLOR:'rgb(255, 255, 255)'
-   
-  ,NPC_COLOUR:'rgb(221, 168, 160)'
+    NPC_COLOUR:'rgb(221, 168, 160)'
   
 };
 var SCENES =
@@ -172,7 +170,7 @@ var Fairy =
 var Arrow =
 {
    id:"Arrow"
-  ,speed:10
+  ,speed:7
   ,attack:1
   ,size:3
   

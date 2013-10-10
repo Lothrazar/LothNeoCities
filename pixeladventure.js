@@ -9,12 +9,17 @@ Game.start = function()
     
     Crafty.init( Game.width_px,  Game.height_px );
      
-    Crafty.background(config.BACKGROUND_COLOR);
+    Crafty.background('rgb(255, 255, 255)');
     Crafty.scene(SCENES.loading); 
 }
-
+//hud size
+Game.hud =
+{
+    height: 20,
+    width: Game.width * Game.u
+};
 Game.u = 16;//size of each tile. short for unit
- 
+
 Game.width = 64;//how many tiles each direction
 Game.height = 32;
 
@@ -22,7 +27,7 @@ Game.height = 32;
 Game.max_x = Game.width -1;
 Game.max_y = Game.height -1;
     
-Game.min_y = 0;
+Game.min_y = 0 ;
 Game.min_x = 0;
 
 //pixel version
@@ -31,12 +36,7 @@ Game.height_px = Game.width * Game.u;
 
 //Game.map_grid phased out
    
-//hud size
-Game.hud =
-{
-    height: 20,
-    width: Game.width * Game.u
-}; 
+ 
 
 Crafty.scene(SCENES.game, function() 
 { 
@@ -50,12 +50,6 @@ Crafty.scene(SCENES.game, function()
     { 
         Game.player = Crafty.e(Player.id).at(Player.start_x, Player.start_x);   
     }
-  
-  //Crafty.e actually returns a reference to that entity!
-  //
- 
-  
-    
    
     this.setmap = function(newMap)
     { 
@@ -95,8 +89,6 @@ Crafty.scene(SCENES.game, function()
           
           
    }
-   
-  
     
    if(!Maps.current) Maps.current = 0;//as good as parsing to int
     
