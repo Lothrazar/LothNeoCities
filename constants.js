@@ -100,7 +100,7 @@ var Zombie =
 var Player =
 {
     id:'PlayerCharacter',
-    speed:1.5,
+    speed:1.3,
     health:10,
     coins:0,
     ammo:50,

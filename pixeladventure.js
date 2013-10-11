@@ -27,7 +27,7 @@ Game.start = function()
 {
     // Start crafty and set a background color so that we can see its working
     
-    Crafty.init( Game.width_px,  Game.height_px );
+    Crafty.init( Game.width_px,  Game.height_px +90);
      
     Crafty.background('rgb(255, 255, 255)');
     Crafty.scene(SCENES.loading); 
@@ -58,24 +58,14 @@ Crafty.scene(SCENES.game, function()
              // Crafty.e('Darkness').at(x,y);
              
    
-                  id = newMap[y][x] ; //id of the block or item or whatever for Crafty to create. such as Rock.id or Tree.id
-                  //right now we setting empty space as zero
-                  
-                  if( id ) //checks for false/zero
-                  { 
-                      // o = 
-                     Crafty.e( id ).at( x , y );
-            
-                    //o.attr({alpha:1});
+              id = newMap[y][x] ; //id of the block or item or whatever for Crafty to create. such as Rock.id or Tree.id
+              //right now we setting empty space as zero
               
-                  }
-                  else
-                  {
-                      //id is zero or empty
-                      //
-                      // this is where we would create 'air' block, or whatever
-                      
-                  }
+              if( id ) //checks for false/zero
+              {  
+                 Crafty.e( id ).at( x , y ); 
+              }
+               
                    
           }
           
@@ -92,7 +82,7 @@ Crafty.scene(SCENES.game, function()
   //Create a menu/HUD at the bottom of the screen with a button
   var menuBkg = Crafty.e("2D, DOM, Color");
       menuBkg.color('rgb(0,0,0)');
-      menuBkg.attr({ w:HUD.width, h: HUD.height , x:0, y:0 });
+      menuBkg.attr({ w:HUD.width, h: HUD.height , x:0, y:Game.height_px+30 });
   
   //fixes
   var X_SPACING = 9;
@@ -180,8 +170,7 @@ Crafty.scene(SCENES.game, function()
               Game.player.y = Game.min_y + 2*Game.u;
           } 
           if(newMap !== null)
-          { 
-              console.log(Maps.current,newMap);
+          {  
               Maps.current = newMap;
               Crafty.scene(SCENES.game);
               return;
@@ -239,8 +228,7 @@ Crafty.scene(SCENES.game, function()
 }//end scene definition, first function
 , function() 
 {
-//unbind some functions
-  console.log('scene.game unloading');
+//unbind some functions 
   this.unbind('CoinCollect', this._CoinCollect);
   
 }//second function passed to scene
