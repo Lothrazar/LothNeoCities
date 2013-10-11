@@ -31,15 +31,3 @@ Crafty.c(Fire.id,
 
  
  
-Crafty.c(Rock.id, 
-{
-  init: function() 
-  {
-      
-      
-    this.requires('Actor, Solid, spr_rock'+getRandomInt(0,15)); //spr_sheet_stone Color, 
-    // this.color(config.ROCK_COLOUR);
-  },
-});
-
- 

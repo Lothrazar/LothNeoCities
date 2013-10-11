@@ -161,6 +161,10 @@ Crafty.c(Player.id,
           case Crafty.keys.ALT:
           
           break; 
+          case Crafty.keys[1]:
+         
+              this.ability(1); 
+          break;
       }
     });
     
@@ -175,12 +179,42 @@ Crafty.c(Player.id,
     
     //update kills and misses TODO     
   }
+  ,ability:function(id)
+  {
+      switch(id)
+      {
+          case 1:
+            this.dash();
+          break;
+          
+      }
+  }
+  ,dash:function()
+  {
+      if(this.speed_timeout  > 0)
+      {
+          //we are already dashing, or in a delay
+          return;
+      }
+      this.speed_timeout = 20;
+      this.setSpeed(5);
+      
+  }
   
   //every game cycle
   ,tick:function()
   {
-      this.damage_timeout--;
-      
+      if(this.damage_timeout>0) this.damage_timeout--;
+      if(this.speed_timeout>0)
+      {
+          this.speed_timeout--;
+          if(this.speed_timeout == 0)
+          {
+               this.setSpeed(Player.speed);
+              
+          }
+          
+      }
   }
   
   
