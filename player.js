@@ -4,11 +4,13 @@ var Player =
     id:'PlayerCharacter',
     speed:1.4,
     health:100,
+    damage_timeout:0,
     coins:0,
     ammo:5,
     colour:'rgb(85, 26, 139)',
     start_x:1,
     start_y:1,
+    invinc_frames:30,//how many frames we stay invincible after taking a hit
     stats:
     {
         misses:0,
@@ -72,7 +74,7 @@ Crafty.c(Player.id,
       ; 
     this.onHit('Solid', this.onHitSolid);
     this.bind('Moved',this.onMoved);
-    
+    this.bind('PlayerTookDamage',this.onTookDamage);
     this.attr(
     {
          w: Game.u - 1//override grid dfeaults
@@ -169,9 +171,19 @@ Crafty.c(Player.id,
     this.updateKills(Player.stats.kills);
     this.updateMisses(Player.stats.misses);
     
+    this.bind('EnterFrame', this.tick);
     
     //update kills and misses TODO     
   }
+  
+  //every game cycle
+  ,tick:function()
+  {
+      this.damage_timeout--;
+      
+  }
+  
+  
   ,checkInventory:function()
   {
       //TODO : this
@@ -312,15 +324,35 @@ Crafty.c(Player.id,
   //update health by increment and the display as well
   ,updateHealth:function (inc)
   { 
-      this.health += inc;
- 
-      if(this.health <= 0)
-      { 
-         Crafty.trigger('Death');
-      }
+      if(inc < 0)
+      {
+          //we are taking damage already, so disable this one
+          if(this.damage_timeout > 0)
+          {
+              //.log('damage timeout safe');
+              return; 
+          }
+          //its not zero, so we took damage
+          Crafty.trigger('PlayerTookDamage');
+          
+           if(this.health <= 0)
+          { 
+             Crafty.trigger('Death');
+          }
+      } 
+      
+      this.health += inc; 
       Crafty.trigger('UpdateHUD');
-      Crafty.trigger('PlayerTookDamage');
+       
   }
+  
+  
+  ,onTookDamage:function()
+  {
+      this.damage_timeout = Player.invinc_frames;
+      
+  }
+  
   //update  by increment and the display as well
   ,updateCoins:function (inc)
   {
