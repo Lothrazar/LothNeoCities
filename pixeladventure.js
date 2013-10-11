@@ -40,8 +40,8 @@ Crafty.scene(SCENES.game, function()
      {
          //used to pass arguments between reloads of this scene
      }
-     
-    if( Maps.current == 0)
+     //first time?
+    if( Game.player === null)
     { 
         Game.player = Crafty.e(Player.id).at(Player.start_x, Player.start_x);   
     }
@@ -143,48 +143,46 @@ Crafty.scene(SCENES.game, function()
   
   
   this._offscreen = this.bind('PlayerOffScreen',function()
-  { 
-      var west = (Game.player.x < Game.min_x );
-      var east = (Game.player.y < Game.min_y );
+  {  
+      var west = (Game.player.x < Game.min_x );//to the left
+      var east = (Game.player.x+1 >= Game.width_px  );// right
       
-      var north = (Game.player.x > Game.width_px  );
+      var north = (Game.player.y < Game.min_y );
       var south = (Game.player.y > Game.height_px );
-      
-      //keeps the player on the screen
+ 
       if(Maps.network[Maps.current])
       {
           var network = Maps.network[Maps.current];
           var newMap = null;
           //flip them to the opposite side of the map too
-        console.log(network);
-          if(east && network.e)  
-          { console.log('east');
+ 
+          if(east && network.e >=0)  
+          {  
               newMap = network.e; //send to far west side
-              Game.player.x = Game.min_x + Game.u; 
+              Game.player.x = Game.min_x + 2*Game.u;  
           }
            
-          if(west && network.w)  
-          { console.log('west');
-              newMap = network.w;//go to east side
-              Game.player.x = Game.width_px - Game.u;
+          if(west && network.w >=0)  
+          {  
+              newMap = network.w;//go to west side
+              Game.player.x = Game.width_px - 2*Game.u;
           }
  
-          if(north && network.n)
-          { console.log('north');
+          if(north && network.n >=0)
+          {  
                newMap = network.n;
-              Game.player.y = Game.height_px - Game.u;
+               Game.player.y = Game.height_px - 2*Game.u;
           }
     
-          if(south && network.s) 
-          { console.log('south');
+          if(south && network.s >=0)  
+          {
               newMap = network.s;
-              Game.player.y = Game.min_y + Game.u;
-          }
-          
-          console.log('Tfound  anetwork',newMap);
-          if(newMap)
+              Game.player.y = Game.min_y + 2*Game.u;
+          } 
+          if(newMap !== null)
           { 
-              Maps.current = network.e;
+              console.log(Maps.current,newMap);
+              Maps.current = newMap;
               Crafty.scene(SCENES.game);
               return;
           }
@@ -193,10 +191,10 @@ Crafty.scene(SCENES.game, function()
       //so keep the player on the screen
       
       //which side is it off
-      if( east ) Game.player.x = Game.player.x * -1;//flip back onto the map
-      if( west ) Game.player.y = Game.player.y * -1;//flip back onto the map
+      if( west ) Game.player.x = Game.player.x * -1;//flip back onto the map
+      if( north ) Game.player.y = Game.player.y * -1;//flip back onto the map
       
-      if( north ) Game.player.x -= 2*(Game.player.x - Game.width_px ) ;//flip back onto the map
+      if( east ) Game.player.x -= 2*(Game.player.x - Game.width_px ) ;//flip back onto the map
       if( south ) Game.player.y -= 2*(Game.player.y - Game.height_px) ;//flip back onto the map
   
       
