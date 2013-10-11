@@ -97,23 +97,7 @@ var Zombie =
    colour:'rgb(0, 255, 0)' ,// legacy :: overwritten by sprites 
 };
 
-var Player =
-{
-    id:'PlayerCharacter',
-    speed:1.3,
-    health:100,
-    coins:0,
-    ammo:8,
-    colour:'rgb(85, 26, 139)',
-    start_x:1,
-    start_y:1,
-    stats:
-    {
-        misses:0,
-        kills:0,
-    } 
-};
- 
+
 var Dragon = 
 {
     id:"Dragon",

@@ -1,24 +1,26 @@
 
-
-
-Crafty.c('Tree1', 
-{
-  init: function() 
-  {
-    this.requires('Actor, Color, spr_tree_1');
-    this.color(config.TREE_COLOUR);
-  },
-});
-
+ 
   
 Crafty.c(Tree.id, 
 {
   init: function() 
   { 
-    this.requires('Actor, Solid, spr_tree_0');  
+    this.requires('Actor, Solid, spr_tree_'+getRandomInt(0,15));  
   },
 });
 
+Crafty.c(Rock.id, 
+{
+  init: function() 
+  {
+      
+      
+    this.requires('Actor, Solid, spr_rock'+getRandomInt(0,15)); //spr_sheet_stone Color, 
+    // this.color(config.ROCK_COLOUR);
+  },
+});
+
+ 
 
 Crafty.c(Wall.id, 
 {

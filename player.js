@@ -2,8 +2,8 @@ var Player =
 {
     // initial stats
     id:'PlayerCharacter',
-    speed:1.5,
-    health:1000,
+    speed:1.4,
+    health:100,
     coins:0,
     ammo:5,
     colour:'rgb(85, 26, 139)',
@@ -15,6 +15,23 @@ var Player =
         kills:0,
     } 
 };
+/*var Player =
+{
+    id:'PlayerCharacter',
+    speed:1.3,
+    health:100,
+    coins:0,
+    ammo:8,
+    colour:'rgb(85, 26, 139)',
+    start_x:1,
+    start_y:1,
+    stats:
+    {
+        misses:0,
+        kills:0,
+    } 
+};
+ */
 
 Crafty.c(Player.id, 
 {
