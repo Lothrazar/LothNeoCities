@@ -76,9 +76,9 @@ Crafty.scene(SCENES.game, function()
     
    this.setmap(Maps.list[Maps.current]);//trust that CURRENT has been set as initial
   
-   this.dragon = Crafty.e(Dragon.id).at(25, 25);//maybe hardcoded
+ //  this.dragon = Crafty.e(Dragon.id).at(25, 25);//maybe hardcoded
    
-     console.log('TODO ALL my hardcoded hud values from Game.vars');
+     console.log('TODO cleanup ALL my hardcoded hud values from Game.vars');
   //Create a menu/HUD at the bottom of the screen with a button
   var menuBkg = Crafty.e("2D, DOM, Color");
       menuBkg.color('rgb(0,0,0)');
@@ -125,8 +125,7 @@ Crafty.scene(SCENES.game, function()
     hudAmmo.text(p.ammo);
     hudCoins.text(p.coins);
     
-    if(p.gun)
-        lblWeapon.text(p.gun.name);
+    if(p.gun)     lblWeapon.text(p.gun.name);
   
   });
 

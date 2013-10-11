@@ -101,9 +101,9 @@ var Player =
 {
     id:'PlayerCharacter',
     speed:1.3,
-    health:10,
+    health:100,
     coins:0,
-    ammo:50,
+    ammo:8,
     colour:'rgb(85, 26, 139)',
     start_x:1,
     start_y:1,

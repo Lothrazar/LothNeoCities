@@ -18,7 +18,7 @@ var Player =
 
 Crafty.c(Player.id, 
 {
-  health:1,//avoid zero just in case
+  health:Player.health, 
   coins:0,
   ammo:0,
   kills:0,
