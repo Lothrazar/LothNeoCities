@@ -3,6 +3,26 @@
 //custom wrapper of my constants, and starting crafty
 Game = {};
 Game.player = null;//pointer to player (I may phase this out)
+
+//hud size
+ 
+Game.u = 16;//size of each tile. short for unit
+
+Game.width  = 64;//how many tiles each direction
+Game.height = 32;
+
+//the same thing but for indexed by zero arrays
+Game.max_x = Game.width  -1;
+Game.max_y = Game.height -1;
+    
+Game.min_y = 0 ;
+Game.min_x = 0;
+
+//pixel version
+Game.width_px =  Game.width * Game.u;
+Game.height_px = Game.height * Game.u;
+
+//Game.map_grid phased out
 Game.start = function() 
 {
     // Start crafty and set a background color so that we can see its working
@@ -11,32 +31,7 @@ Game.start = function()
      
     Crafty.background('rgb(255, 255, 255)');
     Crafty.scene(SCENES.loading); 
-}
-//hud size
-/*
-Game.hud =
-{
-    height: 20,
-    width: Game.width * Game.u
-};*/
-Game.u = 16;//size of each tile. short for unit
-
-Game.width = 64;//how many tiles each direction
-Game.height = 32;
-
-//the same thing but for indexed by zero arrays
-Game.max_x = Game.width -1;
-Game.max_y = Game.height -1;
-    
-Game.min_y = 0 ;
-Game.min_x = 0;
-
-//pixel version
-Game.width_px = Game.width * Game.u;
-Game.height_px = Game.width * Game.u;
-
-//Game.map_grid phased out
-   
+} 
  
 
 Crafty.scene(SCENES.game, function() 
@@ -45,8 +40,7 @@ Crafty.scene(SCENES.game, function()
      {
          //used to pass arguments between reloads of this scene
      }
-    
-    
+     
     if( Maps.current == 0)
     { 
         Game.player = Crafty.e(Player.id).at(Player.start_x, Player.start_x);   
@@ -147,6 +141,19 @@ Crafty.scene(SCENES.game, function()
   });
 
   
+  
+  this._offscreen = this.bind('PlayerOffScreen',function()
+  { 
+      //keeps the player on the screen
+      //which side is it off
+      if(Game.player.x < Game.min_x ) Game.player.x = Game.player.x * -1;//flip back onto the map
+      if(Game.player.y < Game.min_y ) Game.player.y = Game.player.y * -1;//flip back onto the map
+      
+      if(Game.player.x > Game.width_px  ) Game.player.x -= 2*(Game.player.x - Game.width_px ) ;//flip back onto the map
+      if(Game.player.y > Game.height_px ) Game.player.y -= 2*(Game.player.y - Game.height_px) ;//flip back onto the map
+      
+      
+  });
   this._CoinCollect = this.bind('CoinCollect', function() 
   { 
     if (!Crafty(Coin.id).length) 
@@ -173,6 +180,7 @@ Crafty.scene(SCENES.game, function()
       this.bind('PlayerTookDamage',function(e)
       {
           //TODO deprec
+          console.log('PlayerTookDamage');
       });
       
     this.show_failure = this.bind('Death',function(e)
@@ -187,7 +195,7 @@ Crafty.scene(SCENES.game, function()
 , function() 
 {
 //unbind some functions
-console.log('scene.game unloading');
+  console.log('scene.game unloading');
   this.unbind('CoinCollect', this._CoinCollect);
   
 }//second function passed to scene
@@ -236,7 +244,7 @@ Crafty.scene(SCENES.loading, function()
   //  takes a noticeable amount of time to load
   Crafty.e('2D, DOM, Text')
     .text('Loading...')
-    .attr({ x: 0, y:  Game.height_px /2 - 24, w: Game.width_px })
+    .attr({ x: 0, y:  Game.height_px /2 - 24, w: Game.width_px,color:'red' })
     //.css($text_css)
     ;
   

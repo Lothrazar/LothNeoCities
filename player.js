@@ -71,11 +71,9 @@ Crafty.c(Player.id,
     this.z = 999;//prevent player rendering behind the water
     
     this.bind('KeyDown', function(e) 
-    {
-       
+    { 
       switch(e.key )
-      {
-          
+      { 
           case Crafty.keys.E: 
               //this.shoot(null);
           break;
@@ -83,16 +81,17 @@ Crafty.c(Player.id,
           break;
           case Crafty.keys.F:   
           console.log('sword', this.x  ,this.y );
-                this.weapon =  Crafty.e('Sword').at( this.x/config.GRID_SIZE  ,this.y/config.GRID_SIZE );
+               //at my position relative to the grid unit
+                this.weapon =  Crafty.e('Sword').at( this.x/Game.u  ,this.y/Game.u );
                 
                 this.weapon.holder=this;//tell the sword hey, i am holding you. move with me
                
-          console.log(this.weapon);
+                console.log(this.weapon);
                 
                 this.weapon.slice();
                 
                
-          console.log('this.weapon.slice');
+                   console.log('this.weapon.slice');
           break;
           case Crafty.keys.TAB:  
             console.log('TAB');
@@ -142,22 +141,19 @@ Crafty.c(Player.id,
           break;
           case Crafty.keys.ALT:
           
-          break;
-          
+          break; 
       }
     });
     
     this.health = Player.health;
-    
- 
+     
     this.updateCoins( Player.coins );
     this.updateAmmo(Player.ammo);
     this.updateKills(Player.stats.kills);
     this.updateMisses(Player.stats.misses);
     
     
-    //update kills and misses TODO
-    
+    //update kills and misses TODO     
   }
   ,checkInventory:function()
   {
@@ -173,9 +169,7 @@ Crafty.c(Player.id,
   { 
       //not used yet but it works
      this.x = _x * config.GRID_SIZE;
-     this.y = _y * config.GRID_SIZE;
-     
-      
+     this.y = _y * config.GRID_SIZE; 
   }
   // be careful
   ,setSpeed:function(newspeed)
@@ -261,6 +255,7 @@ Crafty.c(Player.id,
   ,stairway:function(data)
   { 
       data[0].obj.collect();
+      //stairway.collect
   }
   
   ,fightFairy:function(data)
@@ -302,12 +297,12 @@ Crafty.c(Player.id,
   { 
       this.health += inc;
  
-      Crafty.trigger('UpdateHUD');
-      Crafty.trigger('PlayerTookDamage');
       if(this.health <= 0)
       { 
          Crafty.trigger('Death');
       }
+      Crafty.trigger('UpdateHUD');
+      Crafty.trigger('PlayerTookDamage');
   }
   //update  by increment and the display as well
   ,updateCoins:function (inc)
@@ -397,17 +392,23 @@ Crafty.c(Player.id,
   }
   
    ,onMoved:function()
-  {
-      this.x_last = this.x;
-      this.y_last = this.y;
+  {   
+      /*are we on the map or off edge 
+        Game.width_px = Game.width * Game.u;
+        Game.height_px = Game.height * Game.u;*/
+      if(0 >  this.x || this.x >  Game.width_px
+      || 0 >  this.y || this.y >  Game.height_px  )
+      { 
+          Crafty.trigger('PlayerOffScreen'); 
+      }
+       
       //this works
       if(this.is_drowning)
       { 
         this.updateHealth( -1  );
       }
       if(this.is_burning_lava)
-      {
-          
+      { 
         this.updateHealth( -5  );
       }
       
