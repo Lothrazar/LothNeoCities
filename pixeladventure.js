@@ -144,14 +144,61 @@ Crafty.scene(SCENES.game, function()
   
   this._offscreen = this.bind('PlayerOffScreen',function()
   { 
+      var west = (Game.player.x < Game.min_x );
+      var east = (Game.player.y < Game.min_y );
+      
+      var north = (Game.player.x > Game.width_px  );
+      var south = (Game.player.y > Game.height_px );
+      
       //keeps the player on the screen
+      if(Maps.network[Maps.current])
+      {
+          var network = Maps.network[Maps.current];
+          var newMap = null;
+          //flip them to the opposite side of the map too
+        console.log(network);
+          if(east && network.e)  
+          { console.log('east');
+              newMap = network.e; //send to far west side
+              Game.player.x = Game.min_x + Game.u; 
+          }
+           
+          if(west && network.w)  
+          { console.log('west');
+              newMap = network.w;//go to east side
+              Game.player.x = Game.width_px - Game.u;
+          }
+ 
+          if(north && network.n)
+          { console.log('north');
+               newMap = network.n;
+              Game.player.y = Game.height_px - Game.u;
+          }
+    
+          if(south && network.s) 
+          { console.log('south');
+              newMap = network.s;
+              Game.player.y = Game.min_y + Game.u;
+          }
+          
+          console.log('Tfound  anetwork',newMap);
+          if(newMap)
+          { 
+              Maps.current = network.e;
+              Crafty.scene(SCENES.game);
+              return;
+          }
+      }  
+      //either no network, or no newmap found
+      //so keep the player on the screen
+      
       //which side is it off
-      if(Game.player.x < Game.min_x ) Game.player.x = Game.player.x * -1;//flip back onto the map
-      if(Game.player.y < Game.min_y ) Game.player.y = Game.player.y * -1;//flip back onto the map
+      if( east ) Game.player.x = Game.player.x * -1;//flip back onto the map
+      if( west ) Game.player.y = Game.player.y * -1;//flip back onto the map
       
-      if(Game.player.x > Game.width_px  ) Game.player.x -= 2*(Game.player.x - Game.width_px ) ;//flip back onto the map
-      if(Game.player.y > Game.height_px ) Game.player.y -= 2*(Game.player.y - Game.height_px) ;//flip back onto the map
-      
+      if( north ) Game.player.x -= 2*(Game.player.x - Game.width_px ) ;//flip back onto the map
+      if( south ) Game.player.y -= 2*(Game.player.y - Game.height_px) ;//flip back onto the map
+  
       
   });
   this._CoinCollect = this.bind('CoinCollect', function() 
