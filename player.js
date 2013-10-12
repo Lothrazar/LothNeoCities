@@ -65,8 +65,8 @@ Crafty.c(Player.id,
     this.bind('PlayerTookDamage',this.onTookDamage);
     this.attr(
     {
-         w: Game.u - 1//override grid dfeaults
-        ,h: Game.u - 1
+         w: Game.u //- 1-1//override grid dfeaults
+        ,h: Game.u //- 1-1
     });
     
     this.bind('NewDirection',this.onDirectionChanged);
@@ -480,16 +480,22 @@ Crafty.c(Player.id,
         else
         { 
             this.removeComponent('link_s');
+            this.removeComponent('link_e');
+            this.removeComponent('link_w'); ;
+            this.removeComponent('link_n'); 
             if(this.north) this.addComponent('link_n');
             if(this.south) this.addComponent('link_s');
+            if(this.east) this.addComponent('link_e');
+            if(this.west) this.addComponent('link_w');
             //if(this.so) this.animate("link_n", 0, 0, 16);
             //link_s:[0,0]
         }
         //.log(this.north,this.east,this.south,this.west);
     }
+    
     ,onStopMoving:function()
     {
-        
+       // this.addComponent('link_s');
     }
     ,skipNextMoves:0
    ,onMoved:function(o)

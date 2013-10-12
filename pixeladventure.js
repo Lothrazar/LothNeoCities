@@ -364,10 +364,12 @@ Crafty.scene(SCENES.loading, function()
         player:[0,0]
      });
      
-     Crafty.sprite(SHEET_RES,'zelda-sprites-link.png',
+     Crafty.sprite(SHEET_RES-1,'zelda-sprites-link.png',
      {
          link_s:[0,0]
-        ,link_n:[4,0]
+        ,link_w:[1,0]
+        ,link_n:[2,0]
+        ,link_e:[3,0]
      });
      
      
