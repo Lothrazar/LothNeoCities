@@ -113,13 +113,7 @@ var Fairy =
     colour:'rgb(255, 105, 180)'
 };
 
-var Tree = {id:'Tree'}; 
-var Coin = {id:'Coin'};
-var Rock = {id:'Rock'};
-var Fire = {id:'Fire'};
-var Loot = {id:'Loot'};
-var Grass = {id:'Grass'};
-var WoodFloor = {id:'WoodFloor'};
+
 
 
 
@@ -160,13 +154,18 @@ var Arrow =
 
 var Tree = {id:'Tree'}; //TODO color or sprite
 var Coin = {id:'Coin'};
-var Rock = {id:'Rock'};
-var Fire = {id:'Fire'};
+var Rock = {id:'Rock'}; 
 var Wall = {id:'Wall'};
 var Water = {id:'Water'};
 var Shallow = {id:'Shallow'}; 
 var Lava = {id:'Lava'}; 
 var NPC = {id:'NPC'}; 
 var Stairway = {id:'Stairway'}; 
-
+ 
+ 
+ 
+var Fire = {id:'Fire',attack:3};
+var Loot = {id:'Loot'};
+var Grass = {id:'Grass'};
+var WoodFloor = {id:'WoodFloor'};
  

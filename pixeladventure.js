@@ -44,6 +44,7 @@ Crafty.scene(SCENES.game, function()
     if( Game.player === null)
     { 
         Game.player = Crafty.e(Player.id).at(Player.start_x, Player.start_x);   
+        Crafty.e(Fairy.id).at(50, 5);
     }
    
     this.setmap = function(newMap)
@@ -78,52 +79,37 @@ Crafty.scene(SCENES.game, function()
   
  //  this.dragon = Crafty.e(Dragon.id).at(25, 25);//maybe hardcoded
    
-     console.log('TODO cleanup ALL my hardcoded hud values from Game.vars');
+     console.log('TODO cleanup HUD spacing,etc');
   //Create a menu/HUD at the bottom of the screen with a button
   var menuBkg = Crafty.e("2D, DOM, Color");
       menuBkg.color(HUD.color );
       menuBkg.attr({ w:HUD.width, h: HUD.height , x: HUD.x , y:Game.height_px + HUD.y });
       
     //fixes
-  var X_SPACING = 9;
-  var Y_SPACING = 1;
+    var X_SPACING = 9;
+    var Y_SPACING = 1;
   
-  var lblHealth = Crafty.e("MenuLabel");
-      lblHealth.text('Health'); 
-      lblHealth.attr({ x:menuBkg.x+X_SPACING, y:menuBkg.y+Y_SPACING });
-      
-   Game.hudHealth = Crafty.e("MenuData").text('0');
-  
-      Game.hudHealth.attr({ x:menuBkg.x+8*X_SPACING, y:menuBkg.y+Y_SPACING }); 
-      
-   var lblAmmo = Crafty.e("MenuLabel").text('Ammo'); 
- 
-      lblAmmo.attr({ x:menuBkg.x+12*X_SPACING, y:menuBkg.y+Y_SPACING });    
-  
-    Game.hudAmmo = Crafty.e("MenuData").attr({ x:menuBkg.x+20*X_SPACING, y:menuBkg.y+Y_SPACING }).text('0');
- 
-       Game.hudAmmo.attr({ x:menuBkg.x+20*X_SPACING, y:menuBkg.y+Y_SPACING }); 
+    var lblHealth = Crafty.e("MenuLabel").text('Health').attr({ x:menuBkg.x   +X_SPACING, y:menuBkg.y+Y_SPACING }); 
+    var lblAmmo  = Crafty.e("MenuLabel").text('Ammo').attr(   { x:menuBkg.x+12*X_SPACING, y:menuBkg.y+Y_SPACING });  
+    var lblCoins = Crafty.e("MenuLabel").text('Coins').attr(  { x:menuBkg.x+28*X_SPACING, y:menuBkg.y+Y_SPACING });  
+    var lblWeapon= Crafty.e("MenuLabel").text('Gun').attr(    { x:menuBkg.x+64*X_SPACING, y:menuBkg.y+Y_SPACING });  
     
-    var lblCoins = Crafty.e("MenuLabel").text('Coins'); 
+    
+    HUD.hudHealth = Crafty.e("MenuData").text('0').attr({ x:menuBkg.x+8*X_SPACING, y:menuBkg.y+Y_SPACING }); 
+    HUD.hudAmmo   = Crafty.e("MenuData").attr({ x:menuBkg.x+20*X_SPACING, y:menuBkg.y+Y_SPACING }).text('0').attr({ x:menuBkg.x+20*X_SPACING, y:menuBkg.y+Y_SPACING }); 
+    HUD.hudCoins  = Crafty.e("MenuData").text('0').attr({ x:menuBkg.x+32*X_SPACING, y:menuBkg.y+Y_SPACING });
  
-      lblCoins.attr({ x:menuBkg.x+28*X_SPACING, y:menuBkg.y+Y_SPACING });    
+       
   
-    Game.hudCoins = Crafty.e("MenuData");
-      Game.hudCoins.text('0'); 
-      Game.hudCoins.attr({ x:menuBkg.x+32*X_SPACING, y:menuBkg.y+Y_SPACING }); 
-      
-    var lblWeapon= Crafty.e("MenuLabel").text('Gun');
- 
-      lblWeapon.attr({ x:menuBkg.x+64*X_SPACING, y:menuBkg.y+Y_SPACING });   
   
   this.bind('UpdateHUD', function() 
   {  
     var p = Game.player || Crafty(Player.id);
     
   //#TODO find a way to loop these?
-    Game.hudHealth.text(p.health);
-    Game.hudAmmo.text(p.ammo);
-    Game.hudCoins.text(p.coins);
+    HUD.hudHealth.text(p.health);
+    HUD.hudAmmo.text(p.ammo);
+    HUD.hudCoins.text(p.coins);
     
     if(p.gun)     lblWeapon.text(p.gun.name);
   
@@ -187,14 +173,20 @@ Crafty.scene(SCENES.game, function()
   
       
   });
+  
+  
+   /*
   this._CoinCollect = this.bind('CoinCollect', function() 
   { 
+      console.log('CoinCollect unused event');
+     
     if (!Crafty(Coin.id).length) 
     { 
-     Crafty.scene(SCENES.victory);
+      Crafty.scene(SCENES.victory);
     }
     else
     { 
+        
         console.log('TODO zombie randomizer');
       if(Math.random() < 0.5)
       {
@@ -202,19 +194,15 @@ Crafty.scene(SCENES.game, function()
       }  
        
       var coins_current =  Game.player.coins;// Crafty(Player.id).coins;
-      
-      if(coins_current > 0 && coins_current % 5 == 0)
+     
+      if(Game.player.coins > 0 && Game.player.coins % 5 == 0)
       { 
         Crafty.e(Fairy.id).at(50, 5);
       } 
+       
     }
   });
-  
-      this.bind('PlayerTookDamage',function(e)
-      {
-          //TODO deprec
-          console.log('PlayerTookDamage');
-      });
+  */
       
     this.show_failure = this.bind('Death',function(e)
     {
