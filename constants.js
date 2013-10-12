@@ -88,43 +88,20 @@ var AUDIO =
   ,leaves: 'leaves'   
 }
 
-var Zombie = 
-{
-   id:"Zombie",
-   speed:0.9,
-   attack:3,
-   health:1,
-   colour:'rgb(0, 255, 0)' ,// legacy :: overwritten by sprites 
-};
-
-
-var Dragon = 
-{
-    id:"Dragon",
-  attack:5,
-  speed:1.75,
-  colour:'rgb(0, 0, 0)' 
-};
-
-var Fairy =
-{
-    id:'Fairy',
-    attack: -10,
-    colour:'rgb(255, 105, 180)'
-};
-
-
-
-
+ 
 
 var Zombie = 
 {
    id:"Zombie",
-   speed:0.9,
-   attack:3,
-   health:50,
-   colour:'rgb(0, 255, 0)' ,// legacy :: overwritten by sprites 
+   speed:1,
+   attack:9,
+   health:1 
+ 
 };
+
+
+ 
+ 
 
 
 
