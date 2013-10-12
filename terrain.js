@@ -8,7 +8,14 @@ Crafty.c(Tree.id,
     this.requires('Actor, Solid, spr_tree_'+getRandomInt(0,15));  
   },
 });
-
+Bush={id:'Bush'};
+Crafty.c(Bush.id, 
+{
+  init: function() 
+  { 
+    this.requires('Actor, Solid, spr_bush_'+getRandomInt(0,11));  
+  },
+});
 Crafty.c(Rock.id, 
 {
   init: function() 
@@ -52,7 +59,8 @@ Crafty.c('Grass',
 {
   init: function() 
   {
-    this.requires('Actor, spr_grass'); 
+    this.requires('Actor, spr_grass'); //
+    //this.color('rgb(162, 255, 151)');
   },
 });
 Crafty.c(Shallow.id, 

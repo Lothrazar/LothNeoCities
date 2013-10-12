@@ -29,7 +29,7 @@ Game.start = function()
     
     Crafty.init( Game.width_px,  Game.height_px +90);
      
-    Crafty.background('rgb(255, 255, 255)');
+    Crafty.background('rgb(162, 255, 151)');//('rgb(255, 255, 255)');
     Crafty.scene(SCENES.loading); 
 } 
  
@@ -391,9 +391,33 @@ Crafty.scene(SCENES.loading, function()
          ,spr_tree_13 : [13,0] 
          ,spr_tree_14 : [14,0] 
          ,spr_tree_15 : [15,0] 
-         //go to 16  
+
+        
+         ,spr_grass :  [2,15] 
+         ,spr_grass_0 :  [3,5] 
          
+         ,spr_bush_0 : [4,15]
+         ,spr_bush_1 : [5,15]
+         ,spr_bush_2 : [6,15]
+         ,spr_bush_3 : [7,15]
+         ,spr_bush_4 : [8,15]
+         ,spr_bush_5 : [9,15]
+         ,spr_bush_6 : [10,14]
+         ,spr_bush_7 : [11,14]
+         ,spr_bush_8 : [12,14]
+         ,spr_bush_9 : [13,14]
+         ,spr_bush_10 : [14,14]
+         ,spr_bush_11 : [15,14]
+
+         ,spr_fruit_bush_0 : [11,15]
+         ,spr_fruit_bush_1 : [12,15]
+         ,spr_fruit_bush_2 : [13,15]
+         ,spr_fruit_bush_3 : [14,15]
+         ,spr_fruit_bush_4 : [15,15]
+         ,spr_fruit_bush_5 : [14,13]
+         ,spr_fruit_bush_6 : [15,13]
          
+         ,spr_leaf_0 : [10,15]
          
          ,spr_wood_pnl_grey :  [4,2]
          ,spr_wood_pnl_brown : [5,2] 
@@ -401,9 +425,8 @@ Crafty.scene(SCENES.loading, function()
          ,spr_wood_flr_brown :  [6,2] 
        //  ,spr_wood_flr_brown :  [6,2] 
         
-         ,spr_grass :  [0,5] 
      });
-    
+    //
     
     // Now that our sprites are ready to draw, start the game
      Crafty.scene(SCENES.game);
