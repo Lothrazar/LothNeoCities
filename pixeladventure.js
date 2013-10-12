@@ -287,6 +287,7 @@ Crafty.scene(SCENES.loading, function()
 	 
 	 assets.push(IMG.rocks );
 	 assets.push(IMG.sword_1);
+	 assets.push('purple16.png','zelda-sprites-link.png');
  
   Crafty.load(assets, function()
   { 
@@ -358,6 +359,17 @@ Crafty.scene(SCENES.loading, function()
          //go to 16  
         
      });
+     Crafty.sprite(SHEET_RES,'purple16.png',
+     {
+        player:[0,0]
+     });
+     
+     Crafty.sprite(SHEET_RES,'zelda-sprites-link.png',
+     {
+         link_s:[0,0]
+        ,link_n:[4,0]
+     });
+     
      
      var open_count = 8; 
     

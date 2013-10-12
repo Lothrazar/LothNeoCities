@@ -17,23 +17,7 @@ var Player =
         kills:0,
     } 
 };
-/*var Player =
-{
-    id:'PlayerCharacter',
-    speed:1.3,
-    health:100,
-    coins:0,
-    ammo:8,
-    colour:'rgb(85, 26, 139)',
-    start_x:1,
-    start_y:1,
-    stats:
-    {
-        misses:0,
-        kills:0,
-    } 
-};
- */
+ 
 
 Crafty.c(Player.id, 
 {
@@ -57,10 +41,10 @@ Crafty.c(Player.id,
   init: function() 
   { 
       //when persist is on, player gets copied again, since player was creted inside the Scene.game 
-    this.requires('Actor, Fourway, Color, Collision, Solid, Persist')//Persist
+    this.requires('Actor, Fourway, SpriteAnimation, link_s, Collision, Solid, Persist')//Persist
       .fourway(Player.speed)
       
-      .color(Player.colour) 
+    //  .color(Player.colour) 
       .onHit(Coin.id,this.collectCoin)
       .onHit(Fire.id,this.collectFire)
       .onHit(Dragon.id,this.fightDragon)
@@ -487,11 +471,19 @@ Crafty.c(Player.id,
             
           this.north = (o.y < 0 );
           this.south = (o.y > 0 );
-          
+          ///http://programmateur.lqbs.fr/blog/creating-an-eternal-animation-with-crafty-js/
           
         if(o.x === 0 && o.y === 0)
         {
             this.onStopMoving(o); 
+        }
+        else
+        { 
+            this.removeComponent('link_s');
+            if(this.north) this.addComponent('link_n');
+            if(this.south) this.addComponent('link_s');
+            //if(this.so) this.animate("link_n", 0, 0, 16);
+            //link_s:[0,0]
         }
         //.log(this.north,this.east,this.south,this.west);
     }
