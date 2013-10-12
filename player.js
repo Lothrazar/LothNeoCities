@@ -85,6 +85,7 @@ Crafty.c(Player.id,
         ,h: Game.u - 1
     });
     
+    this.bind('NewDirection',this.onDirectionChanged);
     
     this.gun = Crafty.e('Gun').at(this.x,this.y);
     this.gun.holder = this;//for updateammo reverse call
@@ -479,8 +480,25 @@ Crafty.c(Player.id,
        
   
   }
-    
-    
+    ,onDirectionChanged:function(o)
+    { 
+          this.west = (o.x < 0 );//to the left
+          this.east = (o.x > 0  );// right
+            
+          this.north = (o.y < 0 );
+          this.south = (o.y > 0 );
+          
+          
+        if(o.x === 0 && o.y === 0)
+        {
+            this.onStopMoving(o); 
+        }
+        //.log(this.north,this.east,this.south,this.west);
+    }
+    ,onStopMoving:function()
+    {
+        
+    }
     ,skipNextMoves:0
    ,onMoved:function(o)
   {    
