@@ -118,6 +118,8 @@ var Coin = {id:'Coin'};
 var Rock = {id:'Rock'};
 var Fire = {id:'Fire'};
 var Loot = {id:'Loot'};
+var Grass = {id:'Grass'};
+var WoodFloor = {id:'WoodFloor'};
 
 
 

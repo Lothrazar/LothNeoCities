@@ -36,11 +36,25 @@ Crafty.c(Water.id,
 {
   init: function() 
   {
-    this.requires('Actor,  spr_water'); 
+    this.requires('Actor, spr_water'); 
   },
 });
 
-
+Crafty.c('WoodFloor', 
+{
+  init: function() 
+  {
+    this.requires('Actor, spr_wood_flr_brown'); 
+  },
+});
+ 
+Crafty.c('Grass', 
+{
+  init: function() 
+  {
+    this.requires('Actor, spr_grass'); 
+  },
+});
 Crafty.c(Shallow.id, 
 {
   init: function() 

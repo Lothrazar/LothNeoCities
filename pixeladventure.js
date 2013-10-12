@@ -375,16 +375,16 @@ Crafty.scene(SCENES.loading, function()
     
      Crafty.sprite(SHEET_RES,IMG.opensheet_1,//'opensource16_1.png'
      {
-          spr_tree_0 : [0,0] 
-         ,spr_tree_1 : [1,0]   
-         ,spr_tree_2 : [2,0]   
-         ,spr_tree_3 : [3,0] 
-         ,spr_tree_4 : [4,0] 
-         ,spr_tree_5 : [5,0] 
-         ,spr_tree_6 : [6,0] 
-         ,spr_tree_7 : [7,0] 
-         ,spr_tree_8 : [8,0] 
-         ,spr_tree_9 : [9,0] 
+          spr_tree_0 :  [0,0] 
+         ,spr_tree_1 :  [1,0]   
+         ,spr_tree_2 :  [2,0]   
+         ,spr_tree_3 :  [3,0] 
+         ,spr_tree_4 :  [4,0] 
+         ,spr_tree_5 :  [5,0] 
+         ,spr_tree_6 :  [6,0] 
+         ,spr_tree_7 :  [7,0] 
+         ,spr_tree_8 :  [8,0] 
+         ,spr_tree_9 :  [9,0] 
          ,spr_tree_10 : [10,0] 
          ,spr_tree_11 : [11,0] 
          ,spr_tree_12 : [12,0] 
@@ -392,7 +392,16 @@ Crafty.scene(SCENES.loading, function()
          ,spr_tree_14 : [14,0] 
          ,spr_tree_15 : [15,0] 
          //go to 16  
+         
+         
+         
+         ,spr_wood_pnl_grey :  [4,2]
+         ,spr_wood_pnl_brown : [5,2] 
+         
+         ,spr_wood_flr_brown :  [6,2] 
+       //  ,spr_wood_flr_brown :  [6,2] 
         
+         ,spr_grass :  [0,5] 
      });
     
     

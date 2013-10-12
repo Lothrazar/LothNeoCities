@@ -2,7 +2,7 @@ var Player =
 {
     // initial stats
     id:'PlayerCharacter',
-    speed:1.4,
+    speed:1.2,
     health:100,
     damage_timeout:0,
     coins:0,
@@ -46,9 +46,9 @@ Crafty.c(Player.id,
   is_burning_lava:false,
   is_burning_fire:false,
   speed_flat:Player.speed,
-  speed_current:Player.speed,
-  speed_shallow:Player.speed/3,
-  speed_water:Player.speed/6,
+  speed_current:Player.speed,//deprec speeds
+  speed_shallow:Player.speed,// (Player.speed / 3).toFixed(3),
+  speed_water: Player.speed,//(Player.speed / 6).toFixed(3),
   
  //TODO consolidate data here
   weapon:null,
@@ -59,6 +59,7 @@ Crafty.c(Player.id,
       //when persist is on, player gets copied again, since player was creted inside the Scene.game 
     this.requires('Actor, Fourway, Color, Collision, Solid, Persist')//Persist
       .fourway(Player.speed)
+      
       .color(Player.colour) 
       .onHit(Coin.id,this.collectCoin)
       .onHit(Fire.id,this.collectFire)
@@ -72,6 +73,9 @@ Crafty.c(Player.id,
       .onHit(Loot.id,this.pickupLoot)
       .onHit(Stairway.id,this.takeStairway)
       ; 
+      
+       
+      
     this.onHit('Solid', this.onHitSolid);
     this.bind('Moved',this.onMoved);
     this.bind('PlayerTookDamage',this.onTookDamage);
@@ -435,11 +439,17 @@ Crafty.c(Player.id,
   }
   // Stops the movement
   //underscore speed and movement are craftyjs variables
+
+  
+  
   ,onHitSolid: function(e) 
-  {
- 
-    if (this._movement) 
-    {  
+  {  
+     if (!this._movement) 
+     { //this case never happens anymore
+            this._speed = 0;
+            return;
+     }
+       
        //assume its x blocking our path
         
       this._move_x(-1 *  this._movement.x  );//back up by one horizontal step
@@ -462,20 +472,21 @@ Crafty.c(Player.id,
                //still didnt work. so must be a collision on both sides at once 
                 this._move_x(-1 *  this._movement.x  );
                 this._move_y(-1 *  this._movement.y  );
+                
+                
+                
+                //.log("done the diagonal undo",this.x,this.y);
            } 
        } 
        
-       
-    } 
-    else 
-    {
-      //this case never happens anymore
-      this._speed = 0;
-    }
-  }
   
-   ,onMoved:function()
-  {   
+  }
+    
+    
+    ,skipNextMoves:0
+   ,onMoved:function(o)
+  {    
+      // o contains previous location from before the move
       /*are we on the map or off edge 
         Game.width_px = Game.width * Game.u;
         Game.height_px = Game.height * Game.u;*/
@@ -489,19 +500,29 @@ Crafty.c(Player.id,
       if(this.is_drowning)
       { 
         this.updateHealth( -1  );
+        
+        
+        
+        
+        if(this.skipNextMoves > 0)
+        {
+            this.skipNextMoves--;
+            
+            this.x = o.x;
+            this.y = o.y;
+            //.log('move undo from drowning'); 
+        }   
+        else 
+        {
+            this.skipNextMoves = 4;
+            //.log('move CONTINUE from drowning');
+        }
       }
       if(this.is_burning_lava)
       { 
         this.updateHealth( -5  );
       }
       
-      if(this.weapon)
-      {
-            //whenever I move, also move my weapon as well
-            //relative position is fixed
-         // this.weapon.x = this.x;
-          //this.weapon.y = this.y;
-          
-      }
+    
   }
 });
