@@ -1,9 +1,11 @@
 HUD = {};
-HUD.height = 20;
+HUD.height = 94;
 HUD.width = 64*16;//Game.width * Game.u;
 HUD.colour = 'rgb(0,0,0)';
-
-
+HUD.x = 0;
+HUD.y = 0;
+HUD.color = 'rgb(0,0,0)';
+//HUD.width, h: HUD.height , x:0, y:Game.height_px+30 });
 
 
 ////////////menu stuff
