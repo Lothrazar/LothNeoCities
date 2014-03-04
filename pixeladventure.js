@@ -51,8 +51,7 @@ Crafty.scene(SCENES.game, function()
    
     this.setmap = function(newMap)
     {  
-        console.log('setmap');
-
+      
           var id;
           
           for (var x = 0; x < Game.width; x++)   for (var y = 0; y < Game.height; y++) 
@@ -121,56 +120,65 @@ Crafty.scene(SCENES.game, function()
   
   this._offscreen = this.bind('PlayerOffScreen',function()
   { 
-  	console.log('PlayerOffScreen'); 
-  	
+  	 
+  	 
       var west = (Game.player.x < Game.min_x );//to the left
       var east = (Game.player.x+1 >= Game.width_px  );// right
       
       var north = (Game.player.y < Game.min_y );
       var south = (Game.player.y > Game.height_px );
  
-      console.log(Game.player.x , Game.player.y);
-      
+     
       if(Maps.network[Maps.current])
       {
+      	console.log('PlayerOffScreen',Game.player.x , Game.player.y);
+      
+      	
           var network = Maps.network[Maps.current];
-          console.log('new map!');
+      
           var newMap = null;
           //flip them to the opposite side of the map too
  
           if(east && network.e >=0)  
           {  
               newMap = network.e; //send to far west side
-              Game.player.x = Game.min_x + 2*Game.u;  
+              
+              Game.player.x = Game.min_x ;//+ 2*Game.u;  
           }
            
           if(west && network.w >=0)  
           {  
               newMap = network.w;//go to west side
-              Game.player.x = Game.width_px - 2*Game.u;
+              Game.player.x = Game.width_px - Game.u;
           }
  
           if(north && network.n >=0)
           {  
                newMap = network.n;
-               Game.player.y = Game.height_px - 2*Game.u;
+               Game.player.y = Game.height_px -  Game.u;
           }
     
           if(south && network.s >=0)  
           {
+              console.log("off map SOUTH from ",  Game.player.x  );
               newMap = network.s;
-              Game.player.y = Game.min_y + 2*Game.u;
+              Game.player.y = Game.min_y ;//+ 3*Game.u;
+              console.log("TO",  Game.player.x  );
           } 
           if(newMap !== null)
           {  
+          	
+      console.log(north,east,south,west);
+      console.log("END OF LEAVESCREEN EVENT",Game.player.x , Game.player.y);
+          	
+          	
               Maps.current = newMap;
               Crafty.scene(SCENES.game);
               return;
           }
-      }  
+      }   
       //either no network, or no newmap found
       //so keep the player on the screen
-      console.log(north,east,south,west);
       //which side is it off
       if( west ) Game.player.x = Game.player.x * -1;//flip back onto the map
       if( north ) Game.player.y = Game.player.y * -1;//flip back onto the map
@@ -179,7 +187,6 @@ Crafty.scene(SCENES.game, function()
       if( south ) Game.player.y -= 2*(Game.player.y - Game.height_px) ;//flip back onto the map
   
       
-      console.log(Game.player.x , Game.player.y);
   });
   
   
