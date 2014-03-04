@@ -83,14 +83,11 @@ Crafty.c('Enemy',
   health:1,//minimum to start. customized in subclass
   init: function() 
   {
-    this.requires('Actor');    
-    console.log("new enemy with health = "+this.health);
+    this.requires('Actor');     
   }
   
   ,updateHealth:function(inc)
-  {
-    console.log('enemy updateHealth' );
-      
+  { 
     this.health += inc;
     console.log('enemytookdamage',this.health);
     if(this.health <= 0) 

@@ -50,19 +50,27 @@ var EXT=
 };
  
    //single images
-var IMG=
+  
+ var IMG_ROOT = 'assets/sprites/';
+var IMG =
 {
-  coin:'goldCoin'+EXT.IMG
-  ,rock:'rock0'+EXT.IMG
-  ,flame:'flame'+EXT.IMG
-  ,zombie:'zombie'+EXT.IMG
-  ,rocks:'rock_sprites'+EXT.IMG
-  ,dungeon_sheet:'dungeon16'+EXT.IMG
-  ,opensheet_1:'opensource16_1'+EXT.IMG
-  ,sword_1:'sword16_1'+EXT.IMG
+    
+  coin: IMG_ROOT + 'goldCoin'+EXT.IMG
+  ,rock:IMG_ROOT + 'rock0'+EXT.IMG
+  ,flame:IMG_ROOT + 'flame'+EXT.IMG
+  ,zombie:IMG_ROOT + 'zombie'+EXT.IMG
+  ,rocks:IMG_ROOT + 'rock_sprites'+EXT.IMG
+  ,dungeon_sheet:IMG_ROOT + 'dungeon16'+EXT.IMG
+  ,opensheet_1:IMG_ROOT + 'opensource16_1'+EXT.IMG
+  ,sword_1:IMG_ROOT + 'sword16_1'+EXT.IMG
+  ,purple:IMG_ROOT + 'purple16'+EXT.IMG
+  ,player:IMG_ROOT + 'player-sprites'+EXT.IMG
 };
+ 
 
   //audio files
+var AUDIO_ROOT ='assets/audio/';
+  
 var AUDIO =
 { 
     DEFAULT_VOLUME:0.5,
@@ -71,9 +79,7 @@ var AUDIO =
    PLAY:function(id,vol)
    {
        if(!vol  || vol >= 1 || vol < 0 ) vol = AUDIO.DEFAULT_VOLUME;//volume
-  
-       
-  
+   
        //add it all ove again d
        Crafty.audio.add(id,id + EXT.AUDIO);
  
@@ -83,12 +89,13 @@ var AUDIO =
        Crafty.audio.play(id,repeats,vol); 
    }
  
-  ,coin: 'coin-01'   
-  ,fairy: 'magic-01'    
-  ,shoot: 'gun_shoot'  
-  ,reload: 'gun_load'  
-  ,fire: 'fire'  
-  ,leaves: 'leaves'   
+  
+  ,coin: AUDIO_ROOT +  'coin-01'   
+  ,fairy:AUDIO_ROOT +  'magic-01'    
+  ,shoot: AUDIO_ROOT + 'gun_shoot'  
+  ,reload: AUDIO_ROOT + 'gun_load'  
+  ,fire: AUDIO_ROOT + 'fire'  
+  ,leaves: AUDIO_ROOT + 'leaves'   
 }
 
  

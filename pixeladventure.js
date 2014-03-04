@@ -27,7 +27,7 @@ Game.start = function()
 {
     // Start crafty and set a background color so that we can see its working
     
-    Crafty.init( Game.width_px,  Game.height_px +90);
+    Crafty.init( Game.width_px,  Game.height_px + 90);
      
     Crafty.background('rgb(162, 255, 151)');//('rgb(255, 255, 255)');
     Crafty.scene(SCENES.loading); 
@@ -44,12 +44,15 @@ Crafty.scene(SCENES.game, function()
     if( Game.player === null)
     { 
         Game.player = Crafty.e(Player.id).at(Player.start_x, Player.start_x);   
+        
+        //TODO: smarter fairy spawning
         Crafty.e(Fairy.id).at(50, 5);
     }
    
     this.setmap = function(newMap)
-    { 
- 
+    {  
+        console.log('setmap');
+
           var id;
           
           for (var x = 0; x < Game.width; x++)   for (var y = 0; y < Game.height; y++) 
@@ -78,8 +81,7 @@ Crafty.scene(SCENES.game, function()
    this.setmap(Maps.list[Maps.current]);//trust that CURRENT has been set as initial
   
  //  this.dragon = Crafty.e(Dragon.id).at(25, 25);//maybe hardcoded
-   
-     console.log('TODO cleanup HUD spacing,etc');
+    
   //Create a menu/HUD at the bottom of the screen with a button
   var menuBkg = Crafty.e("2D, DOM, Color");
       menuBkg.color(HUD.color );
@@ -118,16 +120,21 @@ Crafty.scene(SCENES.game, function()
   
   
   this._offscreen = this.bind('PlayerOffScreen',function()
-  {  
+  { 
+  	console.log('PlayerOffScreen'); 
+  	
       var west = (Game.player.x < Game.min_x );//to the left
       var east = (Game.player.x+1 >= Game.width_px  );// right
       
       var north = (Game.player.y < Game.min_y );
       var south = (Game.player.y > Game.height_px );
  
+      console.log(Game.player.x , Game.player.y);
+      
       if(Maps.network[Maps.current])
       {
           var network = Maps.network[Maps.current];
+          console.log('new map!');
           var newMap = null;
           //flip them to the opposite side of the map too
  
@@ -163,7 +170,7 @@ Crafty.scene(SCENES.game, function()
       }  
       //either no network, or no newmap found
       //so keep the player on the screen
-      
+      console.log(north,east,south,west);
       //which side is it off
       if( west ) Game.player.x = Game.player.x * -1;//flip back onto the map
       if( north ) Game.player.y = Game.player.y * -1;//flip back onto the map
@@ -172,6 +179,7 @@ Crafty.scene(SCENES.game, function()
       if( south ) Game.player.y -= 2*(Game.player.y - Game.height_px) ;//flip back onto the map
   
       
+      console.log(Game.player.x , Game.player.y);
   });
   
   
@@ -287,7 +295,9 @@ Crafty.scene(SCENES.loading, function()
 	 
 	 assets.push(IMG.rocks );
 	 assets.push(IMG.sword_1);
-	 assets.push('purple16.png','player-sprites.png');
+	 assets.push(IMG.purple);;
+     assets.push(IMG.player);
+
  
   Crafty.load(assets, function()
   { 
@@ -359,12 +369,12 @@ Crafty.scene(SCENES.loading, function()
          //go to 16  
         
      });
-     Crafty.sprite(SHEET_RES,'purple16.png',
+     Crafty.sprite(SHEET_RES,IMG.purple,
      {
         player:[0,0]
      });
      
-     Crafty.sprite(SHEET_RES-1,'player-sprites.png',
+     Crafty.sprite(SHEET_RES-1,IMG.player,
      {
          link_s:[0,0]
         ,link_w:[1,0]
