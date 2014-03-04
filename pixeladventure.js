@@ -287,7 +287,7 @@ Crafty.scene(SCENES.loading, function()
 	 
 	 assets.push(IMG.rocks );
 	 assets.push(IMG.sword_1);
-	 assets.push('purple16.png','zelda-sprites-link.png');
+	 assets.push('purple16.png','player-sprites.png');
  
   Crafty.load(assets, function()
   { 
@@ -364,7 +364,7 @@ Crafty.scene(SCENES.loading, function()
         player:[0,0]
      });
      
-     Crafty.sprite(SHEET_RES-1,'zelda-sprites-link.png',
+     Crafty.sprite(SHEET_RES-1,'player-sprites.png',
      {
          link_s:[0,0]
         ,link_w:[1,0]

@@ -6,7 +6,7 @@ var Player =
     health:100,
     damage_timeout:0,
     coins:0,
-    ammo:5,
+    ammo:25,
     colour:'rgb(85, 26, 139)',
     start_x:1,
     start_y:1,
@@ -43,8 +43,7 @@ Crafty.c(Player.id,
       //when persist is on, player gets copied again, since player was creted inside the Scene.game 
     this.requires('Actor, Fourway, SpriteAnimation, link_s, Collision, Solid, Persist')//Persist
       .fourway(Player.speed)
-      
-    //  .color(Player.colour) 
+       
       .onHit(Coin.id,this.collectCoin)
       .onHit(Fire.id,this.collectFire)
       .onHit(Dragon.id,this.fightDragon)
@@ -88,7 +87,7 @@ Crafty.c(Player.id,
           case Crafty.keys.Q:
           break;
           case Crafty.keys.F:   
-          console.log('sword', this.x  ,this.y );
+      
                //at my position relative to the grid unit
                 this.weapon =  Crafty.e('Sword').at( this.x/Game.u  ,this.y/Game.u );
                 
@@ -142,7 +141,7 @@ Crafty.c(Player.id,
             this.teleportTo(10,10);
           break;
           case Crafty.keys.SPACE:
-          
+              this.shoot(null);
           break;
           case Crafty.keys.CTRL:
              this.checkInventory();

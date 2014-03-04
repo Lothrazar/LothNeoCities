@@ -84,6 +84,7 @@ Crafty.c('Enemy',
   init: function() 
   {
     this.requires('Actor');    
+    console.log("new enemy with health = "+this.health);
   }
   
   ,updateHealth:function(inc)

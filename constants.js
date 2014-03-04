@@ -1,7 +1,8 @@
 //based on tutorial at http://buildnewgames.com/introduction-to-crafty/
 // TODO: TRACK zombie kill on head-on-collision. or jsu bounche them back.
 
-function getRandomInt (min, max) {
+function getRandomInt (min, max) 
+{
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 function coinflip(){ return Math.floor( Math.random() * 2 ) ===1; }
@@ -9,7 +10,8 @@ function coinflip(){ return Math.floor( Math.random() * 2 ) ===1; }
  /**
  * Returns a random number between min and max
  */
-function getRandomArbitary (min, max) {
+function getRandomArbitary (min, max) 
+{
     return Math.random() * (max - min) + min;
 }
 
@@ -17,7 +19,8 @@ function getRandomArbitary (min, max) {
  * Returns a random integer between min and max
  * Using Math.round() will give you a non-uniform distribution!
  */
-function getRandomInt (min, max) {
+function getRandomInt (min, max) 
+{
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
  
@@ -33,7 +36,7 @@ var SCENES =
 };
 
 //events
-console.log('TODO events');
+ 
 var EV = 
 {
     

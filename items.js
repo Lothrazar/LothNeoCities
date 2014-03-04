@@ -26,8 +26,8 @@ Crafty.c('Sword',
            if(this.holder)
            {
               // console.log('weapon set its own via holder');
-               this.x=this.holder.x;
-               this.y=this.holder.y;
+               this.x = this.holder.x;
+               this.y = this.holder.y;
                
            }
        });
@@ -53,13 +53,13 @@ Crafty.c('Gun',
    {
         this.requires('Actor');//TODO: holder and icon ?
      
-    
+        this.holder = Game.player;
     }
 
 
   ,shoot:function(dir)
-  {
-    if(this.ammo <= 0) 
+  { 
+    if(this.holder.ammo <= 0) 
     { 
          AUDIO.PLAY(AUDIO.reload);////left at default volume
         return; 
@@ -73,14 +73,14 @@ Crafty.c('Gun',
      
     if(dir===null)
     {
+        dir = '';
         //default direction to movement
+ 
+        var movingUp = (this.holder._movement.y < 0 );//can both be false
+        var movingDown = (this.holder._movement.y > 0 );
         
-        
-        var movingUp = (this._movement.y < 0 );//can both be false
-        var movingDown = (this._movement.y > 0 );
-        
-        var movingLeft = (this._movement.x < 0 );
-        var movingRight = (this._movement.x > 0 );
+        var movingLeft = (this.holder._movement.x < 0 );
+        var movingRight = (this.holder._movement.x > 0 );
         //valid directions are (n,s,e,w,ne,nw,se,sw)
         
         //first decide if N or W
@@ -92,8 +92,7 @@ Crafty.c('Gun',
         dir += (movingRight) ? 'e' : '';
         
         //we will never add both 'w' and 'e', add at most one of them or neither
-        
-        
+         
         //if player is stationary, dir will still be emtpy string at this point
         if(dir == '') {return; }
         
@@ -171,6 +170,7 @@ Crafty.c(Arrow.id,
   ,hitEnemy:function(data)
   { 
       
+      console.log(data[0].obj);
     //deal damage to the enemy, might not kill it    
     data[0].obj.updateHealth(-1 * this.damage);
     
